@@ -201,7 +201,10 @@ $("submit").addEventListener("click", async () => {
   window.open(`${NEW_ISSUE}?${params}`, "_blank");
 });
 
-// Served by `npm run phone`, the computer saves posted results to results/. Elsewhere there's no receiver.
+// Served by `npm run phone`, the computer saves posted results to results/. Elsewhere there's no receiver,
+// so the button only shows on a local or LAN address (the phone reaches the computer by its LAN IP).
+const LOCAL = /^(localhost|127\.|10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.|\[::1\]$)|\.local$/.test(location.hostname);
+if (!LOCAL) $("send").hidden = true;
 $("send").addEventListener("click", async () => {
   try {
     const res = await fetch("./api/results", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(report) });
