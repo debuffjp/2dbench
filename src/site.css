@@ -1,17 +1,20 @@
-/* 2dbench pages (mobile.html, results.html). Neutral on purpose: no contestant's brand colours. */
+/* 2dbench pages (mobile.html, results.html), in debuff's "squish" look: flat ink ground, soft round panels with
+   no outlines, pill buttons, lime only for primary/on, coloured dots for sections, debuff sans for headings. */
 :root {
   color-scheme: dark;
-  --bg: #0b0d10;
-  --panel: #13161b;
-  --panel-2: #1a1e25;
-  --line: #262a33;
-  --fg: #e6e8ec;
-  --dim: #8b909a;
-  --accent: #60a5fa;
-  --accent-ink: #06121f;
-  --good: #4ade80;
-  --radius: 12px;
+  --bg: #11140d;
+  --panel: #1b2014;
+  --panel-2: #20261a;
+  --panel-3: #2a3320;
+  --line: #11140d;
+  --fg: #d3dcc2;
+  --dim: #7d8872;
+  --accent: #cffb2d;
+  --accent-ink: #11140d;
+  --good: #cffb2d;
+  --radius: 22px;
 }
+@font-face { font-family: "debuff sans"; src: url("/debuff-sans.ttf") format("truetype"); font-display: swap; }
 * { box-sizing: border-box; }
 body {
   margin: 0;
@@ -86,3 +89,30 @@ td.num { font-variant-numeric: tabular-nums; }
 
 footer { color: var(--dim); font-size: 13px; border-top: 1px solid var(--line); margin-top: 48px; padding-top: 16px; }
 td:first-child, th:first-child { min-width: 150px; }
+
+/* ---- squish ---- */
+.top { border: 0; background: color-mix(in srgb, var(--bg) 93%, transparent); }
+.brand { font-family: "debuff sans", ui-sans-serif; font-size: 20px; display: flex; align-items: center; gap: 8px; }
+.brand::before { content: ""; width: 28px; height: 28px; background: url("/buff.svg") center / contain no-repeat; }
+.top nav { gap: 4px; }
+.top nav a { padding: 6px 14px; border-radius: 999px; }
+.top nav a[aria-current="page"] { background: var(--accent); color: var(--accent-ink); }
+.hero h1, h2, h3 { font-family: "debuff sans", ui-sans-serif; letter-spacing: 0; font-weight: 400; }
+.hero h1 { font-size: clamp(28px, 5vw, 44px); }
+h2::before { content: ""; display: inline-block; width: 12px; height: 12px; border-radius: 50%; background: #38bdf8; margin-right: 10px; vertical-align: 2px; }
+h3::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #a78bfa; margin-right: 8px; vertical-align: 2px; }
+.card { border: 0; }
+.card.callout { background: var(--panel-2); position: relative; padding-left: 40px; }
+.card.callout::before { content: ""; position: absolute; left: 18px; top: 24px; width: 10px; height: 10px; border-radius: 50%; background: #f472b6; }
+button { border: 0; background: var(--panel-3); transition: transform 0.14s cubic-bezier(0.3, 1.6, 0.5, 1); }
+button:active:not(:disabled) { transform: scale(1.08, 0.86); }
+input[type="text"] { border: 0; border-radius: 14px; }
+.progress { height: 10px; }
+.progress div { border-radius: 999px; }
+table { border-radius: 18px; overflow: hidden; background: var(--panel); }
+th, td { border-bottom: 2px solid var(--bg); }
+.chart svg { border-radius: var(--radius); }
+.chart svg > rect:first-of-type { fill: var(--panel); }
+#stage { border: 0; border-radius: 14px; }
+footer { border: 0; }
+@media (prefers-reduced-motion: reduce) { button { transition: none; } button:active:not(:disabled) { transform: none; } }
