@@ -25,6 +25,8 @@ const PUBLISHED = [10_000, 50_000, 200_000];
 const BUDGET_MS = 1000 / 60;
 const PARITY_COUNTS = [2_000, 50_000];
 const PARITY_TOLERANCE = 8;
+/** GPU strings of software renderers. */
+const SOFTWARE = /SwiftShader|llvmpipe|softpipe|Microsoft Basic Render/i;
 const COVERAGE_RANGE = [99.5, 100.5];
 const MAX_INTERIOR_PERCENT = 0.5;
 const W = 960;
@@ -161,6 +163,13 @@ try {
   adapters = list.filter((a) => a.scenes.includes(scene) && (!chosen.length || chosen.includes(a.id) || a.id === reference)).map((a) => a.id);
   for (const a of adapters) samples[a] = {};
 
+  // Software rendering (SwiftShader, llvmpipe) makes timings meaningless. Parity still checks fine on it (CI
+  // does exactly that), but a timed run is refused unless explicitly allowed. On Linux, try HEADED=1.
+  if (rounds > 0 && SOFTWARE.test(gpu) && !process.env.ALLOW_SOFTWARE)
+    throw new Error(
+      `The GPU is software-rendered (${gpu}), so timings would measure the CPU emulating a GPU. On Linux, run with HEADED=1 (headless Chromium falls back to SwiftShader). To time it anyway, set ALLOW_SOFTWARE=1; the result is marked as software.`,
+    );
+
   // 1. Parity gate: every adapter draws the same seeded frames as the reference.
   const snaps = {};
   for (const a of adapters) {
@@ -259,6 +268,9 @@ const report = {
     cpu: cpus()[0]?.model.trim() ?? "unknown",
     memoryGB: Math.round(totalmem() / 2 ** 30),
     power: power(),
+    // Headed runs show a browser window; on Linux that's what gets the real GPU.
+    headless: !process.env.HEADED,
+    softwareRendering: SOFTWARE.test(gpu),
     note: process.env.NOTE ?? "",
     // "modified": the run used uncommitted changes, so the commit alone doesn't reproduce it.
     commit: `${sh("git rev-parse --short HEAD") || "uncommitted"}${sh("git status --porcelain -- run.mjs src index.html package.json") ? ", modified" : ""}`,

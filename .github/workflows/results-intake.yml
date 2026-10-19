@@ -33,7 +33,7 @@ jobs:
         if: steps.intake.outputs.ok == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-          FILE: ${{ steps.intake.outputs.file }}
+          FILES: ${{ steps.intake.outputs.files }}
           DEVICE: ${{ steps.intake.outputs.device }}
           SUMMARY: ${{ steps.intake.outputs.summary }}
           ISSUE: ${{ github.event.issue.number }}
@@ -42,13 +42,13 @@ jobs:
           git config user.name "2dbench results bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B "$branch"
-          git add "$FILE"
+          echo "$FILES" | while IFS= read -r f; do [ -n "$f" ] && git add "$f"; done
           git commit -m "Results: $DEVICE (#$ISSUE)"
           git push --force origin "$branch"
           if gh pr view "$branch" --json number >/dev/null 2>&1; then
             gh issue comment "$ISSUE" --body "Updated the pull request with your edit: $(gh pr view "$branch" --json url --jq .url)"
           else
             url=$(gh pr create --head "$branch" --title "Results: $DEVICE" --label results \
-              --body "Adds \`$FILE\` from #$ISSUE ($SUMMARY). Validated automatically; a maintainer checks it looks plausible and merges. Closes #$ISSUE.")
+              --body "Adds results from #$ISSUE: $SUMMARY. Validated automatically; a maintainer checks it looks plausible and merges. Closes #$ISSUE.")
             gh issue comment "$ISSUE" --body "Thank you! Your results passed validation and are in $url. Once it's merged they appear on the [community results page](https://debuffjp.github.io/2dbench/results.html)."
           fi

@@ -23,6 +23,8 @@ export function validate(r) {
   if (typeof r.date !== "string" || Number.isNaN(Date.parse(r.date))) problems.push("`date` is missing or not a date.");
   const env = r.environment ?? {};
   if (typeof env.gpu !== "string" && typeof env.userAgent !== "string") problems.push("`environment` has neither a GPU string nor a user agent.");
+  if (/SwiftShader|llvmpipe|softpipe|Microsoft Basic Render/i.test(String(env.gpu ?? "")))
+    problems.push(`The GPU is software-rendered (${env.gpu}), so the timings don't measure a GPU. On Linux, run with HEADED=1 (see the README).`);
   let cells = 0;
   const scenes = [];
   if (kind === "runner") {

@@ -23,6 +23,8 @@
 | `cpu` | The first CPU model string reported by Node. |
 | `memoryGB` | RAM visible to the OS, rounded. |
 | `power` | Power source and plan, detected on Windows; elsewhere it says it wasn't detected. Laptops throttle on battery. |
+| `headless` | Whether the browser ran without a window. `false` means `HEADED=1`, which Linux needs for real-GPU rendering. Missing in files made before this field existed. |
+| `softwareRendering` | `true` if the GPU string is a software renderer (SwiftShader, llvmpipe). Timed runs refuse this unless `ALLOW_SOFTWARE=1`, and the dataset doesn't accept it. |
 | `note` | Free text from the `NOTE` environment variable, for anything the runner can't detect (device model, battery saver, thermal state). |
 | `commit` | The 2dbench commit that produced the file, or `uncommitted`. |
 
