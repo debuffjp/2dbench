@@ -96,6 +96,7 @@ async function run(): Promise<void> {
   $<HTMLButtonElement>("copy").disabled = true;
   $<HTMLButtonElement>("send").disabled = true;
   $<HTMLButtonElement>("submit").disabled = true;
+  $<HTMLButtonElement>("anon").disabled = true;
   $("results").innerHTML = "";
   const startBattery = await battery();
   const results: Record<string, Record<string, { maxAt60fps: number; counts: Record<number, number[]> }>> = {};
@@ -138,10 +139,11 @@ async function run(): Promise<void> {
       environment: { ...environment(), battery: { start: startBattery, end: await battery() } },
       results,
     };
-    say("Done. Copy the results and send them over (or open a pull request in debuffjp/debuff).");
+    say("Done. Tap Submit to add your results to the public dataset.");
     $<HTMLButtonElement>("copy").disabled = false;
     $<HTMLButtonElement>("send").disabled = false;
     $<HTMLButtonElement>("submit").disabled = false;
+    $<HTMLButtonElement>("anon").disabled = false;
   } finally {
     $<HTMLButtonElement>("run").disabled = false;
   }
@@ -173,6 +175,24 @@ if (!noteInput.value) noteInput.value = guessDevice();
 $("run").addEventListener("click", () => {
   run().catch((e) => say(`Failed: ${e}`));
 });
+// No account needed: debuff.jp files the results issue for you (the same issue the GitHub form makes),
+// and the intake workflow validates it and opens a pull request.
+const ANON = "https://debuff.jp/api/2dbench/submit";
+$("anon").addEventListener("click", async () => {
+  const button = $<HTMLButtonElement>("anon");
+  button.disabled = true;
+  say("Submitting…");
+  try {
+    const res = await fetch(ANON, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ device: $<HTMLInputElement>("note").value.trim(), report }) });
+    const body = (await res.json().catch(() => ({}))) as { url?: string; error?: string };
+    if (!res.ok || !body.url) throw new Error(body.error ?? `HTTP ${res.status}`);
+    $("status").innerHTML = `Thanks! Submitted: <a href="${body.url}" target="_blank" rel="noopener">${body.url.replace("https://github.com/", "")}</a>. It joins the dataset once checked.`;
+  } catch (e) {
+    button.disabled = false;
+    say(`Couldn't submit (${e instanceof Error ? e.message : e}). Try Submit on GitHub instead.`);
+  }
+});
+
 // Opens the results issue form, pre-filled. GitHub turns the issue into a pull request that adds the
 // results to the dataset (.github/workflows/results-intake.yml). Long JSON doesn't fit in a URL, so then
 // it's copied to the clipboard and the form opens for pasting.
