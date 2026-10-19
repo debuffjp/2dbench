@@ -1,0 +1,27 @@
+name: Submit results
+description: Results from running 2dbench on your device (desktop runner or mobile.html)
+title: "Results: <device>, <browser>"
+labels: [results]
+body:
+  - type: input
+    id: device
+    attributes:
+      label: Device
+      description: Model, and GPU if you know it (e.g. "Pixel 7", "MacBook Air M2", "ThinkPad T14, Intel Iris Xe")
+    validations:
+      required: true
+  - type: input
+    id: conditions
+    attributes:
+      label: Conditions
+      description: Browser and version, plugged in or on battery, power saving on or off, anything else running
+    validations:
+      required: true
+  - type: textarea
+    id: json
+    attributes:
+      label: Results JSON
+      description: Paste the whole JSON from "Copy results" (mobile.html) or the results file (run.mjs), unedited.
+      render: json
+    validations:
+      required: true

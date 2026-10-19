@@ -9,7 +9,8 @@
     "bench": "node run.mjs",
     "dev": "vite",
     "phone": "vite build && vite preview --host --port 4800",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "pages": "BASE=/2dbench/ vite build"
   },
   "dependencies": {
     "pixi.js": "8.22.0",

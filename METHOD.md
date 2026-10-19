@@ -26,7 +26,7 @@ Before timing, each adapter draws the same seeded frame (10 steps in, at 2,000 a
 
 ## Noise and ordering
 
-- Several rounds (default 3). Each round starts every adapter on a fresh page, in a rotated order, so thermal throttling and ordering spread evenly.
+- Several rounds (default 5; see Statistics). Each round starts every adapter on a fresh page, in a rotated order, so thermal throttling and ordering spread evenly.
 - Reported: the median across rounds, with min–max. Ratios between libraries within one run are the signal. Absolute times vary between days, even on the same machine.
 - **Max at 60 fps** is the largest ladder step (1k, 2k, 5k, 10k, 20k, 50k, 100k, …) measured in every round whose median frame is at most 16.7 ms. Steps are up to 2× apart, so treat it as a lower bound.
 - The **published counts** (10k, 50k, 200k) are measured for every adapter in every round, even once a frame exceeds 16.7 ms, so no cell mixes different numbers of rounds.
@@ -41,6 +41,46 @@ Each adapter documents its setup in `setup`, and that text is copied into every 
 
 - **PixiJS** uses its WebGL renderer: on these scenes it measured faster than PixiJS's WebGPU renderer (2026-10-19, RTX 5060 laptop, Chrome 155). `roundPixels` is on, matching the whole-pixel rule (it made no measurable difference to speed). Antialiasing is off, and the ticker is off; `render()` is called directly.
 - The `mixed` scene deliberately uses 4 separate textures rather than an atlas, to measure multi-texture batching. An atlas would help any library that batches per texture. Measured for PixiJS `Sprite`: about 11%, within noise.
+
+## Statistics
+
+Choices here come from a variance study: the `bunny` and `particles` scenes, 7 rounds each, on the RTX 5060 laptop (`results/2026-10-19-win32-{bunny,particles}.json`). Reproduce it with `node variance.mjs <results files>`.
+
+**Why medians.** A frame time distribution has a long right tail (GC pauses, OS interrupts). The median of 100 frames ignores the tail, which `p95FrameMs` reports separately. Across rounds, the median of the per-round medians resists a single bad round, such as a background task waking up.
+
+**How noisy rounds are.** At the published counts (10k, 50k, 200k), one round's median frame differs from another's with a coefficient of variation of **9.2% (median cell)**, and up to 35.8%. The noisiest cells are the fastest ones: frames under about 2 ms, where the browser's timer resolution and scheduling jitter are a large share of the frame. At 10k sprites, the bulk APIs (about 0.5–1.5 ms per frame) varied by 24–36%.
+
+**Why 5 rounds, not 3.** Taking every window of 3 consecutive rounds from the 7, the 3-round median missed the 7-round median by **9.8% (median cell), up to 28.6%**. The ratios between libraries, which is what the claims are about, missed by up to 15% at 50k and 200k, and up to 29% at 10k for the bulk APIs. So the default is now 5 rounds, and every result keeps `roundsFrameMs`, so anyone can compute their own intervals.
+
+**How stable the ratios are.** Per-round ratios between libraries stay in a band. Examples at 7 rounds:
+
+| Scene, pair | Count | Ratio (7-round medians) | Range of per-round ratios |
+| --- | --- | --- | --- |
+| particles, PixiJS `Sprite` / spryte `draw.sprite` | 50k | 3.82× | 3.18–4.07× |
+| particles, PixiJS `ParticleContainer` / spryte `draw.sprites` | 200k | 4.74× | 4.03–5.19× |
+| bunny, PixiJS `Sprite` / spryte `draw.sprite` | 50k | 2.72× | 2.31–3.24× |
+| bunny, PixiJS `ParticleContainer` / spryte `draw.sprites` | 200k | 3.07× | 2.55–3.38× |
+| bunny, PixiJS `ParticleContainer` / spryte `draw.sprites` | 10k | 2.33× | 1.00–4.00× (frames under 1 ms: not meaningful) |
+
+**What we publish:** medians with min–max per count, and ratios at counts where frames are 2 ms or more. Cells under 2 ms are flagged `†` in the runner's table. They aren't wrong, but they're low precision.
+
+**Benchmark design moves ratios.** Every frame includes the shared simulation, so a cheaper simulation leaves more of the frame to the renderer, and ratios grow. 2dbench's structure-of-arrays simulation is lighter than the object-based one in debuff's own bench, and the same two libraries come out further apart here (particles at 200k: about 4.7× here, against 3.8× there). Neither number is "the" ratio. Both are true of their benchmark, which is why every result states its method, and why ratios from different benchmarks shouldn't be mixed.
+
+## Threats to validity
+
+Each threat says what could make a result misleading, and what 2dbench does about it. These are the honest weak spots.
+
+| Threat | Effect | Mitigation | Residual risk |
+| --- | --- | --- | --- |
+| **The sync costs time.** A 1-pixel `readPixels` stalls the pipeline. A real game never does this; it lets frames overlap. | Absolute frame times include one full CPU–GPU round trip, so they're higher than a pipelined game would see. | Every adapter pays the same stall, so ratios are fair. Without it, frames would look as fast as the CPU can queue them, which is far worse. | Renderers that lean on CPU–GPU overlap would do relatively better in a real game than here. |
+| **Headless, automated Chrome.** | Background-tab throttling and compositor differences. | Headless Chrome uses the real GPU (the GPU string is recorded). Frames are timed directly, not through `requestAnimationFrame`, so throttling and vsync don't apply. `mobile.html` runs in a normal tab. | Compositing and presentation costs aren't measured. |
+| **Garbage collection.** | GC pauses inflate some frames. | Medians resist outliers. `p95FrameMs` shows them. Adapters must not allocate per frame unless the library itself does, which is what's being measured. | A GC-heavy library looks better in the median than it feels in play. Read `p95FrameMs` too. |
+| **Thermal throttling and background load.** | Later measurements run hotter. | Rounds rotate the adapter order. The power source and plan are recorded. Min–max is reported. | Long runs on fanless laptops and phones drift. Compare ratios within one file only. |
+| **The simulation is in the timed frame.** | Absolute numbers include the shared simulation, which grows with the sprite count (not yet measured separately). | Identical for every adapter, as in a real game. | Ratios slightly understate differences between renderers. |
+| **Scenes are synthetic.** | Real games mix workloads. | Several scenes, each stating its purpose, with more planned (tilemaps, text, churn). | No benchmark predicts a specific game. Profile your own (for example with myaku). |
+| **One frame of parity.** | A renderer could differ only on frames that weren't checked. | Two counts (2k and 50k) after 10 seeded steps. Adapters draw from the same arrays, so there's no per-frame branching to hide in. | A library that culls only above 50k sprites wouldn't be caught. |
+| **Library setup.** | A badly configured library looks slow. | `setup` is documented in every result. Maintainers have the final say ([CONTRIBUTING](CONTRIBUTING.md)). Alternatives that were measured (WebGPU, atlases, `roundPixels`) are listed above. | Until a library's maintainers review its adapter, treat its numbers as provisional. |
+| **Conflict of interest.** | The project was started by spryte's authors. | Hand-written reference, public method and adapters, outside review for changes that help spryte, and maintainers welcome. | Trust has to be earned over time. Re-run it yourself. |
 
 ## Known limits
 

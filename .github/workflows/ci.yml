@@ -1,0 +1,21 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  parity:
+    # Typecheck and the parity gate: every adapter must draw the same pixels as the reference.
+    # CI has no GPU (Chrome renders WebGL2 in software), so this checks correctness only. Timings here mean nothing.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm run typecheck
+      - run: |
+          for scene in bunny mixed particles; do node run.mjs $scene rounds=0 || exit 1; done
+        env:
+          BROWSER_ARGS: --enable-unsafe-swiftshader --use-angle=swiftshader

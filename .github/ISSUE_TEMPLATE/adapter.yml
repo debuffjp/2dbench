@@ -1,0 +1,25 @@
+name: Adapter is unfair or wrong
+description: A library's adapter isn't set up the way its docs recommend, or draws the wrong thing
+title: "Adapter: <adapter id>: <what's wrong>"
+labels: [adapter]
+body:
+  - type: input
+    id: adapter
+    attributes:
+      label: Adapter id
+      description: For example pixi-particle
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's unfair or wrong
+      description: Link to the library's docs for the recommended setup if you can, and a measurement if you have one.
+    validations:
+      required: true
+  - type: checkboxes
+    id: maintainer
+    attributes:
+      label: Are you a maintainer of this library?
+      options:
+        - label: Yes. Maintainers have the final say on their library's setup (see CONTRIBUTING.md).

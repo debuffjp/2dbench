@@ -16,7 +16,8 @@ import { build, preview } from "vite";
 const root = dirname(fileURLToPath(import.meta.url));
 const SCENE_IDS = ["bunny", "mixed", "particles"];
 const scene = SCENE_IDS.find((s) => process.argv.includes(s)) ?? "bunny";
-const rounds = Number(process.argv.find((a) => a.startsWith("rounds="))?.slice(7) ?? 3);
+// 5 rounds by default: the variance study (METHOD.md, Statistics) found 3 can miss the ratio by 10–15%.
+const rounds = Number(process.argv.find((a) => a.startsWith("rounds="))?.slice(7) ?? 5);
 const COUNTS = [1_000, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000, 200_000, 400_000, 800_000, 1_600_000];
 // Every adapter is measured at these counts in every round, even past the 60 fps budget.
 const PUBLISHED = [10_000, 50_000, 200_000];
@@ -97,7 +98,8 @@ function compare(ref, px) {
 await build({ root, logLevel: "error" });
 const server = await preview({ root, preview: { port: 0 }, logLevel: "error" });
 const base = server.resolvedUrls.local[0];
-const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL ?? "chrome" });
+// BROWSER_ARGS: extra Chrome flags, e.g. software WebGL in CI ("--enable-unsafe-swiftshader").
+const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL ?? "chrome", args: process.env.BROWSER_ARGS?.split(" ").filter(Boolean) ?? [] });
 
 async function dump(name, px, ref) {
   const dir = join(root, "results", "parity");
@@ -209,6 +211,12 @@ try {
   await new Promise((r) => server.httpServer.close(r));
 }
 
+if (rounds === 0) {
+  // Parity only (CI, or a quick check while writing an adapter): nothing timed, so nothing to save.
+  console.log("\nParity passed for every adapter. rounds=0, so no timing and no results file.");
+  process.exit(0);
+}
+
 const median = (xs) => {
   const s = [...xs].sort((a, b) => a - b);
   return s.length % 2 ? s[(s.length - 1) / 2] : (s[s.length / 2 - 1] + s[s.length / 2]) / 2;
@@ -226,6 +234,8 @@ const results = adapters.map((id) => {
         maxFrameMs: Math.max(...frame),
         p95FrameMs: median(runs.map((r) => r.p95FrameMs)),
         submitMs: median(runs.map((r) => r.submitMs)),
+        // Every round's median frame, in round order, so anyone can redo the statistics.
+        roundsFrameMs: frame.map((v) => +v.toFixed(3)),
       };
     })
     .sort((a, b) => a.count - b.count);
@@ -247,7 +257,8 @@ const report = {
     memoryGB: Math.round(totalmem() / 2 ** 30),
     power: power(),
     note: process.env.NOTE ?? "",
-    commit: sh("git rev-parse --short HEAD") || "uncommitted",
+    // "modified": the run used uncommitted changes, so the commit alone doesn't reproduce it.
+    commit: `${sh("git rev-parse --short HEAD") || "uncommitted"}${sh("git status --porcelain -- run.mjs src index.html package.json") ? ", modified" : ""}`,
   },
   method: {
     budgetMs: BUDGET_MS,
@@ -265,10 +276,12 @@ writeFileSync(file, `${JSON.stringify(report, null, 2)}\n`);
 
 const cell = (r, n) => {
   const c = r.counts.find((x) => x.count === n);
-  return c ? `${c.frameMs.toFixed(1)} ms (${c.minFrameMs.toFixed(1)}–${c.maxFrameMs.toFixed(1)})` : "n/a";
+  // † marks frames under 2 ms, where browser timer resolution makes rounds vary by 20–35% (METHOD.md, Statistics).
+  return c ? `${c.frameMs.toFixed(1)} ms (${c.minFrameMs.toFixed(1)}–${c.maxFrameMs.toFixed(1)})${c.frameMs < 2 ? " †" : ""}` : "n/a";
 };
 console.log(`\n${scene}: ${rounds} rounds · ${gpu} · ${report.environment.browser} · ${report.environment.cpu} · ${report.environment.power}\n`);
 console.log(`| Adapter | Version | Max @60fps | ${PUBLISHED.map((n) => `${n / 1000}k`).join(" | ")} |`);
 console.log(`| --- | --- | --- | ${PUBLISHED.map(() => "---").join(" | ")} |`);
 for (const r of results) console.log(`| ${r.label} | ${r.version || "-"} | ${r.maxAt60fps.toLocaleString("en")} | ${PUBLISHED.map((n) => cell(r, n)).join(" | ")} |`);
-console.log(`\nSaved ${file}`);
+console.log("\n† under 2 ms per frame: low precision, compare with care.");
+console.log(`Saved ${file}`);
