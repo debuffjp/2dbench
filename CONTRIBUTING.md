@@ -22,7 +22,7 @@ An adapter must:
 
 ## When a maintainer disagrees with their adapter
 
-Maintainers of a library get the final say on how their library is set up, within the rules above. Open an issue or PR. If the change keeps parity and is idiomatic, it's merged, and published results are re-run. If someone else contests it, the discussion happens in the open on the PR, and the maintainer's documented recommendation wins.
+Maintainers of a library are invited to review how their library is set up, and their recommendation is followed within the rules above. Open an issue or PR. If the change keeps parity and is idiomatic, it's merged, and published results are re-run. If someone else contests it, the discussion happens in the open on the PR, and the maintainer's documented recommendation wins.
 
 ## Changes to the method
 
