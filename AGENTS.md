@@ -19,7 +19,7 @@ Timed runs need a real GPU and are refused on SwiftShader or llvmpipe (check `so
 
 - Every adapter must pass the parity gate (METHOD.md). If yours fails, fix the adapter. Never loosen tolerances to make it pass.
 - Adapters use each library the way its docs recommend. Don't add caches or tricks a game wouldn't use. `setup` describes exactly what the adapter does.
-- Every property a scene declares must change every frame, so nothing can win by skipping unchanged work.
+- Every property a scene declares must keep changing during the run (METHOD.md lists how often), so nothing can win by skipping unchanged work.
 - Published numbers are always measured. Never hand-edit `results/*.json`; `scripts/validate-results.mjs` checks them.
 - When an adapter can't draw a scene identically, it declines via `supports()` and says why in a comment. Don't fake it.
 
