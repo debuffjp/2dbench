@@ -12,8 +12,7 @@ mkdirSync(outDir, { recursive: true });
 // One fixed colour per adapter, the same in every chart.
 const COLOURS = { spryte: "#4ade80", "spryte-bulk": "#22d3ee", "pixi-sprite": "#f472b6", "pixi-particle": "#fbbf24", canvas2d: "#a78bfa" };
 const colour = (id) => COLOURS[id] ?? "#94a3b8";
-// Only current adapters: older result files also hold the retired hand-written WebGL2 reference.
-const current = (report) => ({ ...report, results: report.results.filter((r) => r.adapter in COLOURS) });
+
 const BG = "#0f1115";
 const GRID = "#262a33";
 const TEXT = "#d4d7dd";
@@ -93,13 +92,16 @@ function maxChart(reports) {
   const R = 90;
   const T = 50;
   const rows = reports.reduce((n, r) => n + r.results.length, 0);
-  const H = T + rows * rowH + reports.length * groupGap + 20;
-  const max = Math.max(...reports.flatMap((r) => r.results.map((x) => x.maxAt60fps)));
-  const lx = (v) => (Math.log10(Math.max(v, 1)) / Math.log10(max * 1.5)) * (W - L - R);
+  const H = T + rows * rowH + reports.length * groupGap + 34;
+  // Linear, scaled per scene: bar lengths compare libraries honestly within a scene (2× the sprites is
+  // 2× the bar). Scenes differ in cost by orders of magnitude, so they aren't compared with each other.
+  let lx = (v) => v;
   const s = [`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" ${FONT}>`, `<rect width="${W}" height="${H}" rx="10" fill="${BG}"/>`];
-  s.push(`<text x="20" y="28" fill="${TEXT}" font-size="15" font-weight="600">Most sprites at 60 fps, by scene (log scale, higher is better)</text>`);
+  s.push(`<text x="20" y="28" fill="${TEXT}" font-size="15" font-weight="600">Most sprites at 60 fps (higher is better; each scene on its own scale)</text>`);
   let y = T;
   for (const rep of reports) {
+    const top = Math.max(...rep.results.map((x) => x.maxAt60fps));
+    lx = (v) => (v / top) * (W - L - R);
     s.push(`<text x="20" y="${y + 12}" fill="${TEXT}" font-size="12" font-weight="600">${esc(rep.scene)}</text>`);
     y += 18;
     for (const r of [...rep.results].sort((a, b) => b.maxAt60fps - a.maxAt60fps)) {
@@ -110,6 +112,8 @@ function maxChart(reports) {
     }
     y += groupGap - 18;
   }
+  // Counts are tested in steps (…20k, 50k, 100k…), so "50,000" means it held 60 fps at 50k but not at 100k.
+  s.push(`<text x="20" y="${H - 12}" fill="${MUTED}" font-size="11">Counts are tested in steps (1k, 2k, 5k, 10k, 20k, 50k…): each bar is the last step that held 60 fps.</text>`);
   void ids;
   void labels;
   s.push("</svg>");
@@ -118,7 +122,7 @@ function maxChart(reports) {
 
 const args = process.argv.slice(2);
 const files = args.length ? args : readdirSync(join(root, "results")).filter((f) => f.endsWith(".json")).map((f) => join(root, "results", f));
-const reports = files.map((f) => current({ file: f, ...JSON.parse(readFileSync(f, "utf8")) }));
+const reports = files.map((f) => ({ file: f, ...JSON.parse(readFileSync(f, "utf8")) }));
 for (const r of reports) {
   const name = args.length ? basename(r.file, ".json") : r.scene;
   writeFileSync(join(outDir, `${name}.svg`), `${frameChart(r)}\n`);

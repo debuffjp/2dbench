@@ -78,7 +78,7 @@ let html = "";
 for (const scene of ["bunny", "mixed", "particles", "raycaster"]) {
   const rows = byScene[scene] ?? [];
   if (!rows.length) continue;
-  const adapters = [...new Set(rows.flatMap((r) => Object.keys(r.byAdapter)))].filter((a) => a !== "webgl2-baseline").sort();
+  const adapters = [...new Set(rows.flatMap((r) => Object.keys(r.byAdapter)))].sort();
   html += `<h2>${scene}</h2><p class="dim">Most sprites at 60 fps, then the median frame at 50k sprites (ms). Higher count, lower ms is better. ${rows.length} device${rows.length === 1 ? "" : "s"}.</p>`;
   html += `<div class="scroll"><table><tr><th>Device</th><th>Browser · GPU</th>${adapters.map((a) => `<th>${esc(a)}</th>`).join("")}<th>Rounds</th><th>Data</th></tr>`;
   for (const r of rows.sort((a, b) => a.device.localeCompare(b.device))) {
