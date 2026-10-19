@@ -4,7 +4,7 @@ on:
     branches: [main]
     paths-ignore: ["results/**"]
   pull_request:
-    # Results-only PRs (community submissions) are data: results.yml validates them instead.
+    # Results-only PRs (community submissions) are data, already validated by results-intake.
     paths-ignore: ["results/**"]
 jobs:
   parity:
