@@ -5,6 +5,7 @@
 //   node run.mjs mixed spryte pixi-sprite
 //   NOTE="Pixel 7, battery saver off" node run.mjs     anything the runner can't detect
 //   PARITY_DUMP=1 node run.mjs particles               write parity frames and diffs to results/parity/
+//   HEADED=1 node run.mjs                              visible browser window (Linux: headless falls back to SwiftShader)
 import { execSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { cpus, release, totalmem } from "node:os";
@@ -99,7 +100,9 @@ await build({ root, logLevel: "error" });
 const server = await preview({ root, preview: { port: 0 }, logLevel: "error" });
 const base = server.resolvedUrls.local[0];
 // BROWSER_ARGS: extra Chrome flags, e.g. software WebGL in CI ("--enable-unsafe-swiftshader").
-const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL ?? "chrome", args: process.env.BROWSER_ARGS?.split(" ").filter(Boolean) ?? [] });
+// HEADED: launch a visible window. On Linux, headless Chrome renders with SwiftShader whatever the GPU flags,
+// so the GPU string reads "SwiftShader" and timings are software; a visible window gets the real GPU.
+const browser = await chromium.launch({ headless: !process.env.HEADED, channel: process.env.BROWSER_CHANNEL ?? "chrome", args: process.env.BROWSER_ARGS?.split(" ").filter(Boolean) ?? [] });
 
 async function dump(name, px, ref) {
   const dir = join(root, "results", "parity");

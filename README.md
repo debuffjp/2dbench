@@ -97,6 +97,8 @@ NOTE="Surface Laptop 5, balanced power" node run.mjs particles
 
 This writes `results/<date>-<platform>-<scene>.json` ([format](docs/results.md)) and prints a markdown table. `PARITY_DUMP=1` also writes each adapter's parity frame and a diff image to `results/parity/`.
 
+On Linux, headless Chrome falls back to software rendering (the GPU string reads "SwiftShader"). Run with a visible window instead, and keep the machine idle while it runs: `HEADED=1 node run.mjs particles`. Under Wayland, add `BROWSER_ARGS="--ozone-platform=wayland"`.
+
 **On a phone or tablet:**
 
 - Open **[debuffjp.github.io/2dbench/mobile.html](https://debuffjp.github.io/2dbench/mobile.html)**, fill in the device note, keep the screen on, and tap Run. Then submit the copied JSON with the [results issue template](../../issues/new?template=results.yml).
