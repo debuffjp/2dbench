@@ -1,6 +1,7 @@
 // One adapter, one scene, on a fresh page: ?adapter=<id>&scene=<id>. Exposes window.__bench for the
 // runner (node, run.mjs) and for mobile.html (in an iframe).
 import { ADAPTERS } from "./adapters/index.js";
+import { makeRaycasterAtlas, RaycasterSim } from "./raycaster.js";
 import { makeTextures, SCENES, Simulation } from "./scenes.js";
 import { HEIGHT, WIDTH } from "./types.js";
 
@@ -31,8 +32,10 @@ if (!adapter.supports(scene)) throw new Error(`${adapter.id} doesn't support ${s
 const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
-const sim = new Simulation(scene);
-const instance = await adapter.create(canvas, makeTextures(scene), scene);
+// Each scene brings its own simulation and textures; adapters see only the frame state and textures.
+const sim = scene.id === "raycaster" ? new RaycasterSim() : new Simulation(scene);
+const textures = scene.id === "raycaster" ? [makeRaycasterAtlas()] : makeTextures(scene);
+const instance = await adapter.create(canvas, textures, scene);
 
 export interface Measure {
   count: number;

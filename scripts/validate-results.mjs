@@ -5,7 +5,7 @@
 import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 
-const SCENES = new Set(["bunny", "mixed", "particles"]);
+const SCENES = new Set(["bunny", "mixed", "particles", "raycaster"]);
 const ADAPTER = /^[a-z0-9][a-z0-9-]{1,40}$/;
 const sane = (ms) => typeof ms === "number" && Number.isFinite(ms) && ms >= 0 && ms < 60_000;
 

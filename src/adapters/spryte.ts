@@ -15,14 +15,31 @@ export const spryteSprite: Adapter = {
   id: "spryte",
   label: "spryte draw.sprite",
   package: "spryte",
-  setup: "createRenderer(canvas, { smooth: false }); one draw.sprite per sprite with a reused options object.",
+  setup: "createRenderer(canvas, { smooth: false }); one draw.sprite per sprite with a reused options object. Slice scenes: one reused Frame object whose source rectangle changes per call.",
   supports: () => true,
-  async create(canvas, textures) {
+  async create(canvas, textures, scene) {
     const { draw, gl } = setup(canvas);
     const o = { rotation: 0, scaleX: 1, scaleY: 1, tint: 0xffffffff };
+    // Slices: one reused Frame object, since draw.sprite reads it immediately (no allocation per slice).
+    const frame = { image: textures[0] as HTMLCanvasElement, x: 0, y: 0, w: 1, h: 1 };
+    const slice = { origin: [0, 0] as const, scaleX: 1, scaleY: 1, tint: 0xffffffff };
     return {
       draw(s) {
         draw.begin(BACKGROUND, WIDTH, HEIGHT, 1);
+        if (scene.slices) {
+          for (let i = 0; i < s.count; i++) {
+            frame.x = s.sx[i] as number;
+            frame.y = s.sy[i] as number;
+            frame.w = s.sw[i] as number;
+            frame.h = s.sh[i] as number;
+            slice.scaleX = (s.w[i] as number) / frame.w;
+            slice.scaleY = (s.h[i] as number) / frame.h;
+            slice.tint = s.color[i] as number;
+            draw.sprite(frame, s.x[i] as number, s.y[i] as number, slice);
+          }
+          draw.end();
+          return;
+        }
         for (let i = 0; i < s.count; i++) {
           o.rotation = s.rotation[i] as number;
           o.scaleX = o.scaleY = s.scale[i] as number;
@@ -45,7 +62,8 @@ export const spryteBulk: Adapter = {
   label: "spryte draw.sprites",
   package: "spryte",
   setup: "createRenderer(canvas, { smooth: false }); one draw.sprites per texture per frame, with per-copy scale, rotation and colour arrays.",
-  supports: (scene) => scene.textures === 1,
+  // draw.sprites draws one frame at many positions; slices need a different source region per copy.
+  supports: (scene) => scene.textures === 1 && !scene.slices,
   async create(canvas, textures, scene) {
     const { draw, gl } = setup(canvas);
     let pos = new Float32Array(0);

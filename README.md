@@ -6,7 +6,7 @@ Renderer benchmarks are easy to rig, usually by accident: a library left on a sl
 
 > **Conflict of interest, in the open.** 2dbench was started by the [debuff](https://debuff.jp) project, whose renderer [spryte](https://github.com/debuffjp/spryte) is one of the contestants. The parity reference is PixiJS `Sprite`, the most widely used 2D web renderer, not spryte. Every library's setup is documented, and its maintainers have the final say on it ([CONTRIBUTING](CONTRIBUTING.md)). Changes that help spryte need outside review. If your library is configured badly, please send a PR.
 
-**Status: early.** Three scenes and five adapters, measured on one desktop and one iPhone so far. **Your device would help:** see [Submit your results](#submit-your-results), and the [community results](https://debuffjp.github.io/2dbench/results.html). Phone and other-browser results are the most wanted contribution.
+**Status: early.** Four scenes and five adapters, measured on one desktop and one iPhone so far. **Your device would help:** see [Submit your results](#submit-your-results), and the [community results](https://debuffjp.github.io/2dbench/results.html). Phone and other-browser results are the most wanted contribution.
 
 ## Results so far
 
@@ -37,6 +37,13 @@ Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryz
 | --- | --- | --- | --- | --- | --- |
 | spryte `draw.sprite` | 0.1.0 | 50,000 | 2.5 | 9.9 | 38.9 |
 | PixiJS `Sprite` | 8.22.0 | 10,000 | 6.5 | 33.6 | 141.5 |
+
+**`raycaster`**: enemies in a first-person maze, each visible one drawn as many texture slices, 3 rounds
+
+| Adapter | Version | Max enemies at 60 fps | 10k | 50k | 200k |
+| --- | --- | --- | --- | --- | --- |
+| spryte `draw.sprite` | 0.1.0 | 10,000 | 11.3 | 58.2 | 377.1 |
+| PixiJS `Sprite` | 8.22.0 | 2,000 | 46.4 | 238.7 | 946.6 |
 
 **iPhone** (iOS 26.6.2, Chrome, which uses WebKit on iOS; Apple GPU): `mobile.html`, 1 quick round, 60 frames per count. iOS timers have 1 ms resolution, so these are indicative ([raw](results/community/2026-10-19-iphone-ios-26-chrome.json)).
 
@@ -70,6 +77,8 @@ Parity passed in every scene (desktop; re-checked against PixiJS `Sprite` as the
 | `pixi-sprite` | PixiJS `Sprite` (the parity reference) | all |
 | `pixi-particle` | PixiJS `ParticleContainer` | bunny, particles |
 
+`raycaster` needs a different texture region per sprite. spryte `draw.sprite` and PixiJS `Sprite` do that; the bulk paths (`draw.sprites`, `ParticleContainer`) share one region per call, and Canvas 2D can't tint for the shading, so they sit this one out.
+
 Wanted: Phaser, KAPLAY, Excalibur, LittleJS, three.js, Babylon.js, melonJS, and Canvas 2D in an `OffscreenCanvas` worker. See [Adding a library](#adding-a-library).
 
 ## Scenes
@@ -79,8 +88,9 @@ Wanted: Phaser, KAPLAY, Excalibur, LittleJS, three.js, Babylon.js, melonJS, and 
 | `bunny` | Bounces under gravity. One texture, position only. | Raw sprite throughput: the classic bunnymark. |
 | `mixed` | Also rotates, scales, and changes tint and alpha over time. Drawn from 4 separate textures. | General-purpose sprites, and multi-texture batching. |
 | `particles` | Like `mixed`, from one texture. | Bulk and particle APIs with per-particle properties. |
+| `raycaster` | A retro first-person maze (the Wolfenstein 3D technique): 480 textured wall slices, distance shading, and squish-blob enemies billboarded and clipped column by column. The count is the number of enemies. | Thousands of thin quads per frame, each from a different region of one texture atlas: what raycasters, sprite-sheet animation and tile atlases do. |
 
-Every property a scene uses changes over time, so no library can win by caching values that never change. Planned: tilemaps, text and UI, clipping, render targets and post-effects, object churn (spawn and destroy), texture uploads, startup time and time to first frame, memory over time, and context loss.
+Every property a scene uses changes over time, so no library can win by caching values that never change. In `raycaster`, the shared simulation does all the game work (casting rays, shading, projecting and depth-clipping enemies), and adapters only draw the resulting slices. Planned: text and UI, clipping, render targets and post-effects, texture uploads, startup time and time to first frame, memory over time, and context loss.
 
 ## Run it
 

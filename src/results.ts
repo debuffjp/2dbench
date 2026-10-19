@@ -75,7 +75,7 @@ for (const [path, r] of Object.entries(files)) {
 
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string);
 let html = "";
-for (const scene of ["bunny", "mixed", "particles"]) {
+for (const scene of ["bunny", "mixed", "particles", "raycaster"]) {
   const rows = byScene[scene] ?? [];
   if (!rows.length) continue;
   const adapters = [...new Set(rows.flatMap((r) => Object.keys(r.byAdapter)))].filter((a) => a !== "webgl2-baseline").sort();

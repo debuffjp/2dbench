@@ -15,7 +15,7 @@ import { chromium } from "playwright-core";
 import { build, preview } from "vite";
 
 const root = dirname(fileURLToPath(import.meta.url));
-const SCENE_IDS = ["bunny", "mixed", "particles"];
+const SCENE_IDS = ["bunny", "mixed", "particles", "raycaster"];
 const scene = SCENE_IDS.find((s) => process.argv.includes(s)) ?? "bunny";
 // 5 rounds by default: the variance study (METHOD.md, Statistics) found 3 can miss the ratio by 10–15%.
 const rounds = Number(process.argv.find((a) => a.startsWith("rounds="))?.slice(7) ?? 5);

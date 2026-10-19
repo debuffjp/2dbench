@@ -1,4 +1,4 @@
-import { type FrameState, HEIGHT, SPRITE, type SceneSpec, WIDTH } from "./types.js";
+import { type FrameState, HEIGHT, SPRITE, type SceneSpec, type Sim, WIDTH } from "./types.js";
 
 export const SCENES: Record<string, SceneSpec> = {
   bunny: {
@@ -8,6 +8,7 @@ export const SCENES: Record<string, SceneSpec> = {
     scale: false,
     color: false,
     textures: 1,
+    slices: false,
   },
   mixed: {
     id: "mixed",
@@ -16,6 +17,7 @@ export const SCENES: Record<string, SceneSpec> = {
     scale: true,
     color: true,
     textures: 4,
+    slices: false,
   },
   particles: {
     id: "particles",
@@ -24,6 +26,17 @@ export const SCENES: Record<string, SceneSpec> = {
     scale: true,
     color: true,
     textures: 1,
+    slices: false,
+  },
+  raycaster: {
+    id: "raycaster",
+    description: "Retro first-person maze: 480 textured wall slices, distance shading and billboarded enemies, all as texture slices",
+    rotation: false,
+    scale: false,
+    color: true,
+    textures: 1,
+    slices: true,
+    countMeans: "enemies in the maze (each visible one is drawn as many thin slices)",
   },
 };
 
@@ -50,7 +63,7 @@ export function makeTextures(scene: SceneSpec): HTMLCanvasElement[] {
  * Bunnies bounce under gravity; looks change over time (scale every 4 frames, alpha every 2, tint every 8,
  * rotation every frame), so "dynamic" is honest: no renderer can win by caching values that never change.
  */
-export class Simulation {
+export class Simulation implements Sim {
   readonly state: FrameState;
   private vx = new Float32Array(0);
   private vy = new Float32Array(0);
@@ -66,6 +79,12 @@ export class Simulation {
       rotation: new Float32Array(0),
       color: new Uint32Array(0),
       texture: new Uint8Array(0),
+      sx: new Float32Array(0),
+      sy: new Float32Array(0),
+      sw: new Float32Array(0),
+      sh: new Float32Array(0),
+      w: new Float32Array(0),
+      h: new Float32Array(0),
     };
   }
 

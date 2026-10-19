@@ -17,6 +17,13 @@ export interface SceneSpec {
   color: boolean;
   /** Number of distinct textures sprites are drawn from (separate images, not an atlas). */
   textures: number;
+  /**
+   * Sprites are slices: each draws part of the texture (`sx, sy, sw, sh`, in texture pixels) at any size
+   * (`w, h`), with `x, y` its top-left corner, not its centre. Rotation and scale aren't used.
+   */
+  slices: boolean;
+  /** For `slices` scenes, how many sprites are drawn per unit of `count` varies per frame (e.g. raycaster strips). */
+  countMeans?: string;
 }
 
 /**
@@ -37,6 +44,20 @@ export interface FrameState {
   color: Uint32Array;
   /** Index into the textures array (0 when the scene has one texture). */
   texture: Uint8Array;
+  /** `slices` scenes only: source rectangle in texture pixels, and drawn size. Empty otherwise. */
+  sx: Float32Array;
+  sy: Float32Array;
+  sw: Float32Array;
+  sh: Float32Array;
+  w: Float32Array;
+  h: Float32Array;
+}
+
+/** What `page.ts` drives: a scene's simulation. `count` is the scene's load dial (sprites, or enemies…). */
+export interface Sim {
+  readonly state: FrameState;
+  resize(count: number): void;
+  step(): void;
 }
 
 export interface AdapterInstance {

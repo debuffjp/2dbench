@@ -35,12 +35,51 @@ export const pixiSprite: Adapter = {
   id: "pixi-sprite",
   label: "PixiJS Sprite",
   package: "pixi.js",
-  setup: "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame.",
+  setup: "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame. Slice scenes: a cached Texture per source rectangle on the shared source, and a pool of Sprites shown or hidden as the count changes.",
   supports: () => true,
   async create(canvas, textures, scene): Promise<AdapterInstance> {
     const { PIXI, application, gl } = await app(canvas);
     const texs = textures.map((t) => textureOf(PIXI, t));
     const sprites: Pixi.Sprite[] = [];
+    if (scene.slices) {
+      // Slices: a Texture per source rectangle (cached; PixiJS's way of drawing part of an image), and a
+      // pool of Sprites, shown or hidden as the slice count changes from frame to frame.
+      const base = texs[0] as Pixi.Texture;
+      const frames = new Map<number, Pixi.Texture>();
+      const frameOf = (sx: number, sy: number, sw: number, sh: number) => {
+        const key = ((sx * 4096 + sy) * 128 + sw) * 128 + sh;
+        let t = frames.get(key);
+        if (!t) {
+          t = new PIXI.Texture({ source: base.source, frame: new PIXI.Rectangle(sx, sy, sw, sh) });
+          frames.set(key, t);
+        }
+        return t;
+      };
+      return {
+        draw(s) {
+          for (let i = 0; i < s.count; i++) {
+            let sp = sprites[i];
+            if (!sp) {
+              sp = new PIXI.Sprite(base);
+              sprites.push(sp);
+              application.stage.addChild(sp);
+            }
+            sp.visible = true;
+            sp.texture = frameOf(s.sx[i] as number, s.sy[i] as number, s.sw[i] as number, s.sh[i] as number);
+            sp.x = s.x[i] as number;
+            sp.y = s.y[i] as number;
+            sp.width = s.w[i] as number;
+            sp.height = s.h[i] as number;
+            const c = s.color[i] as number;
+            sp.tint = c >>> 8;
+            sp.alpha = (c & 0xff) / 255;
+          }
+          for (let i = s.count; i < sprites.length; i++) (sprites[i] as Pixi.Sprite).visible = false;
+          application.render();
+        },
+        sync: () => readPixel(gl),
+      };
+    }
     return {
       draw(s) {
         for (let i = 0; i < s.count; i++) {
@@ -75,7 +114,8 @@ export const pixiParticle: Adapter = {
   label: "PixiJS ParticleContainer",
   package: "pixi.js",
   setup: "Application as for Sprite; one ParticleContainer with dynamicProperties set to exactly what the scene changes per frame (position, plus rotation, scale and color where used).",
-  supports: (scene: SceneSpec) => scene.textures === 1,
+  // A ParticleContainer shares one texture region across particles; slices need a different one per sprite.
+  supports: (scene: SceneSpec) => scene.textures === 1 && !scene.slices,
   async create(canvas, textures, scene): Promise<AdapterInstance> {
     const { PIXI, application, gl } = await app(canvas);
     const tex = textureOf(PIXI, textures[0] as HTMLCanvasElement);
