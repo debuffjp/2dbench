@@ -9,7 +9,7 @@
     "cpu": "AMD Ryzen 7 260 w/ Radeon 780M Graphics",
     "memoryGB": 15,
     "power": "AC power, power plan Turbo",
-    "note": "",
+    "note": "Ryzen 7 260 + RTX 5060 laptop",
     "commit": "d6e3ea8, modified (run.mjs: per-round samples and the 5-round default, committed next)"
   },
   "method": {

@@ -1,0 +1,54 @@
+name: results-intake
+# A "results" issue (from the template, or mobile.html's Submit on GitHub) becomes a pull request that adds
+# the results to results/community/. A maintainer reviews and merges it. No servers, nothing scheduled.
+on:
+  issues:
+    types: [opened, edited, labeled]
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+concurrency:
+  group: results-intake-${{ github.event.issue.number }}
+  cancel-in-progress: true
+jobs:
+  intake:
+    if: contains(github.event.issue.labels.*.name, 'results') && github.event.issue.state == 'open'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Reads the issue from the event file; the body is untrusted and only ever parsed as JSON.
+      - id: intake
+        run: node scripts/intake.mjs
+      - name: Ask for a fix
+        if: steps.intake.outputs.ok == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          COMMENT: ${{ steps.intake.outputs.comment }}
+        run: gh issue comment ${{ github.event.issue.number }} --body "$COMMENT"
+      - name: Open or update the pull request
+        if: steps.intake.outputs.ok == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FILE: ${{ steps.intake.outputs.file }}
+          DEVICE: ${{ steps.intake.outputs.device }}
+          SUMMARY: ${{ steps.intake.outputs.summary }}
+          ISSUE: ${{ github.event.issue.number }}
+        run: |
+          branch="results/issue-$ISSUE"
+          git config user.name "2dbench results bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add "$FILE"
+          git commit -m "Results: $DEVICE (#$ISSUE)"
+          git push --force origin "$branch"
+          if gh pr view "$branch" --json number >/dev/null 2>&1; then
+            gh issue comment "$ISSUE" --body "Updated the pull request with your edit: $(gh pr view "$branch" --json url --jq .url)"
+          else
+            url=$(gh pr create --head "$branch" --title "Results: $DEVICE" --label results \
+              --body "Adds \`$FILE\` from #$ISSUE ($SUMMARY). Validated automatically; a maintainer checks it looks plausible and merges. Closes #$ISSUE.")
+            gh issue comment "$ISSUE" --body "Thank you! Your results passed validation and are in $url. Once it's merged they appear on the [community results page](https://debuffjp.github.io/2dbench/results.html)."
+          fi

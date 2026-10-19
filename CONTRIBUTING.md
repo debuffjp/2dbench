@@ -4,7 +4,7 @@
 
 ## Ways to help
 
-- **Run it on your devices** and submit the results (see [docs/results.md](docs/results.md)). Phones, tablets, Chromebooks, integrated GPUs, Safari and Firefox are the most wanted.
+- **Run it on your devices** and submit the results: **Submit on GitHub** in [mobile.html](https://debuffjp.github.io/2dbench/mobile.html), or `node submit.mjs <file>` (see the README). Phones, tablets, Chromebooks, integrated GPUs, Safari and Firefox are the most wanted.
 - **Add a library** (see the README's "Adding a library").
 - **Review your library's adapter.** If you maintain or know a library here well, the most valuable contribution is telling us its adapter isn't how you'd write it.
 - **Add a scene** that measures something real games do and the current scenes don't.

@@ -95,6 +95,7 @@ async function run(): Promise<void> {
   $<HTMLButtonElement>("run").disabled = true;
   $<HTMLButtonElement>("copy").disabled = true;
   $<HTMLButtonElement>("send").disabled = true;
+  $<HTMLButtonElement>("submit").disabled = true;
   $("results").innerHTML = "";
   const startBattery = await battery();
   const results: Record<string, Record<string, { maxAt60fps: number; counts: Record<number, number[]> }>> = {};
@@ -140,6 +141,7 @@ async function run(): Promise<void> {
     say("Done. Copy the results and send them over (or open a pull request in debuffjp/debuff).");
     $<HTMLButtonElement>("copy").disabled = false;
     $<HTMLButtonElement>("send").disabled = false;
+    $<HTMLButtonElement>("submit").disabled = false;
   } finally {
     $<HTMLButtonElement>("run").disabled = false;
   }
@@ -157,10 +159,38 @@ function show(results: Record<string, Record<string, { maxAt60fps: number; count
 $("run").addEventListener("click", () => {
   run().catch((e) => say(`Failed: ${e}`));
 });
+// Opens the results issue form, pre-filled. GitHub turns the issue into a pull request that adds the
+// results to the dataset (.github/workflows/results-intake.yml). Long JSON doesn't fit in a URL, so then
+// it's copied to the clipboard and the form opens for pasting.
+const NEW_ISSUE = "https://github.com/debuffjp/2dbench/issues/new";
+$("submit").addEventListener("click", async () => {
+  const note = $<HTMLInputElement>("note").value.trim();
+  const json = JSON.stringify(report);
+  const params = new URLSearchParams({
+    template: "results.yml",
+    title: `Results: ${note || "my device"}`,
+    device: note,
+    conditions: navigator.userAgent,
+  });
+  const withJson = `${NEW_ISSUE}?${params}&json=${encodeURIComponent(json)}`;
+  if (withJson.length <= 7500) {
+    window.open(withJson, "_blank");
+    say("Opened GitHub with your results filled in: check it and press Submit new issue.");
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(json);
+    say("Your results are copied. GitHub is opening: paste them into Results JSON, then press Submit new issue.");
+  } catch {
+    say("Copy your results with Copy results below, then paste them into Results JSON on GitHub.");
+  }
+  window.open(`${NEW_ISSUE}?${params}`, "_blank");
+});
+
 // Served by `npm run phone`, the computer saves posted results to results/. Elsewhere there's no receiver.
 $("send").addEventListener("click", async () => {
   try {
-    const res = await fetch("./results", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(report) });
+    const res = await fetch("./api/results", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(report) });
     if (!res.ok) throw new Error(String(res.status));
     const { saved } = (await res.json()) as { saved: string };
     say(`Saved on the computer: ${saved}`);

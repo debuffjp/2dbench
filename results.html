@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>2dbench community results</title>
+    <style>
+      :root { color-scheme: dark; --bg: #0d1208; --fg: #e5e7eb; --dim: #8a9479; --lime: #cffb2d; }
+      body { margin: 0; padding: 16px; background: var(--bg); color: var(--fg); font: 14px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; max-width: 1200px; }
+      h1 { font-size: 20px; margin: 0 0 6px; }
+      h2 { font-size: 16px; margin: 28px 0 4px; }
+      a { color: var(--lime); }
+      .dim { color: var(--dim); }
+      .cta { border: 1px solid var(--lime); padding: 12px; margin: 16px 0; }
+      .scroll { overflow-x: auto; }
+      table { border-collapse: collapse; font-size: 12px; min-width: 640px; }
+      th, td { text-align: left; padding: 5px 8px; border-bottom: 1px solid #2a3320; vertical-align: top; }
+      th { color: var(--dim); font-weight: normal; }
+    </style>
+  </head>
+  <body>
+    <h1>2dbench community results</h1>
+    <p class="dim">Every result in the <a href="https://github.com/debuffjp/2dbench">2dbench</a> repository, one row per device. Desktop rows passed the pixel-parity gate; phone rows come from <code>mobile.html</code>. Compare libraries within a row: absolute numbers depend on the device, the day and its temperature.</p>
+    <div class="cta">
+      <b>Is your device missing?</b> Phones, tablets, Chromebooks, older laptops, Safari and Firefox are all wanted.
+      Open <a href="mobile.html">mobile.html</a> on it, tap Run, then <b>Submit on GitHub</b>. It takes a few minutes, and your results land here once merged.
+    </div>
+    <div id="tables"></div>
+    <p class="dim">Data is CC0. Method: <a href="https://github.com/debuffjp/2dbench/blob/main/METHOD.md">METHOD.md</a>.</p>
+    <script type="module" src="/src/results.ts"></script>
+  </body>
+</html>

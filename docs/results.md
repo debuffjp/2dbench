@@ -59,6 +59,14 @@
 | `p95FrameMs` | Median across rounds of each round's 95th-percentile frame: spikes such as garbage collection show here. |
 | `submitMs` | Median across rounds of main-thread time before the GPU sync: the CPU part of the frame. `frameMs - submitMs` is roughly the GPU's share. |
 
+## Phone results (`mobile.html`)
+
+Files from `mobile.html` hold every scene in one file, in a lighter format: `results[scene][adapter] = { maxAt60fps, counts: { "<count>": [one median frame time per round] } }`. `environment` adds `userAgent`, `devicePixelRatio`, `screen`, `cores`, `memoryGB`, `timerResolutionMs` (the smallest step of `performance.now()`: about 0.1 ms in desktop Chrome, 1 ms on iOS) and battery state where the browser exposes it. There's no parity data: phones can't easily ship frames back. Adapters don't change behaviour per device, so desktop parity covers them.
+
+## `submission` (community results)
+
+Files in `results/community/` come from GitHub issues, through the results-intake workflow, which adds `submission: { issue, device, conditions, submittedBy }` from the issue form. Everything else is as the tool wrote it.
+
 ## Submitting results
 
-Run on your device, keep the JSON unedited apart from `note`, and open a pull request adding it under `results/`. Say anything unusual in the PR: an external display, a game running in the background, power saving. A result whose parity gate failed is never written, so every committed file has passed it.
+See the README's "Submit your results". In short: tap **Submit on GitHub** in `mobile.html`, or run `node submit.mjs <file>` for a desktop file. Either opens an issue, which a workflow validates (`scripts/validate-results.mjs`) and turns into a pull request. A result whose parity gate failed is never written, so every desktop file has passed it.

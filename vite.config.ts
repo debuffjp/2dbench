@@ -4,14 +4,14 @@ import { defineConfig, type Plugin } from "vite";
 
 /**
  * `npm run phone` serves the built pages on the LAN. This lets mobile.html send its results back:
- * POST /results saves the JSON to results/<date>-device-<slug>.json, so nothing has to be copied by hand.
+ * POST /api/results saves the JSON to results/<date>-device-<slug>.json, so nothing has to be copied by hand.
  * Only the preview server has it; the GitHub Pages copy is static and mobile.html says so.
  */
 function receiveResults(): Plugin {
   return {
     name: "2dbench-receive-results",
     configurePreviewServer(server) {
-      server.middlewares.use("/results", (req, res) => {
+      server.middlewares.use("/api/results", (req, res) => {
         if (req.method !== "POST") {
           res.statusCode = 405;
           res.end();
@@ -49,5 +49,5 @@ function receiveResults(): Plugin {
 export default defineConfig({
   base: process.env.BASE ?? "/",
   plugins: [receiveResults()],
-  build: { rollupOptions: { input: { main: "index.html", mobile: "mobile.html" } } },
+  build: { rollupOptions: { input: { main: "index.html", mobile: "mobile.html", results: "results.html" } } },
 });

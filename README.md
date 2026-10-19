@@ -6,7 +6,7 @@ Renderer benchmarks are easy to rig, usually by accident: a library left on a sl
 
 > **Conflict of interest, in the open.** 2dbench was started by the [debuff](https://debuff.jp) project, whose renderer [spryte](https://github.com/debuffjp/spryte) is one of the contestants. The parity reference is PixiJS `Sprite`, the most widely used 2D web renderer, not spryte. Every library's setup is documented, and its maintainers have the final say on it ([CONTRIBUTING](CONTRIBUTING.md)). Changes that help spryte need outside review. If your library is configured badly, please send a PR.
 
-**Status: early.** Three scenes and five adapters, measured on one desktop and one iPhone so far. Phone and other-browser results are the most wanted contribution.
+**Status: early.** Three scenes and five adapters, measured on one desktop and one iPhone so far. **Your device would help:** see [Submit your results](#submit-your-results), and the [community results](https://debuffjp.github.io/2dbench/results.html). Phone and other-browser results are the most wanted contribution.
 
 ## Results so far
 
@@ -102,6 +102,18 @@ This writes `results/<date>-<platform>-<scene>.json` ([format](docs/results.md))
 - Open **[debuffjp.github.io/2dbench/mobile.html](https://debuffjp.github.io/2dbench/mobile.html)**, fill in the device note, keep the screen on, and tap Run. Then submit the copied JSON with the [results issue template](../../issues/new?template=results.yml).
 - Or serve it from your computer: run `npm run phone` and open `http://<computer's LAN IP>:4800/mobile.html`. **Send to this computer** then saves the results straight into `results/`.
 
+## Submit your results
+
+The more varied the devices, the more useful the data. Phones, tablets, Chromebooks, integrated GPUs, older laptops, Safari and Firefox are all wanted: they're where renderers differ most, and where most players are.
+
+- **From a phone or any browser:** open [mobile.html](https://debuffjp.github.io/2dbench/mobile.html), type your device model, tap **Run**, then **Submit on GitHub**. It opens a pre-filled issue, and nothing is sent until you press Submit there.
+- **From a desktop run:** `node submit.mjs results/<file>.json`. It validates the file, shows exactly what will be public, asks for your device model, and opens the issue with the GitHub CLI (`gh`).
+- **By hand:** open a [results issue](../../issues/new?template=results.yml) and paste the JSON.
+
+**What happens next:** a workflow checks the JSON. If it can't be accepted, it says why on the issue, and editing the issue re-runs it. If it can, the workflow opens a pull request adding it to `results/community/` and links it on your issue. A maintainer checks it looks plausible and merges. The [community results page](https://debuffjp.github.io/2dbench/results.html) rebuilds from the repository, so it appears there. No server or database is involved: it's all in this repository, in the open.
+
+**What's public:** the results file, which holds timings, the browser user agent, GPU string, CPU and OS where known, and your device note, plus your GitHub username on the issue. Nothing else is collected. Results data is released under [CC0](https://creativecommons.org/publicdomain/zero/1.0/), so anyone can reuse it.
+
 ## Method, in brief
 
 1. **Same work.** Scenes own a seeded simulation and hand every adapter the same typed arrays each frame. Adapters only draw. Same textures, 960×540, nearest filtering, no antialiasing, unrotated sprites on whole pixels.
@@ -131,7 +143,8 @@ The adapters in `src/adapters/` are short and worth reading as examples. If you 
 - [CONTRIBUTING.md](CONTRIBUTING.md): adapter rules, maintainer review, method changes, conflicts of interest.
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 - CI runs the typecheck and the parity gate on every pull request (software WebGL, so correctness only).
+- [Community results](https://debuffjp.github.io/2dbench/results.html): every submitted device, rebuilt on each merge.
 
 ## Licence
 
-MIT. Library adapters use each library under its own licence.
+Code: MIT. Results data (`results/`): CC0. Library adapters use each library under its own licence.
