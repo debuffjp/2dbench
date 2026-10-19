@@ -4,7 +4,7 @@
 
 Renderer benchmarks are easy to rig, usually by accident: a library left on a slow default, scenes that favour one design, timing that vsync hides, numbers from one lucky run. 2dbench is built so that's hard to do and easy to check.
 
-> **Conflict of interest, in the open.** 2dbench was started by the [debuff](https://debuff.jp) project, whose renderer [spryte](https://github.com/debuffjp/spryte) is one of the contestants. The parity reference is PixiJS `Sprite`, the most widely used 2D web renderer, not spryte. Every library's setup is documented, and its maintainers have the final say on it ([CONTRIBUTING](CONTRIBUTING.md)). Changes that help spryte need outside review. If your library is configured badly, please send a PR.
+> **Conflict of interest, in the open.** 2dbench was started by the [debuff](https://debuff.jp) project, whose renderer [spryte](https://github.com/debuffjp/spryte) is one of the contestants. The parity reference is PixiJS `Sprite`, the most widely used 2D web renderer, not spryte. Every library's setup is documented, and library maintainers are invited to review theirs ([CONTRIBUTING](CONTRIBUTING.md)). If your library is configured badly, please send a PR.
 
 **Status: early.** Four scenes and five adapters, measured on one desktop and one iPhone so far. **Your device would help:** see [Submit your results](#submit-your-results), and the [community results](https://debuffjp.github.io/2dbench/results.html). Phone and other-browser results are the most wanted contribution.
 
@@ -156,7 +156,7 @@ The reasons for each choice, and the threats to validity, are in **[METHOD.md](M
    - `sync()`: a 1-pixel `readPixels` on the library's context.
 3. Register it in [`src/adapters/index.ts`](src/adapters/index.ts), run `node run.mjs <scene> <id> rounds=0` until parity passes, then open a PR.
 
-The adapters in `src/adapters/` are short and worth reading as examples. If you maintain a library here, please review its adapter: you have the final say ([CONTRIBUTING](CONTRIBUTING.md)).
+The adapters in `src/adapters/` are short and worth reading as examples. If you maintain a library here, please review its adapter: corrections that keep parity are merged and results rerun ([CONTRIBUTING](CONTRIBUTING.md)).
 
 ## Project
 
