@@ -1,0 +1,920 @@
+{
+  "date": "2026-10-19T06:23:40.778Z",
+  "scene": "bunny",
+  "rounds": 7,
+  "environment": {
+    "gpu": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 4080 Laptop GPU/PCIe/SSE2, OpenGL ES 3.2)",
+    "browser": "Chrome 156.0.8078.4",
+    "os": "linux 7.2.11-1-cachyos x64",
+    "cpu": "13th Gen Intel(R) Core(TM) i9-13900HX",
+    "memoryGB": 31,
+    "power": "not detected on this OS; add it to NOTE",
+    "note": "Linux CachyOS, niri Wayland, AC power, power profile performance, Playwright Chromium 156 headed",
+    "commit": "6f74094, modified"
+  },
+  "method": {
+    "budgetMs": 16.666666666666668,
+    "framesPerCount": 100,
+    "warmupFrames": 20,
+    "publishedCounts": [
+      10000,
+      50000,
+      200000
+    ],
+    "timing": "simulation through GPU completion (1-pixel readback); median per count per round, then median across rounds",
+    "parity": {
+      "counts": [
+        2000,
+        50000
+      ],
+      "tolerance": 8,
+      "reference": "pixi-sprite",
+      "gate": {
+        "coveragePercent": [
+          99.5,
+          100.5
+        ],
+        "maxInteriorDifferingPercent": 0.5
+      }
+    }
+  },
+  "results": [
+    {
+      "adapter": "pixi-sprite",
+      "label": "PixiJS Sprite",
+      "package": "pixi.js",
+      "version": "8.22.0",
+      "setup": "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame.",
+      "maxAt60fps": 50000,
+      "parity": {
+        "2000": {
+          "drawnPixels": 172260,
+          "differingPercent": 0,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 317440,
+          "differingPercent": 0,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 7,
+          "frameMs": 1.199999999254942,
+          "minFrameMs": 0.8999999985098839,
+          "maxFrameMs": 1.299999998882413,
+          "p95FrameMs": 1.5,
+          "submitMs": 0.2999999988824129,
+          "roundsFrameMs": [
+            0.9,
+            1.2,
+            1.3,
+            1.2,
+            1.1,
+            0.9,
+            1.2
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 7,
+          "frameMs": 1.099999999627471,
+          "minFrameMs": 0.6000000014901161,
+          "maxFrameMs": 1.5,
+          "p95FrameMs": 1.5,
+          "submitMs": 0.40000000037252903,
+          "roundsFrameMs": [
+            0.6,
+            1.5,
+            1.2,
+            1.1,
+            1.1,
+            0.9,
+            1.3
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 7,
+          "frameMs": 1.799999998882413,
+          "minFrameMs": 1.699999999254942,
+          "maxFrameMs": 2,
+          "p95FrameMs": 2.199999999254942,
+          "submitMs": 1,
+          "roundsFrameMs": [
+            1.8,
+            1.8,
+            1.7,
+            1.8,
+            2,
+            1.7,
+            1.9
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 7,
+          "frameMs": 2.900000000372529,
+          "minFrameMs": 2.799999998882413,
+          "maxFrameMs": 2.900000000372529,
+          "p95FrameMs": 3.200000001117587,
+          "submitMs": 1.8999999985098839,
+          "roundsFrameMs": [
+            2.9,
+            2.9,
+            2.8,
+            2.9,
+            2.9,
+            2.9,
+            2.9
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 7,
+          "frameMs": 5.099999999627471,
+          "minFrameMs": 5,
+          "maxFrameMs": 5.400000000372529,
+          "p95FrameMs": 5.700000001117587,
+          "submitMs": 3.800000000745058,
+          "roundsFrameMs": [
+            5.3,
+            5.2,
+            5,
+            5.4,
+            5,
+            5.1,
+            5
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 7,
+          "frameMs": 14.400000000372529,
+          "minFrameMs": 13.400000000372529,
+          "maxFrameMs": 15.400000000372529,
+          "p95FrameMs": 15.300000000745058,
+          "submitMs": 11,
+          "roundsFrameMs": [
+            14,
+            14.7,
+            13.6,
+            13.4,
+            14.5,
+            15.4,
+            14.4
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 7,
+          "frameMs": 33.30000000074506,
+          "minFrameMs": 28.299999998882413,
+          "maxFrameMs": 35.90000000037253,
+          "p95FrameMs": 35.40000000037253,
+          "submitMs": 24.799999998882413,
+          "roundsFrameMs": [
+            33.2,
+            33.4,
+            30.8,
+            28.3,
+            33.4,
+            33.3,
+            35.9
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 7,
+          "frameMs": 65.09999999962747,
+          "minFrameMs": 50.30000000074506,
+          "maxFrameMs": 68.40000000037253,
+          "p95FrameMs": 67.19999999925494,
+          "submitMs": 56.79999999888241,
+          "roundsFrameMs": [
+            65.9,
+            63.1,
+            65.1,
+            63.5,
+            65.8,
+            50.3,
+            68.4
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "pixi-particle",
+      "label": "PixiJS ParticleContainer",
+      "package": "pixi.js",
+      "version": "8.22.0",
+      "setup": "Application as for Sprite; one ParticleContainer with dynamicProperties set to exactly what the scene changes per frame (position, plus rotation, scale and color where used).",
+      "maxAt60fps": 200000,
+      "parity": {
+        "2000": {
+          "drawnPixels": 172260,
+          "differingPercent": 0,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 317440,
+          "differingPercent": 0,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 7,
+          "frameMs": 0.7000000011175871,
+          "minFrameMs": 0.2999999988824129,
+          "maxFrameMs": 0.900000000372529,
+          "p95FrameMs": 1.300000000745058,
+          "submitMs": 0.09999999962747097,
+          "roundsFrameMs": [
+            0.9,
+            0.6,
+            0.8,
+            0.9,
+            0.4,
+            0.3,
+            0.7
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 7,
+          "frameMs": 0.30000000074505806,
+          "minFrameMs": 0.2000000011175871,
+          "maxFrameMs": 0.8999999985098839,
+          "p95FrameMs": 0.900000000372529,
+          "submitMs": 0.09999999962747097,
+          "roundsFrameMs": [
+            0.6,
+            0.7,
+            0.2,
+            0.3,
+            0.9,
+            0.2,
+            0.2
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 7,
+          "frameMs": 0.900000000372529,
+          "minFrameMs": 0.40000000037252903,
+          "maxFrameMs": 1.099999999627471,
+          "p95FrameMs": 1.200000001117587,
+          "submitMs": 0.2000000011175871,
+          "roundsFrameMs": [
+            0.6,
+            1.1,
+            0.9,
+            0.4,
+            0.8,
+            1,
+            0.9
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 7,
+          "frameMs": 1.099999999627471,
+          "minFrameMs": 0.7000000011175871,
+          "maxFrameMs": 1.299999998882413,
+          "p95FrameMs": 1.300000000745058,
+          "submitMs": 0.40000000037252903,
+          "roundsFrameMs": [
+            1.1,
+            1.2,
+            1.3,
+            0.7,
+            1,
+            0.9,
+            1.1
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 7,
+          "frameMs": 1.5,
+          "minFrameMs": 1.200000001117587,
+          "maxFrameMs": 1.599999999627471,
+          "p95FrameMs": 1.799999998882413,
+          "submitMs": 0.6999999992549419,
+          "roundsFrameMs": [
+            1.4,
+            1.6,
+            1.5,
+            1.5,
+            1.6,
+            1.3,
+            1.2
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 7,
+          "frameMs": 2.900000000372529,
+          "minFrameMs": 2.5,
+          "maxFrameMs": 3,
+          "p95FrameMs": 3.099999999627471,
+          "submitMs": 1.599999999627471,
+          "roundsFrameMs": [
+            2.9,
+            2.8,
+            2.9,
+            2.9,
+            2.5,
+            3,
+            2.8
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 7,
+          "frameMs": 5.199999999254942,
+          "minFrameMs": 5,
+          "maxFrameMs": 5.5,
+          "p95FrameMs": 5.800000000745058,
+          "submitMs": 3.400000000372529,
+          "roundsFrameMs": [
+            5.2,
+            5.2,
+            5.5,
+            5.1,
+            5,
+            5.4,
+            5.5
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 7,
+          "frameMs": 11.400000000372529,
+          "minFrameMs": 10.200000001117587,
+          "maxFrameMs": 11.900000000372529,
+          "p95FrameMs": 12.300000000745058,
+          "submitMs": 6.699999999254942,
+          "roundsFrameMs": [
+            11.7,
+            11.4,
+            11.6,
+            11.9,
+            10.2,
+            11.1,
+            10.5
+          ]
+        },
+        {
+          "count": 400000,
+          "runs": 7,
+          "frameMs": 30,
+          "minFrameMs": 29.200000001117587,
+          "maxFrameMs": 30.299999998882413,
+          "p95FrameMs": 31.600000001490116,
+          "submitMs": 15,
+          "roundsFrameMs": [
+            29.9,
+            29.2,
+            30,
+            30.2,
+            29.9,
+            30.3,
+            30
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "spryte",
+      "label": "spryte draw.sprite",
+      "package": "spryte",
+      "version": "0.1.0",
+      "setup": "createRenderer(canvas, { smooth: false }); one draw.sprite per sprite with a reused options object.",
+      "maxAt60fps": 100000,
+      "parity": {
+        "2000": {
+          "drawnPixels": 172298,
+          "differingPercent": 0.04,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 317499,
+          "differingPercent": 0.08,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 7,
+          "frameMs": 1.099999999627471,
+          "minFrameMs": 0.7999999988824129,
+          "maxFrameMs": 1.199999999254942,
+          "p95FrameMs": 2.299999998882413,
+          "submitMs": 0.19999999925494194,
+          "roundsFrameMs": [
+            1,
+            1.2,
+            1.1,
+            1.1,
+            1.1,
+            0.8,
+            1.2
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 7,
+          "frameMs": 0.900000000372529,
+          "minFrameMs": 0.8000000007450581,
+          "maxFrameMs": 1.099999999627471,
+          "p95FrameMs": 1.300000000745058,
+          "submitMs": 0.2999999988824129,
+          "roundsFrameMs": [
+            0.9,
+            0.8,
+            0.8,
+            1,
+            0.9,
+            1.1,
+            0.9
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 7,
+          "frameMs": 1.400000000372529,
+          "minFrameMs": 1.1000000014901161,
+          "maxFrameMs": 1.6000000014901161,
+          "p95FrameMs": 1.800000000745058,
+          "submitMs": 0.599999999627471,
+          "roundsFrameMs": [
+            1.5,
+            1.4,
+            1.2,
+            1.1,
+            1.3,
+            1.4,
+            1.6
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 7,
+          "frameMs": 2,
+          "minFrameMs": 1.700000001117587,
+          "maxFrameMs": 2.099999999627471,
+          "p95FrameMs": 2.200000001117587,
+          "submitMs": 1.199999999254942,
+          "roundsFrameMs": [
+            2,
+            2,
+            2,
+            1.9,
+            2.1,
+            1.9,
+            1.7
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 7,
+          "frameMs": 3.300000000745058,
+          "minFrameMs": 3.299999998882413,
+          "maxFrameMs": 3.400000000372529,
+          "p95FrameMs": 3.599999999627471,
+          "submitMs": 2.300000000745058,
+          "roundsFrameMs": [
+            3.4,
+            3.3,
+            3.3,
+            3.4,
+            3.3,
+            3.3,
+            3.4
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 7,
+          "frameMs": 7.200000001117587,
+          "minFrameMs": 7,
+          "maxFrameMs": 7.300000000745058,
+          "p95FrameMs": 7.700000001117587,
+          "submitMs": 5.699999999254942,
+          "roundsFrameMs": [
+            7.2,
+            7,
+            7.3,
+            7.3,
+            7.2,
+            7.2,
+            7.3
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 7,
+          "frameMs": 14.900000000372529,
+          "minFrameMs": 13.200000001117587,
+          "maxFrameMs": 15.599999999627471,
+          "p95FrameMs": 15.400000000372529,
+          "submitMs": 11.200000001117587,
+          "roundsFrameMs": [
+            15.6,
+            14.8,
+            13.2,
+            14.9,
+            14.9,
+            14.9,
+            13.8
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 7,
+          "frameMs": 31.700000001117587,
+          "minFrameMs": 28,
+          "maxFrameMs": 33.20000000111759,
+          "p95FrameMs": 33.90000000037253,
+          "submitMs": 22.5,
+          "roundsFrameMs": [
+            33.2,
+            31.6,
+            28,
+            31.7,
+            31.8,
+            31.9,
+            28.2
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "spryte-bulk",
+      "label": "spryte draw.sprites",
+      "package": "spryte",
+      "version": "0.1.0",
+      "setup": "createRenderer(canvas, { smooth: false }); one draw.sprites per texture per frame, with per-copy scale, rotation and colour arrays.",
+      "maxAt60fps": 400000,
+      "parity": {
+        "2000": {
+          "drawnPixels": 172298,
+          "differingPercent": 0.04,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 317499,
+          "differingPercent": 0.08,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 7,
+          "frameMs": 0.8000000007450581,
+          "minFrameMs": 0.3999999985098839,
+          "maxFrameMs": 1.099999999627471,
+          "p95FrameMs": 1.699999999254942,
+          "submitMs": 0.09999999962747097,
+          "roundsFrameMs": [
+            0.4,
+            1.1,
+            0.7,
+            1,
+            0.8,
+            0.9,
+            0.4
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 7,
+          "frameMs": 0.30000000074505806,
+          "minFrameMs": 0.2000000011175871,
+          "maxFrameMs": 0.900000000372529,
+          "p95FrameMs": 1,
+          "submitMs": 0,
+          "roundsFrameMs": [
+            0.2,
+            0.2,
+            0.9,
+            0.3,
+            0.6,
+            0.2,
+            0.6
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 7,
+          "frameMs": 0.30000000074505806,
+          "minFrameMs": 0.2000000011175871,
+          "maxFrameMs": 0.7999999988824129,
+          "p95FrameMs": 1,
+          "submitMs": 0.09999999962747097,
+          "roundsFrameMs": [
+            0.2,
+            0.4,
+            0.3,
+            0.4,
+            0.8,
+            0.2,
+            0.3
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 7,
+          "frameMs": 0.40000000037252903,
+          "minFrameMs": 0.30000000074505806,
+          "maxFrameMs": 1.099999999627471,
+          "p95FrameMs": 0.8000000007450581,
+          "submitMs": 0.09999999962747097,
+          "roundsFrameMs": [
+            0.4,
+            1.1,
+            0.4,
+            0.5,
+            0.3,
+            0.5,
+            0.3
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 7,
+          "frameMs": 0.8000000007450581,
+          "minFrameMs": 0.5,
+          "maxFrameMs": 1.099999999627471,
+          "p95FrameMs": 1.200000001117587,
+          "submitMs": 0.2999999988824129,
+          "roundsFrameMs": [
+            0.5,
+            1.1,
+            0.8,
+            0.7,
+            0.9,
+            0.8,
+            0.6
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 7,
+          "frameMs": 1.6000000014901161,
+          "minFrameMs": 1.200000001117587,
+          "maxFrameMs": 2.099999999627471,
+          "p95FrameMs": 2,
+          "submitMs": 0.599999999627471,
+          "roundsFrameMs": [
+            1.9,
+            1.2,
+            1.6,
+            2.1,
+            1.5,
+            1.5,
+            1.8
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 7,
+          "frameMs": 2.400000000372529,
+          "minFrameMs": 2.299999998882413,
+          "maxFrameMs": 2.700000001117587,
+          "p95FrameMs": 2.599999999627471,
+          "submitMs": 1.099999999627471,
+          "roundsFrameMs": [
+            2.3,
+            2.4,
+            2.5,
+            2.7,
+            2.3,
+            2.3,
+            2.5
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 7,
+          "frameMs": 4.099999999627471,
+          "minFrameMs": 3.900000000372529,
+          "maxFrameMs": 4.900000000372529,
+          "p95FrameMs": 4.400000000372529,
+          "submitMs": 2.200000001117587,
+          "roundsFrameMs": [
+            3.9,
+            4.1,
+            4.7,
+            4.9,
+            4,
+            4.1,
+            4.4
+          ]
+        },
+        {
+          "count": 400000,
+          "runs": 7,
+          "frameMs": 7.900000000372529,
+          "minFrameMs": 7.300000000745058,
+          "maxFrameMs": 9.5,
+          "p95FrameMs": 8.800000000745058,
+          "submitMs": 4.400000000372529,
+          "roundsFrameMs": [
+            7.3,
+            7.9,
+            9.5,
+            9.3,
+            7.6,
+            7.7,
+            8.8
+          ]
+        },
+        {
+          "count": 800000,
+          "runs": 7,
+          "frameMs": 17.299999998882413,
+          "minFrameMs": 15.400000000372529,
+          "maxFrameMs": 18.299999998882413,
+          "p95FrameMs": 19,
+          "submitMs": 9,
+          "roundsFrameMs": [
+            16.4,
+            15.4,
+            18.2,
+            18.3,
+            17.3,
+            17.4,
+            16.8
+          ]
+        },
+        {
+          "count": 1600000,
+          "runs": 2,
+          "frameMs": 82.5,
+          "minFrameMs": 80.59999999962747,
+          "maxFrameMs": 84.40000000037253,
+          "p95FrameMs": 89.1499999994412,
+          "submitMs": 53.950000000186265,
+          "roundsFrameMs": [
+            84.4,
+            80.6
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "canvas2d",
+      "label": "Canvas 2D drawImage",
+      "package": "",
+      "version": "",
+      "setup": "getContext('2d', { alpha: false }), imageSmoothingEnabled = false, one drawImage per sprite.",
+      "maxAt60fps": 5000,
+      "parity": {
+        "2000": {
+          "drawnPixels": 172298,
+          "differingPercent": 0.04,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 317499,
+          "differingPercent": 0.08,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 7,
+          "frameMs": 3.099999999627471,
+          "minFrameMs": 3.099999999627471,
+          "maxFrameMs": 3.100000001490116,
+          "p95FrameMs": 3.400000000372529,
+          "submitMs": 1.200000001117587,
+          "roundsFrameMs": [
+            3.1,
+            3.1,
+            3.1,
+            3.1,
+            3.1,
+            3.1,
+            3.1
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 7,
+          "frameMs": 5.5,
+          "minFrameMs": 5.5,
+          "maxFrameMs": 5.699999999254942,
+          "p95FrameMs": 7,
+          "submitMs": 2.5,
+          "roundsFrameMs": [
+            5.5,
+            5.5,
+            5.5,
+            5.6,
+            5.6,
+            5.5,
+            5.7
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 7,
+          "frameMs": 15.100000001490116,
+          "minFrameMs": 15.099999999627471,
+          "maxFrameMs": 15.200000001117587,
+          "p95FrameMs": 15.5,
+          "submitMs": 13.400000000372529,
+          "roundsFrameMs": [
+            15.1,
+            15.1,
+            15.2,
+            15.2,
+            15.1,
+            15.2,
+            15.1
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 7,
+          "frameMs": 32.09999999962747,
+          "minFrameMs": 31.90000000037253,
+          "maxFrameMs": 32.20000000111759,
+          "p95FrameMs": 33,
+          "submitMs": 26.799999998882413,
+          "roundsFrameMs": [
+            32.1,
+            31.9,
+            32,
+            32.1,
+            32.1,
+            32,
+            32.2
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 7,
+          "frameMs": 162.19999999925494,
+          "minFrameMs": 160.90000000037253,
+          "maxFrameMs": 162.60000000149012,
+          "p95FrameMs": 306.30000000074506,
+          "submitMs": 155.90000000037253,
+          "roundsFrameMs": [
+            162.6,
+            162.1,
+            161.9,
+            162.2,
+            162.3,
+            160.9,
+            162.2
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 7,
+          "frameMs": 656.3999999985099,
+          "minFrameMs": 653.6999999992549,
+          "maxFrameMs": 670.0999999996275,
+          "p95FrameMs": 931.2999999988824,
+          "submitMs": 651.9000000003725,
+          "roundsFrameMs": [
+            661.9,
+            656.3,
+            654.5,
+            670.1,
+            656.4,
+            653.7,
+            669.1
+          ]
+        }
+      ]
+    }
+  ],
+  "submission": {
+    "issue": 6,
+    "device": "Lenovo Legion Pro 7 16IRX8H, NVIDIA GeForce RTX 4080 Laptop GPU (ANGLE, OpenGL ES 3.2), Intel Core i9-13900HX, 32 GB",
+    "conditions": "Playwright Chromium 156.0.8078.4 (headed, `--ozone-platform=wayland`), CachyOS Linux 7.2.11, niri (Wayland) compositor rendering on the dGPU in hybrid mode (internal panel scanned out by the Intel iGPU). On AC power, power-profiles-daemon set to `performance`. Machine idle during the run. Rounds: bu",
+    "submittedBy": "LoopyJack"
+  }
+}
