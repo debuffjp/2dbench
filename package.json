@@ -10,7 +10,9 @@
     "dev": "vite",
     "phone": "vite build && vite preview --host --port 4800",
     "typecheck": "tsc --noEmit",
-    "pages": "BASE=/2dbench/ vite build"
+    "pages": "BASE=/2dbench/ vite build",
+    "list": "node run.mjs --list",
+    "parity": "node run.mjs rounds=0"
   },
   "dependencies": {
     "pixi.js": "8.22.0",

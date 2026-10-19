@@ -1,0 +1,31 @@
+name: Propose a scenario or improve one
+description: A new benchmark scene, or a change to an existing one. Humans and agents both welcome.
+title: "Scenario: <name>"
+labels: [scenario]
+body:
+  - type: textarea
+    id: workload
+    attributes:
+      label: What real game workload does it represent?
+      description: The kind of game or effect, and why existing scenes don't cover it.
+    validations:
+      required: true
+  - type: textarea
+    id: spec
+    attributes:
+      label: What's drawn each frame
+      description: Textures, counts, which properties change (position, rotation, scale, colour, source region), and what "count" means.
+    validations:
+      required: true
+  - type: textarea
+    id: fairness
+    attributes:
+      label: Fairness
+      description: Which adapters can draw it identically (parity), which can't and why, and what could let one library win by skipping work.
+    validations:
+      required: true
+  - type: dropdown
+    id: author
+    attributes:
+      label: Written by
+      options: [A person, An AI agent, An agent with a person reviewing]

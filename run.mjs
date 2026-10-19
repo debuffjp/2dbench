@@ -1,11 +1,14 @@
 // 2dbench runner: builds the page, checks every adapter draws the same pixels as the reference, then times
 // each adapter over interleaved rounds and saves results/<date>-<platform>-<scene>.json.
-//   node run.mjs                         bunny scene, every adapter that supports it, 3 rounds
+//   node run.mjs                         bunny scene, every adapter that supports it, 5 rounds
 //   node run.mjs particles rounds=5      another scene, more rounds
 //   node run.mjs mixed spryte pixi-sprite
 //   NOTE="Pixel 7, battery saver off" node run.mjs     anything the runner can't detect
 //   PARITY_DUMP=1 node run.mjs particles               write parity frames and diffs to results/parity/
 //   HEADED=1 node run.mjs                              visible browser window (Linux: headless falls back to SwiftShader)
+//   node run.mjs --list                                scenes, adapters and GPU as JSON; nothing is run
+//   node run.mjs raycaster rounds=0 --json             parity only; progress on stderr, one JSON summary on stdout
+//   node run.mjs --help
 import { execSync } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { cpus, release, totalmem } from "node:os";
@@ -15,6 +18,17 @@ import { chromium } from "playwright-core";
 import { build, preview } from "vite";
 
 const root = dirname(fileURLToPath(import.meta.url));
+const flags = new Set(process.argv.slice(2).filter((a) => a.startsWith("--")));
+if (flags.has("--help")) {
+  // The usage lines at the top of this file are the help text.
+  const lines = readFileSync(fileURLToPath(import.meta.url), "utf8").split("\n");
+  console.log(lines.slice(2, lines.findIndex((l) => l.startsWith("import"))).map((l) => l.replace(/^\/\/ ?/, "")).join("\n"));
+  process.exit(0);
+}
+// --json: stdout carries exactly one JSON document (for agents and scripts); progress goes to stderr.
+const JSON_OUT = flags.has("--json");
+const out = console.log;
+if (JSON_OUT) console.log = (...a) => console.error(...a);
 const SCENE_IDS = ["bunny", "mixed", "particles", "raycaster"];
 const scene = SCENE_IDS.find((s) => process.argv.includes(s)) ?? "bunny";
 // 5 rounds by default: the variance study (METHOD.md, Statistics) found 3 can miss the ratio by 10–15%.
@@ -158,6 +172,16 @@ try {
     return ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : "unknown";
   });
   await lister.close();
+  const known = (a) => a.startsWith("--") || a.startsWith("rounds=") || SCENE_IDS.includes(a) || list.some((x) => x.id === a);
+  const unknown = process.argv.slice(2).filter((a) => !known(a));
+  if (unknown.length)
+    throw new Error(`Unknown argument: ${unknown.join(", ")}. Scenes: ${SCENE_IDS.join(", ")}. Adapters: ${list.map((x) => x.id).join(", ")}. Try --help.`);
+  if (flags.has("--list")) {
+    out(JSON.stringify({ scenes: SCENE_IDS, adapters: list, gpu, softwareRendering: SOFTWARE.test(gpu) }, null, 2));
+    await browser.close();
+    await new Promise((r) => server.httpServer.close(r));
+    process.exit(0);
+  }
   const chosen = process.argv.slice(2).filter((a) => list.some((x) => x.id === a));
   const reference = list[0].id;
   adapters = list.filter((a) => a.scenes.includes(scene) && (!chosen.length || chosen.includes(a.id) || a.id === reference)).map((a) => a.id);
@@ -226,6 +250,7 @@ try {
 if (rounds === 0) {
   // Parity only (CI, or a quick check while writing an adapter): nothing timed, so nothing to save.
   console.log("\nParity passed for every adapter. rounds=0, so no timing and no results file.");
+  if (JSON_OUT) out(JSON.stringify({ scene, gpu, parity: "passed", adapters, details: parity }, null, 2));
   process.exit(0);
 }
 
@@ -300,3 +325,8 @@ console.log(`| --- | --- | --- | ${PUBLISHED.map(() => "---").join(" | ")} |`);
 for (const r of results) console.log(`| ${r.label} | ${r.version || "-"} | ${r.maxAt60fps.toLocaleString("en")} | ${PUBLISHED.map((n) => cell(r, n)).join(" | ")} |`);
 console.log("\n† under 2 ms per frame: low precision, compare with care.");
 console.log(`Saved ${file}`);
+if (JSON_OUT) {
+  const ms = (r) => Object.fromEntries(PUBLISHED.map((n) => [n, r.counts.find((c) => c.count === n)?.frameMs ?? null]));
+  const summary = results.map((r) => ({ adapter: r.adapter, label: r.label, version: r.version, maxAt60fps: r.maxAt60fps, ms: ms(r) }));
+  out(JSON.stringify({ file, scene, rounds, gpu, parity: "passed", results: summary }, null, 2));
+}

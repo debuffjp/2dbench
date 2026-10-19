@@ -153,6 +153,7 @@ The adapters in `src/adapters/` are short and worth reading as examples. If you 
 - [METHOD.md](METHOD.md): how and why it measures the way it does, statistics, and threats to validity.
 - [docs/results.md](docs/results.md): every field of a results file.
 - [CONTRIBUTING.md](CONTRIBUTING.md): adapter rules, maintainer review, method changes, conflicts of interest.
+- [AGENTS.md](AGENTS.md): for AI agents: JSON output, fairness rules, how to propose scenarios.
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 - CI runs the typecheck and the parity gate on every pull request (software WebGL, so correctness only).
 - [Community results](https://debuffjp.github.io/2dbench/results.html): every submitted device, rebuilt on each merge.
