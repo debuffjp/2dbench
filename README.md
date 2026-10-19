@@ -4,9 +4,9 @@
 
 Renderer benchmarks are easy to rig, usually by accident: a library left on a slow default, scenes that favour one design, timing that vsync hides, numbers from one lucky run. 2dbench is built so that's hard to do and easy to check.
 
-> **Conflict of interest, in the open.** 2dbench was started by the [debuff](https://debuff.jp) project, whose renderer [spryte](https://github.com/debuffjp/spryte) is one of the contestants. The parity reference is a hand-written WebGL2 renderer, not spryte. Every library's setup is documented, and its maintainers have the final say on it ([CONTRIBUTING](CONTRIBUTING.md)). Changes that help spryte need outside review. If your library is configured badly, please send a PR.
+> **Conflict of interest, in the open.** 2dbench was started by the [debuff](https://debuff.jp) project, whose renderer [spryte](https://github.com/debuffjp/spryte) is one of the contestants. The parity reference is PixiJS `Sprite`, the most widely used 2D web renderer, not spryte. Every library's setup is documented, and its maintainers have the final say on it ([CONTRIBUTING](CONTRIBUTING.md)). Changes that help spryte need outside review. If your library is configured badly, please send a PR.
 
-**Status: early.** Three scenes and six adapters, measured on one desktop so far. Phone and other-browser results are the most wanted contribution.
+**Status: early.** Three scenes and five adapters, measured on one desktop and one iPhone so far. Phone and other-browser results are the most wanted contribution.
 
 ## Results so far
 
@@ -16,7 +16,6 @@ Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryz
 
 | Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
-| Hand-written WebGL2 (reference) | – | 800,000 | 0.7 † | 1.4 † | 4.0 |
 | spryte `draw.sprites` | 0.1.0 | 800,000 | 0.6 † | 1.1 † | 2.9 |
 | PixiJS `ParticleContainer` | 8.22.0 | 200,000 | 1.4 † | 3.3 | 8.9 |
 | spryte `draw.sprite` | 0.1.0 | 100,000 | 1.9 † | 6.1 | 21.5 |
@@ -27,7 +26,6 @@ Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryz
 
 | Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
-| Hand-written WebGL2 (reference) | – | 400,000 | 0.8 † | 2.5 | 6.6 |
 | spryte `draw.sprites` | 0.1.0 | 400,000 | 0.8 † | 2.0 | 6.1 |
 | PixiJS `ParticleContainer` | 8.22.0 | 100,000 | 2.4 | 8.1 | 28.9 |
 | spryte `draw.sprite` | 0.1.0 | 50,000 | 2.5 | 8.9 | 37.1 |
@@ -37,11 +35,28 @@ Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryz
 
 | Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
-| Hand-written WebGL2 (reference) | – | 400,000 | 0.8 † | 2.0 | 6.7 |
 | spryte `draw.sprite` | 0.1.0 | 50,000 | 2.5 | 9.9 | 38.9 |
 | PixiJS `Sprite` | 8.22.0 | 10,000 | 6.5 | 33.6 | 141.5 |
 
-Parity passed in every scene: coverage 99.8–100%, and 0% of pixels differ inside sprites. The rotated scenes differ at sprite edges (8–13% of drawn pixels), where libraries round rotated corners differently.
+**iPhone** (iOS 26.6.2, Chrome, which uses WebKit on iOS; Apple GPU): `mobile.html`, 1 quick round, 60 frames per count. iOS timers have 1 ms resolution, so these are indicative ([raw](results/2026-10-19-device-iphone-ios-26-chrome.json)).
+
+| Scene | Adapter | Max at 60 fps | 10k | 50k | 200k |
+| --- | --- | --- | --- | --- | --- |
+| bunny | spryte `draw.sprites` | 400,000 | 2 | 6 | 12 |
+| bunny | PixiJS `ParticleContainer` | 200,000 | 2 | 7 | 13 |
+| bunny | spryte `draw.sprite` | 100,000 | 4 | 9 | 18 |
+| bunny | PixiJS `Sprite` | 20,000 | 4 | 17 | – |
+| bunny | Canvas 2D `drawImage` | 10,000 | 10 | – | – |
+| mixed | spryte `draw.sprite` | 100,000 | 4 | 9 | 22 |
+| mixed | PixiJS `Sprite` | 20,000 | 7 | 32 | – |
+| particles | spryte `draw.sprites` | 200,000 | 3 | 7 | 12 |
+| particles | PixiJS `ParticleContainer` | 100,000 | 3 | 9 | 28 |
+| particles | spryte `draw.sprite` | 100,000 | 5 | 9 | 22 |
+| particles | PixiJS `Sprite` | 20,000 | 6 | 32 | – |
+
+On this phone, the gap closes for position-only bulk drawing (spryte `draw.sprites` and PixiJS `ParticleContainer` are level at 200k). It stays wide for general sprites (about 3.6× in `mixed` at 50k) and for dynamic particles (about 2.3× at 200k). The phone's Canvas 2D does twice as well as the desktop's.
+
+Parity passed in every scene (desktop; re-checked against PixiJS `Sprite` as the reference): coverage 99.8–100%, and 0% of pixels differ inside sprites. The rotated scenes differ at sprite edges (8–13% of drawn pixels), where libraries round rotated corners differently.
 
 **How to read these.** Compare within a table, as ratios. Absolute times depend on the machine, the day and the benchmark design (see [Statistics](METHOD.md#statistics)). One desktop GPU says little about phones, where filling pixels often dominates.
 
@@ -49,11 +64,10 @@ Parity passed in every scene: coverage 99.8–100%, and 0% of pixels differ insi
 
 | Adapter | Library and API | Scenes |
 | --- | --- | --- |
-| `webgl2-baseline` | Hand-written WebGL2, instanced: the parity reference, and a simple baseline. Not an upper bound: tuned libraries can beat it. | all |
 | `canvas2d` | Canvas 2D `drawImage` | bunny (no per-draw tint) |
 | `spryte` | spryte `draw.sprite` | all |
 | `spryte-bulk` | spryte `draw.sprites` | bunny, particles |
-| `pixi-sprite` | PixiJS `Sprite` | all |
+| `pixi-sprite` | PixiJS `Sprite` (the parity reference) | all |
 | `pixi-particle` | PixiJS `ParticleContainer` | bunny, particles |
 
 Wanted: Phaser, KAPLAY, Excalibur, LittleJS, three.js, Babylon.js, melonJS, and Canvas 2D in an `OffscreenCanvas` worker. See [Adding a library](#adding-a-library).

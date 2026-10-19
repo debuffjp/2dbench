@@ -12,7 +12,7 @@ Scenes (`src/scenes.ts`) own a seeded simulation and write structure-of-arrays s
 
 ## Same output: the parity gate
 
-Before timing, each adapter draws the same seeded frame (10 steps in, at 2,000 and at 50,000 sprites), and its pixels are compared with the reference's (`webgl2-baseline`, hand-written, so no library referees itself).
+Before timing, each adapter draws the same seeded frame (10 steps in, at 2,000 and at 50,000 sprites), and its pixels are compared with the reference's: **PixiJS `Sprite`**. It's the most widely used 2D web renderer, it supports every scene, and it isn't made by 2dbench's authors. (An earlier hand-written WebGL2 reference was dropped: it was close to spryte's own design, so it neither referees independently nor adds information as a contestant.)
 
 - **Coverage:** the adapter's drawn area divided by the reference's. Skipped, culled or missing sprites show here. The run fails outside 99.5–100.5%.
 - **Interior differences:** pixels that differ (any channel by more than 8 levels) where the 3×3 neighbourhood is a single flat colour in both frames. Any edge, even a sprite drawn over another sprite, breaks flatness, so different rounding rules for rotated edges don't count. A wrong tint, alpha, blend or texture inside a sprite does. The run fails above 0.5%. This metric was validated by deliberately giving one library a wrong tint: interior differences rose from 0% to 22%.
@@ -80,7 +80,7 @@ Each threat says what could make a result misleading, and what 2dbench does abou
 | **Scenes are synthetic.** | Real games mix workloads. | Several scenes, each stating its purpose, with more planned (tilemaps, text, churn). | No benchmark predicts a specific game. Profile your own (for example with myaku). |
 | **One frame of parity.** | A renderer could differ only on frames that weren't checked. | Two counts (2k and 50k) after 10 seeded steps. Adapters draw from the same arrays, so there's no per-frame branching to hide in. | A library that culls only above 50k sprites wouldn't be caught. |
 | **Library setup.** | A badly configured library looks slow. | `setup` is documented in every result. Maintainers have the final say ([CONTRIBUTING](CONTRIBUTING.md)). Alternatives that were measured (WebGPU, atlases, `roundPixels`) are listed above. | Until a library's maintainers review its adapter, treat its numbers as provisional. |
-| **Conflict of interest.** | The project was started by spryte's authors. | Hand-written reference, public method and adapters, outside review for changes that help spryte, and maintainers welcome. | Trust has to be earned over time. Re-run it yourself. |
+| **Conflict of interest.** | The project was started by spryte's authors. | The incumbent library (PixiJS) as parity reference, public method and adapters, outside review for changes that help spryte, and maintainers welcome. | Trust has to be earned over time. Re-run it yourself. |
 
 ## Known limits
 

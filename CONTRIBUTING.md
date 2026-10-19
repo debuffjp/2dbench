@@ -37,7 +37,7 @@ Changes to timing, parity or statistics (`run.mjs`, `METHOD.md`) need:
 2dbench was started by the debuff project, whose renderer spryte is a contestant. So:
 
 - spryte's adapters get no special treatment and follow the same rules.
-- The parity reference is the hand-written `webgl2-baseline`, not any library.
+- The parity reference is PixiJS `Sprite`, the most widely used library here, not spryte.
 - Any change that helps spryte's results specifically must be reviewed by someone outside the debuff project before it's merged.
 - PRs from library maintainers for their own adapters are especially welcome.
 

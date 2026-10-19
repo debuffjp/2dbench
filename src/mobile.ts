@@ -4,11 +4,11 @@
 import { ADAPTERS } from "./adapters/index.js";
 import { SCENES as SCENE_SPECS } from "./scenes.js";
 
-/** Every scene, with the adapters that support it (the reference is skipped on phones to save time). */
+/** Every scene, with the adapters that support it. */
 const SCENES: Record<string, string[]> = Object.fromEntries(
   Object.values(SCENE_SPECS).map((scene) => [
     scene.id,
-    ADAPTERS.filter((a) => a.id !== "webgl2-baseline" && a.supports(scene)).map((a) => a.id),
+    ADAPTERS.filter((a) => a.supports(scene)).map((a) => a.id),
   ]),
 );
 const COUNTS = [1_000, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000, 200_000, 400_000, 800_000];
@@ -31,6 +31,21 @@ const say = (text: string) => {
   $("status").textContent = text;
 };
 
+/**
+ * The smallest step performance.now() takes here. Browsers coarsen timers against fingerprinting:
+ * Chrome on desktop about 0.1 ms; WebKit (every iOS browser) 1 ms. Frames near the step are imprecise.
+ */
+function timerResolutionMs(): number {
+  let smallest = Number.POSITIVE_INFINITY;
+  for (let i = 0; i < 50; i++) {
+    const t0 = performance.now();
+    let t1 = t0;
+    while (t1 === t0) t1 = performance.now();
+    smallest = Math.min(smallest, t1 - t0);
+  }
+  return +smallest.toFixed(4);
+}
+
 function environment() {
   const gl = document.createElement("canvas").getContext("webgl2");
   const ext = gl?.getExtension("WEBGL_debug_renderer_info");
@@ -41,6 +56,7 @@ function environment() {
     devicePixelRatio,
     screen: `${screen.width}×${screen.height}`,
     cores: navigator.hardwareConcurrency,
+    timerResolutionMs: timerResolutionMs(),
     memoryGB: nav.deviceMemory ?? null,
     note: $<HTMLInputElement>("note").value,
   };
