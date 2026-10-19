@@ -326,5 +326,11 @@
         }
       }
     }
+  },
+  "submission": {
+    "issue": null,
+    "device": "iPhone (model not recorded)",
+    "conditions": "Chrome on iOS 26.6.2, one quick round, sent with Send to this computer",
+    "submittedBy": "h0ds"
   }
 }

@@ -38,7 +38,7 @@ Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryz
 | spryte `draw.sprite` | 0.1.0 | 50,000 | 2.5 | 9.9 | 38.9 |
 | PixiJS `Sprite` | 8.22.0 | 10,000 | 6.5 | 33.6 | 141.5 |
 
-**iPhone** (iOS 26.6.2, Chrome, which uses WebKit on iOS; Apple GPU): `mobile.html`, 1 quick round, 60 frames per count. iOS timers have 1 ms resolution, so these are indicative ([raw](results/2026-10-19-device-iphone-ios-26-chrome.json)).
+**iPhone** (iOS 26.6.2, Chrome, which uses WebKit on iOS; Apple GPU): `mobile.html`, 1 quick round, 60 frames per count. iOS timers have 1 ms resolution, so these are indicative ([raw](results/community/2026-10-19-iphone-ios-26-chrome.json)).
 
 | Scene | Adapter | Max at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
