@@ -156,6 +156,20 @@ function show(results: Record<string, Record<string, { maxAt60fps: number; count
   $("results").innerHTML = html;
 }
 
+/** A best guess at the device from the user agent, so the note starts filled in (people can correct it). */
+function guessDevice(): string {
+  const ua = navigator.userAgent;
+  const browser = /Edg\//.test(ua) ? "Edge" : /SamsungBrowser/.test(ua) ? "Samsung Internet" : /CriOS|Chrome\//.test(ua) ? "Chrome" : /FxiOS|Firefox\//.test(ua) ? "Firefox" : /Safari\//.test(ua) ? "Safari" : "browser";
+  const model = /iPhone/.test(ua)
+    ? "iPhone"
+    : /iPad|Macintosh.*Mobile/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)
+      ? "iPad"
+      : (/Android [\d.]+; ([^;)]+)/.exec(ua)?.[1]?.trim() ?? (/Windows/.test(ua) ? "Windows PC" : /Mac OS X/.test(ua) ? "Mac" : /CrOS/.test(ua) ? "Chromebook" : /Linux/.test(ua) ? "Linux PC" : "device"));
+  return `${model}, ${browser}`;
+}
+const noteInput = $<HTMLInputElement>("note");
+if (!noteInput.value) noteInput.value = guessDevice();
+
 $("run").addEventListener("click", () => {
   run().catch((e) => say(`Failed: ${e}`));
 });

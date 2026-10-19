@@ -5,6 +5,11 @@ import { makeTextures, SCENES, Simulation } from "./scenes.js";
 import { HEIGHT, WIDTH } from "./types.js";
 
 const params = new URLSearchParams(location.search);
+// The bare address (someone opened the shared link) goes to the self-running page.
+if (!params.has("adapter") && !params.has("list")) {
+  location.replace("mobile.html");
+  throw new Error("redirecting to mobile.html");
+}
 // ?list: describe every adapter and what it supports, for the runner and reports.
 if (params.has("list")) {
   (window as unknown as { __list: unknown }).__list = ADAPTERS.map((a) => ({
