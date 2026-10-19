@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "pages": "BASE=/2dbench/ vite build",
     "list": "node run.mjs --list",
-    "parity": "node run.mjs rounds=0"
+    "parity": "node run.mjs rounds=0",
+    "charts": "node scripts/charts.mjs"
   },
   "dependencies": {
     "pixi.js": "8.22.0",

@@ -33,6 +33,8 @@ Timed runs need a real GPU and are refused on SwiftShader or llvmpipe (check `so
 | `run.mjs` | Build, parity gate, interleaved timing, results file |
 | `METHOD.md` | Statistics and threats to validity; read before changing timing or parity |
 
+After a new reference run, `npm run charts` redraws the README charts.
+
 Before you commit, run `npx tsc --noEmit` and `node run.mjs <scene> rounds=0`.
 
 ## Proposing scenarios

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 408" width="760" height="408" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif">
+<rect width="760" height="408" rx="10" fill="#0f1115"/>
+<text x="20" y="28" fill="#d4d7dd" font-size="15" font-weight="600">Most sprites at 60 fps, by scene (log scale, higher is better)</text>
+<text x="20" y="62" fill="#d4d7dd" font-size="12" font-weight="600">bunny</text>
+<text x="180" y="80" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprites</text>
+<rect x="190" y="70" width="466.0961861596609" height="13" rx="3" fill="#22d3ee"/>
+<text x="662.0961861596609" y="80" fill="#d4d7dd" font-size="11">800,000</text>
+<text x="180" y="98" fill="#8b909a" font-size="11" text-anchor="end">PixiJS ParticleContainer</text>
+<rect x="190" y="88" width="418.5587326538441" height="13" rx="3" fill="#fbbf24"/>
+<text x="614.5587326538441" y="98" fill="#d4d7dd" font-size="11">200,000</text>
+<text x="180" y="116" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
+<rect x="190" y="106" width="394.7900059009358" height="13" rx="3" fill="#4ade80"/>
+<text x="590.7900059009357" y="116" fill="#d4d7dd" font-size="11">100,000</text>
+<text x="180" y="134" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
+<rect x="190" y="124" width="371.0212791480274" height="13" rx="3" fill="#f472b6"/>
+<text x="567.0212791480274" y="134" fill="#d4d7dd" font-size="11">50,000</text>
+<text x="180" y="152" fill="#8b909a" font-size="11" text-anchor="end">Canvas 2D drawImage</text>
+<rect x="190" y="142" width="292.06327796784024" height="13" rx="3" fill="#a78bfa"/>
+<text x="488.06327796784024" y="152" fill="#d4d7dd" font-size="11">5,000</text>
+<text x="20" y="178" fill="#d4d7dd" font-size="12" font-weight="600">particles</text>
+<text x="180" y="196" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprites</text>
+<rect x="190" y="186" width="442.3274594067525" height="13" rx="3" fill="#22d3ee"/>
+<text x="638.3274594067525" y="196" fill="#d4d7dd" font-size="11">400,000</text>
+<text x="180" y="214" fill="#8b909a" font-size="11" text-anchor="end">PixiJS ParticleContainer</text>
+<rect x="190" y="204" width="394.7900059009358" height="13" rx="3" fill="#fbbf24"/>
+<text x="590.7900059009357" y="214" fill="#d4d7dd" font-size="11">100,000</text>
+<text x="180" y="232" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
+<rect x="190" y="222" width="371.0212791480274" height="13" rx="3" fill="#4ade80"/>
+<text x="567.0212791480274" y="232" fill="#d4d7dd" font-size="11">50,000</text>
+<text x="180" y="250" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
+<rect x="190" y="240" width="339.60073147365694" height="13" rx="3" fill="#f472b6"/>
+<text x="535.6007314736569" y="250" fill="#d4d7dd" font-size="11">20,000</text>
+<text x="20" y="276" fill="#d4d7dd" font-size="12" font-weight="600">mixed</text>
+<text x="180" y="294" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
+<rect x="190" y="284" width="371.0212791480274" height="13" rx="3" fill="#4ade80"/>
+<text x="567.0212791480274" y="294" fill="#d4d7dd" font-size="11">50,000</text>
+<text x="180" y="312" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
+<rect x="190" y="302" width="315.8320047207486" height="13" rx="3" fill="#f472b6"/>
+<text x="511.8320047207486" y="312" fill="#d4d7dd" font-size="11">10,000</text>
+<text x="20" y="338" fill="#d4d7dd" font-size="12" font-weight="600">raycaster</text>
+<text x="180" y="356" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
+<rect x="190" y="346" width="315.8320047207486" height="13" rx="3" fill="#4ade80"/>
+<text x="511.8320047207486" y="356" fill="#d4d7dd" font-size="11">10,000</text>
+<text x="180" y="374" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
+<rect x="190" y="364" width="260.6427302934698" height="13" rx="3" fill="#f472b6"/>
+<text x="456.6427302934698" y="374" fill="#d4d7dd" font-size="11">2,000</text>
+</svg>

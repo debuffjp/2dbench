@@ -72,3 +72,7 @@ Files in `results/community/` come from GitHub issues, through the results-intak
 ## Submitting results
 
 See the README's "Submit your results". In short: tap **Submit on GitHub** in `mobile.html`, or run `node submit.mjs <file>` for a desktop file. Either opens an issue, which a workflow validates (`scripts/validate-results.mjs`) and turns into a pull request. A result whose parity gate failed is never written, so every desktop file has passed it.
+
+## Charts
+
+`npm run charts` redraws the README charts in `docs/charts/` from the files in `results/`. Pass result files to chart those instead, for example `node scripts/charts.mjs results/community/<file>.json`; each gets its own SVG. Charts show only current adapters.

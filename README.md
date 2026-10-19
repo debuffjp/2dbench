@@ -10,9 +10,13 @@ Renderer benchmarks are easy to rig, usually by accident: a library left on a sl
 
 ## Results so far
 
+![Most sprites at 60 fps in each scene, per library](docs/charts/max-at-60fps.svg)
+
 Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryzen 7 260, on AC power with power plan Turbo. The median frame (simulation through GPU completion) is in ms; lower is better. † marks frames under 2 ms, which are low precision ([why](METHOD.md#statistics)). Raw data, with every round's value, is in [`results/`](results).
 
 **`bunny`**: one texture, position only, 7 rounds
+
+![bunny: frame time by count per library, with the 60 fps budget](docs/charts/bunny.svg)
 
 | Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
@@ -24,6 +28,8 @@ Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryz
 
 **`particles`**: one texture; position, rotation, scale, tint and alpha all change, 7 rounds
 
+![particles: frame time by count per library, with the 60 fps budget](docs/charts/particles.svg)
+
 | Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
 | spryte `draw.sprites` | 0.1.0 | 400,000 | 0.8 † | 2.0 | 6.1 |
@@ -33,12 +39,16 @@ Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryz
 
 **`mixed`**: 4 separate textures; rotation, scale, tint and alpha all change, 5 rounds
 
+![mixed: frame time by count per library, with the 60 fps budget](docs/charts/mixed.svg)
+
 | Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
 | spryte `draw.sprite` | 0.1.0 | 50,000 | 2.5 | 9.9 | 38.9 |
 | PixiJS `Sprite` | 8.22.0 | 10,000 | 6.5 | 33.6 | 141.5 |
 
 **`raycaster`**: enemies in a first-person maze, each visible one drawn as many texture slices, 3 rounds
+
+![raycaster: frame time by count per library, with the 60 fps budget](docs/charts/raycaster.svg)
 
 | Adapter | Version | Max enemies at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
