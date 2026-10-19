@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 422" width="760" height="422" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 422" width="760" height="422" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif" role="img" aria-label="Most sprites at 60 fps">
 <rect width="760" height="422" rx="10" fill="#0f1115"/>
 <text x="20" y="28" fill="#d4d7dd" font-size="15" font-weight="600">Most sprites at 60 fps (higher is better; each scene on its own scale)</text>
 <text x="20" y="62" fill="#d4d7dd" font-size="12" font-weight="600">bunny</text>

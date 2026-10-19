@@ -1,7 +1,9 @@
 // Self-running benchmark for phones and tablets: the same page run.mjs drives, run from inside the browser.
 // Each adapter runs in a fresh iframe (a fresh GPU context); results show in a table and copy as JSON.
 // There's no parity check here (phones can't easily ship frames back); desktop runs carry the parity gate.
+import "./site.css";
 import { ADAPTERS } from "./adapters/index.js";
+import { fromMobile, frameChart, maxChart, shortGpu } from "./charts.js";
 import { SCENES as SCENE_SPECS } from "./scenes.js";
 
 /** Every scene, with the adapters that support it. */
@@ -11,6 +13,7 @@ const SCENES: Record<string, string[]> = Object.fromEntries(
     ADAPTERS.filter((a) => a.supports(scene)).map((a) => a.id),
   ]),
 );
+const LABELS: Record<string, string> = Object.fromEntries(ADAPTERS.map((a) => [a.id, a.label]));
 const COUNTS = [1_000, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000, 200_000, 400_000, 800_000];
 const BUDGET = 1000 / 60;
 const FRAMES = 60;
@@ -98,6 +101,12 @@ async function run(): Promise<void> {
   $<HTMLButtonElement>("submit").disabled = true;
   $<HTMLButtonElement>("anon").disabled = true;
   $("results").innerHTML = "";
+  $("charts").innerHTML = "";
+  $("done").hidden = true;
+  const bar = $("bar");
+  (bar.parentElement as HTMLElement).hidden = false;
+  const total = Object.values(SCENES).reduce((n, r) => n + r.length * rounds, 0);
+  let step = 0;
   const startBattery = await battery();
   const results: Record<string, Record<string, { maxAt60fps: number; counts: Record<number, number[]> }>> = {};
   try {
@@ -107,7 +116,8 @@ async function run(): Promise<void> {
         // Rotate the order each round so heat and ordering spread evenly.
         const order = renderers.map((_, i) => renderers[(i + round) % renderers.length] as string);
         for (const renderer of order) {
-          say(`${scene} · ${renderer} · round ${round + 1}/${rounds}`);
+          say(`${scene} · ${LABELS[renderer] ?? renderer} · round ${round + 1}/${rounds}`);
+          bar.style.width = `${(100 * step++) / total}%`;
           results[scene][renderer] ??= { maxAt60fps: 0, counts: {} };
           const entry = results[scene][renderer];
           let page: Awaited<ReturnType<typeof open>>;
@@ -139,7 +149,18 @@ async function run(): Promise<void> {
       environment: { ...environment(), battery: { start: startBattery, end: await battery() } },
       results,
     };
-    say("Done. Tap Submit to add your results to the public dataset.");
+    bar.style.width = "100%";
+    say("Done. Your charts are below; tap Submit to add them to the public dataset.");
+    const env = environment();
+    const subtitle = `${$<HTMLInputElement>("note").value || "this device"} · ${shortGpu(env.gpu)} · ${rounds} round${rounds === 1 ? "" : "s"}`;
+    const scenes = fromMobile(results, LABELS, subtitle);
+    $("charts").innerHTML = [maxChart(scenes, "Most sprites at 60 fps on this device"), ...scenes.map(frameChart)]
+      .filter(Boolean)
+      .map((svg) => `<div class="chart">${svg}</div>`)
+      .join("");
+    $("summary").textContent = subtitle;
+    $("done").hidden = false;
+    $("done").scrollIntoView({ behavior: "smooth" });
     $<HTMLButtonElement>("copy").disabled = false;
     $<HTMLButtonElement>("send").disabled = false;
     $<HTMLButtonElement>("submit").disabled = false;
@@ -154,7 +175,7 @@ function show(results: Record<string, Record<string, { maxAt60fps: number; count
   let html = "<tr><th>Scene</th><th>Renderer</th><th>Max @60fps</th><th>10k</th><th>50k</th></tr>";
   for (const [scene, byRenderer] of Object.entries(results))
     for (const [renderer, e] of Object.entries(byRenderer))
-      html += `<tr><td>${scene}</td><td>${renderer}</td><td>${e.maxAt60fps.toLocaleString("en")}</td><td>${at(e, 10_000)}</td><td>${at(e, 50_000)}</td></tr>`;
+      html += `<tr><td>${scene}</td><td>${LABELS[renderer] ?? renderer}</td><td>${e.maxAt60fps.toLocaleString("en")}</td><td>${at(e, 10_000)}</td><td>${at(e, 50_000)}</td></tr>`;
   $("results").innerHTML = html;
 }
 

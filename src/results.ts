@@ -1,13 +1,19 @@
 // Community results page: every results file in the repo, bundled at build time, one table per scene.
 // A merged pull request rebuilds GitHub Pages, so new submissions appear without anything else running.
 
+import "./site.css";
+import { ADAPTERS } from "./adapters/index.js";
+import { SCENE_ORDER, colour, frameChart, fromRunner, maxChart, shortGpu } from "./charts.js";
+
+const LABELS: Record<string, string> = Object.fromEntries(ADAPTERS.map((a) => [a.id, a.label]));
+
 interface RunnerResult {
   date: string;
   scene: string;
   rounds: number;
   environment: { gpu?: string; browser?: string; note?: string };
   submission?: { device?: string };
-  results: { adapter: string; maxAt60fps: number; counts: { count: number; frameMs: number }[] }[];
+  results: { adapter: string; label: string; maxAt60fps: number; counts: { count: number; frameMs: number }[] }[];
 }
 interface MobileResult {
   date: string;
@@ -43,11 +49,7 @@ for (const [path, r] of Object.entries(files)) {
   if (Array.isArray(r.results)) {
     const rr = r as RunnerResult;
     // "ANGLE (NVIDIA, NVIDIA GeForce RTX 5060 Laptop GPU (0x2D59) Direct3D11 vs_5_0 ps_5_0, D3D11)" → "NVIDIA GeForce RTX 5060 Laptop GPU, D3D11"
-    const gpu = (rr.environment.gpu ?? "")
-      .replace(/^ANGLE \([^,]+, /, "")
-      .replace(/ \(0x[0-9A-Fa-f]+\)/, "")
-      .replace(/ Direct3D\S* vs_\S+ ps_\S+/, "")
-      .replace(/\)$/, "");
+    const gpu = shortGpu(rr.environment.gpu);
     (byScene[rr.scene] ??= []).push({
       device: deviceOf(rr),
       platform: `${rr.environment.browser ?? ""} · ${gpu}`,
@@ -75,20 +77,33 @@ for (const [path, r] of Object.entries(files)) {
 
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string);
 let html = "";
-for (const scene of ["bunny", "mixed", "particles", "raycaster"]) {
+for (const scene of SCENE_ORDER) {
   const rows = byScene[scene] ?? [];
   if (!rows.length) continue;
   const adapters = [...new Set(rows.flatMap((r) => Object.keys(r.byAdapter)))].sort();
   html += `<h2>${scene}</h2><p class="dim">Most sprites at 60 fps, then the median frame at 50k sprites (ms). Higher count, lower ms is better. ${rows.length} device${rows.length === 1 ? "" : "s"}.</p>`;
-  html += `<div class="scroll"><table><tr><th>Device</th><th>Browser · GPU</th>${adapters.map((a) => `<th>${esc(a)}</th>`).join("")}<th>Rounds</th><th>Data</th></tr>`;
+  html += `<div class="scroll"><table><tr><th>Device</th><th>Browser · GPU</th>${adapters.map((a) => `<th><span class="swatch" style="background:${colour(a)}"></span>${esc(LABELS[a] ?? a)}</th>`).join("")}<th>Rounds</th><th>Data</th></tr>`;
   for (const r of rows.sort((a, b) => a.device.localeCompare(b.device))) {
-    html += `<tr><td>${esc(r.device)}</td><td class="dim">${esc(r.platform)}</td>`;
+    // Long device notes (a full spec line) are cut to the first two parts; the whole note is in the tooltip.
+    const short = r.device.split(",").slice(0, 2).join(",").slice(0, 48);
+    html += `<tr><td title="${esc(r.device)}"><b>${esc(short)}</b></td><td class="dim">${esc(r.platform)}</td>`;
     for (const a of adapters) {
       const e = r.byAdapter[a];
-      html += e ? `<td>${e.max.toLocaleString("en")}<br><small>${e.at50k === undefined ? "–" : `${e.at50k.toFixed(1)} ms`}</small></td>` : "<td>–</td>";
+      html += e ? `<td class="num">${e.max.toLocaleString("en")}<br><small>${e.at50k === undefined ? "–" : `${e.at50k.toFixed(1)} ms`}</small></td>` : "<td>–</td>";
     }
     html += `<td>${r.rounds}</td><td><a href="https://github.com/debuffjp/2dbench/blob/main/${esc(r.file)}">json</a></td></tr>`;
   }
   html += "</table></div>";
 }
 (document.getElementById("tables") as HTMLElement).innerHTML = html || "<p>No results yet.</p>";
+
+// The reference machine: the maintainer's runs in results/ (not community/), charted like the README.
+const reference = Object.entries(files)
+  .filter(([path, r]) => !path.includes("/community/") && Array.isArray(r.results))
+  .map(([, r]) => fromRunner(r as RunnerResult))
+  .sort((a, b) => SCENE_ORDER.indexOf(a.scene) - SCENE_ORDER.indexOf(b.scene));
+if (reference.length) {
+  (document.getElementById("ref-env") as HTMLElement).textContent =
+    `${reference[0]?.subtitle.replace(/ · \d+ rounds$/, "")}. Each run passed the pixel-parity gate before timing. Bands show the spread across rounds.`;
+  (document.getElementById("reference") as HTMLElement).innerHTML = [maxChart(reference), ...reference.map(frameChart)].map((svg) => `<div class="chart">${svg}</div>`).join("");
+}
