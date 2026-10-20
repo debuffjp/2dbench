@@ -1,0 +1,262 @@
+{
+  "date": "2026-10-20T01:00:51.045Z",
+  "rounds": 1,
+  "framesPerCount": 60,
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Android 17; Mobile; rv:158.0) Gecko/158.0 Firefox/158.0",
+    "gpu": "Mali-T760, or similar",
+    "devicePixelRatio": 2.608695652173913,
+    "screen": "414×920",
+    "cores": 9,
+    "timerResolutionMs": 1,
+    "memoryGB": null,
+    "note": "Mobile, Firefox",
+    "battery": {
+      "start": "not exposed by this browser",
+      "end": "not exposed by this browser"
+    }
+  },
+  "results": {
+    "bunny": {
+      "pixi-sprite": {
+        "maxAt60fps": 5000,
+        "counts": {
+          "1000": [
+            8
+          ],
+          "2000": [
+            9
+          ],
+          "5000": [
+            15
+          ],
+          "10000": [
+            20
+          ]
+        }
+      },
+      "pixi-particle": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            5
+          ],
+          "2000": [
+            7
+          ],
+          "5000": [
+            6
+          ],
+          "10000": [
+            5
+          ],
+          "20000": [
+            12
+          ],
+          "50000": [
+            31
+          ]
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 10000,
+        "counts": {
+          "1000": [
+            3
+          ],
+          "2000": [
+            5
+          ],
+          "5000": [
+            8
+          ],
+          "10000": [
+            13
+          ],
+          "20000": [
+            23
+          ]
+        }
+      },
+      "spryte-bulk": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            5
+          ],
+          "2000": [
+            7
+          ],
+          "5000": [
+            7
+          ],
+          "10000": [
+            8
+          ],
+          "20000": [
+            9
+          ],
+          "50000": [
+            20
+          ]
+        }
+      },
+      "canvas2d": {
+        "maxAt60fps": 2000,
+        "counts": {
+          "1000": [
+            1
+          ],
+          "2000": [
+            10
+          ],
+          "5000": [
+            23
+          ]
+        }
+      }
+    },
+    "mixed": {
+      "pixi-sprite": {
+        "maxAt60fps": 2000,
+        "counts": {
+          "1000": [
+            6
+          ],
+          "2000": [
+            11
+          ],
+          "5000": [
+            19
+          ]
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 10000,
+        "counts": {
+          "1000": [
+            8
+          ],
+          "2000": [
+            10
+          ],
+          "5000": [
+            11
+          ],
+          "10000": [
+            16
+          ],
+          "20000": [
+            25
+          ]
+        }
+      }
+    },
+    "particles": {
+      "pixi-sprite": {
+        "maxAt60fps": 5000,
+        "counts": {
+          "1000": [
+            8
+          ],
+          "2000": [
+            11
+          ],
+          "5000": [
+            13
+          ],
+          "10000": [
+            26
+          ]
+        }
+      },
+      "pixi-particle": {
+        "maxAt60fps": 5000,
+        "counts": {
+          "1000": [
+            6
+          ],
+          "2000": [
+            9
+          ],
+          "5000": [
+            12
+          ],
+          "10000": [
+            17
+          ]
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 10000,
+        "counts": {
+          "1000": [
+            5
+          ],
+          "2000": [
+            10
+          ],
+          "5000": [
+            10
+          ],
+          "10000": [
+            16
+          ],
+          "20000": [
+            25
+          ]
+        }
+      },
+      "spryte-bulk": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            6
+          ],
+          "2000": [
+            5
+          ],
+          "5000": [
+            8
+          ],
+          "10000": [
+            10
+          ],
+          "20000": [
+            15
+          ],
+          "50000": [
+            28
+          ]
+        }
+      }
+    },
+    "raycaster": {
+      "pixi-sprite": {
+        "maxAt60fps": 0,
+        "counts": {
+          "1000": [
+            23
+          ]
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 1000,
+        "counts": {
+          "1000": [
+            11
+          ],
+          "2000": [
+            18
+          ]
+        }
+      }
+    }
+  },
+  "submission": {
+    "issue": 12,
+    "device": "Mobile, Firefox",
+    "conditions": "Mozilla/5.0 (Android 17; Mobile; rv:158.0) Gecko/158.0 Firefox/158.0",
+    "submittedBy": "h0ds"
+  }
+}
