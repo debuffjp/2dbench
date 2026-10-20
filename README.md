@@ -6,7 +6,7 @@ Renderer benchmarks are easy to rig, usually by accident: a library left on a sl
 
 > **Conflict of interest, in the open.** 2dbench was started by the [debuff](https://debuff.jp) project, whose renderer [spryte](https://github.com/debuffjp/spryte) is one of the contestants. The parity reference is PixiJS `Sprite`, the most widely used 2D web renderer, not spryte. Every library's setup is documented, and library maintainers are invited to review theirs ([CONTRIBUTING](CONTRIBUTING.md)). If your library is configured badly, please send a PR.
 
-**Status: early.** Four scenes and five adapters, measured on one desktop and one iPhone so far. **Your device would help:** see [Submit your results](#submit-your-results), and the [community results](https://debuffjp.github.io/2dbench/results.html). Phone and other-browser results are the most wanted contribution.
+**Status: early.** Four scenes and five adapters, measured so far on desktop and laptop GPUs, iPhones and an Android phone. **Your device would help:** see [Submit your results](#submit-your-results), and the [community results](https://debuffjp.github.io/2dbench/results.html). Phone and other-browser results are the most wanted contribution.
 
 ## Results so far
 
@@ -20,14 +20,14 @@ Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryz
 
 | Device | GPU | Browser | spryte | PixiJS | spryte faster |
 | --- | --- | --- | --- | --- | --- |
-| Laptop (reference) | NVIDIA RTX 5060 | Chrome 155, Windows | 50,000 | 20,000 | 3.8× |
+| Laptop (reference) | NVIDIA RTX 5060 | Chrome 155, Windows | 100,000 | 20,000 | 3.3× |
 | Lenovo Legion Pro 7 | NVIDIA RTX 4080 | Chromium 156, Linux | 100,000 | 50,000 | 2.7× |
 | Windows laptop | AMD Radeon 780M (integrated) | Chrome, Windows | 50,000 | 20,000 | 3.3× |
 | iPhone | Apple GPU | Safari, iOS 18 | 100,000 | 20,000 | 3.7× |
 | iPhone | Apple GPU | Chrome, iOS 26 (2 runs) | 50,000–100,000 | 20,000 | 3.5–3.8× |
 | Android phone | Mali-T760 class | Firefox | 10,000 | 5,000 | 1.6× |
 
-spryte's one-call-per-sprite path is ahead on every device so far. The bulk paths (spryte `draw.sprites` against `ParticleContainer`) are 2.5–4× apart on desktop GPUs, but on iPhones they finish level, because there the GPU's fill rate, not JavaScript, is the limit. Phone runs are one quick round each with coarse timers, so treat them as indicative. Every row is a file in [`results/`](results).
+spryte's one-call-per-sprite path is ahead on every device so far. The bulk paths (spryte `draw.sprites` against `ParticleContainer`) are 2.5–4.2× apart on desktop GPUs, but on iPhones they finish level, because there the GPU's fill rate, not JavaScript, is the limit. Phone runs are one quick round each with coarse timers, so treat them as indicative. Every row is a file in [`results/`](results).
 
 **`bunny`**: one texture, position only, 7 rounds
 
@@ -35,11 +35,11 @@ spryte's one-call-per-sprite path is ahead on every device so far. The bulk path
 
 | Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprites` | 0.1.0 | 800,000 | 0.6 † | 1.1 † | 2.9 |
-| PixiJS `ParticleContainer` | 8.22.0 | 200,000 | 1.4 † | 3.3 | 8.9 |
-| spryte `draw.sprite` | 0.1.0 | 100,000 | 1.9 † | 6.1 | 21.5 |
-| PixiJS `Sprite` | 8.22.0 | 50,000 | 4.1 | 16.6 | 71.4 |
-| Canvas 2D `drawImage` | – | 5,000 | 30.1 | 146.0 | 611.2 |
+| spryte `draw.sprites` | 0.2.1 | 800,000 | 0.4 † | 0.9 † | 2.8 |
+| PixiJS `ParticleContainer` | 8.22.0 | 400,000 | 0.7 † | 2.4 | 7.2 |
+| spryte `draw.sprite` | 0.2.1 | 100,000 | 1.3 † | 4.7 | 21.7 |
+| PixiJS `Sprite` | 8.22.0 | 50,000 | 3.0 | 12.2 | 53.7 |
+| Canvas 2D `drawImage` | – | 5,000 | 23.3 | 123.6 | 499.1 |
 
 **`particles`**: one texture; position, rotation, scale, tint and alpha all change, 7 rounds
 
@@ -47,10 +47,10 @@ spryte's one-call-per-sprite path is ahead on every device so far. The bulk path
 
 | Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprites` | 0.1.0 | 400,000 | 0.8 † | 2.0 | 6.1 |
-| PixiJS `ParticleContainer` | 8.22.0 | 100,000 | 2.4 | 8.1 | 28.9 |
-| spryte `draw.sprite` | 0.1.0 | 50,000 | 2.5 | 8.9 | 37.1 |
-| PixiJS `Sprite` | 8.22.0 | 20,000 | 6.8 | 34.0 | 137.2 |
+| spryte `draw.sprites` | 0.2.1 | 400,000 | 0.7 † | 2.0 | 5.8 |
+| PixiJS `ParticleContainer` | 8.22.0 | 100,000 | 1.4 † | 6.0 | 24.2 |
+| spryte `draw.sprite` | 0.2.1 | 100,000 | 1.8 † | 6.8 | 24.8 |
+| PixiJS `Sprite` | 8.22.0 | 20,000 | 4.9 | 22.4 | 92.8 |
 
 **`mixed`**: 4 separate textures; rotation, scale, tint and alpha all change, 5 rounds
 
@@ -58,8 +58,8 @@ spryte's one-call-per-sprite path is ahead on every device so far. The bulk path
 
 | Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprite` | 0.1.0 | 50,000 | 2.5 | 9.9 | 38.9 |
-| PixiJS `Sprite` | 8.22.0 | 10,000 | 6.5 | 33.6 | 141.5 |
+| spryte `draw.sprite` | 0.2.1 | 100,000 | 2.1 | 7.8 | 33.7 |
+| PixiJS `Sprite` | 8.22.0 | 20,000 | 4.7 | 27.1 | 108.0 |
 
 **`raycaster`**: enemies in a first-person maze, each visible one drawn as many texture slices, 3 rounds
 
@@ -67,8 +67,8 @@ spryte's one-call-per-sprite path is ahead on every device so far. The bulk path
 
 | Adapter | Version | Max enemies at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprite` | 0.1.0 | 10,000 | 11.3 | 58.2 | 377.1 |
-| PixiJS `Sprite` | 8.22.0 | 2,000 | 46.4 | 238.7 | 946.6 |
+| spryte `draw.sprite` | 0.2.1 | 20,000 | 8.0 | 40.3 | 188.5 |
+| PixiJS `Sprite` | 8.22.0 | 5,000 | 36.0 | 180.9 | 684.9 |
 
 **iPhone** (iOS 26.6.2, Chrome, which uses WebKit on iOS; Apple GPU): `mobile.html`, 1 quick round, 60 frames per count. iOS timers have 1 ms resolution, so these are indicative ([raw](results/community/2026-10-19-iphone-ios-26-chrome.json)).
 

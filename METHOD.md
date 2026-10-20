@@ -48,7 +48,7 @@ Each adapter documents its setup in `setup`, and that text is copied into every 
 
 ## Statistics
 
-Choices here come from a variance study: the `bunny` and `particles` scenes, 7 rounds each, on the RTX 5060 laptop (`results/2026-10-19-win32-{bunny,particles}.json`). Reproduce it with `node variance.mjs <results files>`.
+Choices here come from a variance study: the `bunny` and `particles` scenes, 7 rounds each, on the RTX 5060 laptop (`results/archive/2026-10-19-win32-{bunny,particles}.json`). Reproduce it with `node variance.mjs <results files>`.
 
 **Why medians.** A frame time distribution has a long right tail (GC pauses, OS interrupts). The median of 100 frames ignores the tail, which `p95FrameMs` reports separately. Across rounds, the median of the per-round medians resists a single bad round, such as a background task waking up.
 
