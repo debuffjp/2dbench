@@ -7,6 +7,15 @@ import { pathToFileURL } from "node:url";
 
 const SCENES = new Set(["bunny", "mixed", "particles", "raycaster", "tilemap", "churn", "text", "lowres", "clip", "upload"]);
 const ADAPTER = /^[a-z0-9][a-z0-9-]{1,40}$/;
+// The default parity gate, and scenes that declare their own (keep in step with `gate` in src/scenes.ts and
+// COVERAGE_RANGE / MAX_INTERIOR_PERCENT in src/parity.ts). A gate checked here but not in the page would
+// reject honest results: text uses a wider gate because glyph rasterisation differs between libraries.
+const DEFAULT_GATE = { coverage: [99.5, 100.5], interior: 0.5 };
+const SCENE_GATES = { text: { coverage: [90, 110], interior: 5 } };
+const outside = (p, scene) => {
+  const g = SCENE_GATES[scene] ?? DEFAULT_GATE;
+  return p.coveragePercent < g.coverage[0] || p.coveragePercent > g.coverage[1] || p.interiorDifferingPercent > g.interior;
+};
 const sane = (ms) => typeof ms === "number" && Number.isFinite(ms) && ms >= 0 && ms < 60_000;
 
 /** Which tool produced it: "runner" (run.mjs, one scene) or "mobile" (mobile.html, every scene). */
@@ -38,7 +47,7 @@ export function validate(r) {
       }
       // A runner result is only written when parity passed; check it says so.
       for (const p of Object.values(a.parity ?? {})) {
-        if (p.coveragePercent < 99.5 || p.coveragePercent > 100.5 || p.interiorDifferingPercent > 0.5) problems.push(`${a.adapter}: parity outside the gate.`);
+        if (outside(p, r.scene)) problems.push(`${a.adapter}: parity outside the gate.`);
       }
     }
   } else {
@@ -56,7 +65,7 @@ export function validate(r) {
         const parity = Object.values(e?.parity ?? {});
         if (parity.some((p) => ![p?.coveragePercent, p?.interiorDifferingPercent].every((n) => typeof n === "number" && Number.isFinite(n))))
           problems.push(`${scene} ${adapter}: parity values are not numbers.`);
-        else if (parity.some((p) => p.coveragePercent < 99.5 || p.coveragePercent > 100.5 || p.interiorDifferingPercent > 0.5) && Object.keys(e?.counts ?? {}).length)
+        else if (parity.some((p) => outside(p, scene)) && Object.keys(e?.counts ?? {}).length)
           problems.push(`${scene} ${adapter}: timed although its parity is outside the gate.`);
       }
     }
