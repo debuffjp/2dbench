@@ -1,9 +1,11 @@
 // One adapter, one scene, on a fresh page: ?adapter=<id>&scene=<id>. Exposes window.__bench for the
 // runner (node, run.mjs) and for mobile.html (in an iframe).
 import { ADAPTERS } from "./adapters/index.js";
+import { ChurnSim } from "./churn.js";
 import { makeRaycasterAtlas, RaycasterSim } from "./raycaster.js";
 import { makeTextures, SCENES, Simulation } from "./scenes.js";
-import { HEIGHT, WIDTH } from "./types.js";
+import { makeTilemapAtlas, TilemapSim } from "./tilemap.js";
+import { HEIGHT, type Sim, WIDTH } from "./types.js";
 
 const params = new URLSearchParams(location.search);
 // The bare address (someone opened the shared link) goes to the self-running page.
@@ -33,9 +35,13 @@ const canvas = document.querySelector("canvas") as HTMLCanvasElement;
 canvas.width = WIDTH;
 canvas.height = HEIGHT;
 // Each scene brings its own simulation and textures; adapters see only the frame state and textures.
-const sim = scene.id === "raycaster" ? new RaycasterSim() : new Simulation(scene);
-const textures = scene.id === "raycaster" ? [makeRaycasterAtlas()] : makeTextures(scene);
+const sim: Sim =
+  scene.id === "raycaster" ? new RaycasterSim() : scene.id === "tilemap" ? new TilemapSim() : scene.id === "churn" ? new ChurnSim() : new Simulation(scene);
+const textures = scene.id === "raycaster" ? [makeRaycasterAtlas()] : scene.id === "tilemap" ? [makeTilemapAtlas()] : makeTextures(scene);
+const createStart = performance.now();
 const instance = await adapter.create(canvas, textures, scene);
+const readyAt = performance.now();
+const createMs = readyAt - createStart;
 
 export interface Measure {
   count: number;
@@ -44,7 +50,17 @@ export interface Measure {
   p95FrameMs: number;
   /** Median main-thread time before the GPU sync. */
   submitMs: number;
+  /** Mean time in the shared simulation alone (a mean, since one step is often below timer resolution) (identical work for every adapter), inside frameMs. */
+  simMs: number;
+  /** JS heap in use after the frames, in MB (Chrome only; null elsewhere). */
+  heapMB: number | null;
 }
+
+/** Chrome's non-standard heap counter. Coarse (bucketed) but enough to see growth over a run. */
+const heapMB = () => {
+  const m = (performance as unknown as { memory?: { usedJSHeapSize: number } }).memory;
+  return m ? +(m.usedJSHeapSize / 2 ** 20).toFixed(1) : null;
+};
 
 /**
  * Render `frames` frames back to back at `count` sprites, after 20 warm-up frames. Each frame is timed
@@ -60,9 +76,11 @@ async function measure(count: number, frames = 100): Promise<Measure> {
   await new Promise(requestAnimationFrame);
   const total: number[] = [];
   const submit: number[] = [];
+  const simulate: number[] = [];
   for (let i = 0; i < frames; i++) {
     const t0 = performance.now();
     sim.step();
+    simulate.push(performance.now() - t0);
     instance.draw(sim.state);
     const t1 = performance.now();
     await instance.sync();
@@ -70,7 +88,28 @@ async function measure(count: number, frames = 100): Promise<Measure> {
     submit.push(t1 - t0);
   }
   const at = (xs: number[], q: number) => [...xs].sort((a, b) => a - b)[Math.min(xs.length - 1, Math.floor(xs.length * q))] ?? 0;
-  return { count, frameMs: at(total, 0.5), p95FrameMs: at(total, 0.95), submitMs: at(submit, 0.5) };
+  return { count, frameMs: at(total, 0.5), p95FrameMs: at(total, 0.95), submitMs: at(submit, 0.5), simMs: +(simulate.reduce((a, b) => a + b, 0) / frames).toFixed(3), heapMB: heapMB() };
+}
+
+export interface Startup {
+  /** Time since navigation when the adapter was ready (page load, library import and setup). */
+  readyMs: number;
+  /** adapter.create alone: library import (adapters import lazily), context and texture setup. */
+  createMs: number;
+  /** The first frame at 1,000 sprites, simulation through GPU completion: shader compiles, first texture uploads. */
+  firstFrameMs: number;
+}
+
+/** Startup on a fresh page: call before anything else draws. */
+async function startup(): Promise<Startup> {
+  if (sim.state.count) throw new Error("startup() needs a fresh page");
+  const readyMs = readyAt;
+  const t0 = performance.now();
+  sim.resize(1_000);
+  sim.step();
+  instance.draw(sim.state);
+  await instance.sync();
+  return { readyMs: +readyMs.toFixed(1), createMs: +createMs.toFixed(1), firstFrameMs: +(performance.now() - t0).toFixed(2) };
 }
 
 /**
@@ -95,4 +134,4 @@ function snapshot(count: number, steps = 10): { width: number; height: number; r
   return { width: WIDTH, height: HEIGHT, rgba: btoa(bin) };
 }
 
-(window as unknown as { __bench: unknown }).__bench = { adapter: adapter.id, scene: scene.id, measure, snapshot, ready: true };
+(window as unknown as { __bench: unknown }).__bench = { adapter: adapter.id, scene: scene.id, measure, snapshot, startup, ready: true };

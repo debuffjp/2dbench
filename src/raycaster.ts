@@ -1,7 +1,7 @@
 // The raycaster scene: a retro first-person maze (the technique behind Wolfenstein 3D), rendered as texture
 // slices. All the game work (casting rays, shading, projecting and depth-clipping enemies) happens here, in
 // the shared simulation, identically for every library. Adapters only draw the resulting slices.
-import { type FrameState, HEIGHT, type Sim, WIDTH } from "./types.js";
+import { emptyState, type FrameState, HEIGHT, type Sim, WIDTH } from "./types.js";
 
 /** Atlas tiles, 64×64 each: four wall styles, four enemy colours, and a white tile for flat floor and ceiling. */
 const TILE = 64;
@@ -105,23 +105,7 @@ export class RaycasterSim implements Sim {
   private seed = 1;
 
   constructor() {
-    const s = (n: number) => new Float32Array(n);
-    this.state = {
-      count: 0,
-      frame: 0,
-      x: s(0),
-      y: s(0),
-      scale: s(0),
-      rotation: s(0),
-      color: new Uint32Array(0),
-      texture: new Uint8Array(0),
-      sx: s(0),
-      sy: s(0),
-      sw: s(0),
-      sh: s(0),
-      w: s(0),
-      h: s(0),
-    };
+    this.state = emptyState();
   }
 
   private rand(): number {

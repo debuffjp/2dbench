@@ -1,4 +1,4 @@
-import { type FrameState, HEIGHT, SPRITE, type SceneSpec, type Sim, WIDTH } from "./types.js";
+import { emptyState, type FrameState, HEIGHT, SPRITE, type SceneSpec, type Sim, WIDTH } from "./types.js";
 
 export const SCENES: Record<string, SceneSpec> = {
   bunny: {
@@ -38,6 +38,26 @@ export const SCENES: Record<string, SceneSpec> = {
     slices: true,
     countMeans: "enemies in the maze (each visible one is drawn as many thin slices)",
   },
+  tilemap: {
+    id: "tilemap",
+    description: "Scrolling tile layers: 16×16 tiles from one atlas, parallax layers at different speeds, animated water tiles",
+    rotation: false,
+    scale: false,
+    color: false,
+    textures: 1,
+    slices: true,
+    countMeans: "tiles drawn per frame (a full-screen layer is 2,135 tiles)",
+  },
+  churn: {
+    id: "churn",
+    description: "Spawn and despawn: every sprite lives 60 frames, so 1/60 of them are destroyed and created each frame; they grow as they age",
+    rotation: false,
+    scale: true,
+    color: false,
+    textures: 1,
+    slices: false,
+    churn: true,
+  },
 };
 
 const TINTS = [0xffffff, 0xff8080, 0x80ff80, 0x8080ff];
@@ -70,22 +90,7 @@ export class Simulation implements Sim {
   private seed = 1;
 
   constructor(private readonly scene: SceneSpec) {
-    this.state = {
-      count: 0,
-      frame: 0,
-      x: new Float32Array(0),
-      y: new Float32Array(0),
-      scale: new Float32Array(0),
-      rotation: new Float32Array(0),
-      color: new Uint32Array(0),
-      texture: new Uint8Array(0),
-      sx: new Float32Array(0),
-      sy: new Float32Array(0),
-      sw: new Float32Array(0),
-      sh: new Float32Array(0),
-      w: new Float32Array(0),
-      h: new Float32Array(0),
-    };
+    this.state = emptyState();
   }
 
   private rand(): number {

@@ -24,6 +24,12 @@ export interface SceneSpec {
   slices: boolean;
   /** For `slices` scenes, how many sprites are drawn per unit of `count` varies per frame (e.g. raycaster strips). */
   countMeans?: string;
+  /**
+   * Sprites are born and die every frame: each frame the oldest drop off the front of the arrays and new ones
+   * are appended, so draw order is spawn order. `id` names each sprite, so retained-mode libraries can
+   * destroy and create objects as a game would.
+   */
+  churn?: boolean;
 }
 
 /**
@@ -51,6 +57,14 @@ export interface FrameState {
   sh: Float32Array;
   w: Float32Array;
   h: Float32Array;
+  /** `churn` scenes only: a unique, increasing id per sprite. Empty otherwise. */
+  id: Uint32Array;
+}
+
+/** An empty frame state, for simulations to fill. */
+export function emptyState(): FrameState {
+  const f = () => new Float32Array(0);
+  return { count: 0, frame: 0, x: f(), y: f(), scale: f(), rotation: f(), color: new Uint32Array(0), texture: new Uint8Array(0), sx: f(), sy: f(), sw: f(), sh: f(), w: f(), h: f(), id: new Uint32Array(0) };
 }
 
 /** What `page.ts` drives: a scene's simulation. `count` is the scene's load dial (sprites, or enemies…). */

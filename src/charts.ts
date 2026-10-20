@@ -34,7 +34,9 @@ const BUDGET = 1000 / 60;
 const FONT = `font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif"`;
 const esc = (s: unknown) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string);
 const kfmt = (n: number) => (n >= 1e6 ? `${n / 1e6}M` : n >= 1e3 ? `${n / 1e3}k` : String(n));
-export const SCENE_ORDER = ["bunny", "particles", "mixed", "raycaster"];
+export const SCENE_ORDER = ["bunny", "particles", "mixed", "raycaster", "tilemap", "churn"];
+/** What a scene's count counts, for axis labels. */
+const UNIT: Record<string, [string, string]> = { raycaster: ["enemy", "enemies"], tilemap: ["tile", "tiles"] };
 
 /** Frame time against count, both log scale (counts double; times span 1–1000 ms), one line per adapter with its min–max band. */
 export function frameChart({ scene, subtitle, series }: ChartScene): string {
@@ -57,7 +59,7 @@ export function frameChart({ scene, subtitle, series }: ChartScene): string {
   const s: string[] = [];
   s.push(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" ${FONT} role="img" aria-label="${esc(scene)}: frame time by count">`);
   s.push(`<rect width="${W}" height="${H}" rx="10" fill="${BG}"/>`);
-  s.push(`<text x="${L}" y="26" fill="${TEXT}" font-size="15" font-weight="600">${esc(scene)}: frame time by ${scene === "raycaster" ? "enemy" : "sprite"} count</text>`);
+  s.push(`<text x="${L}" y="26" fill="${TEXT}" font-size="15" font-weight="600">${esc(scene)}: frame time by ${UNIT[scene]?.[0] ?? "sprite"} count</text>`);
   s.push(`<text x="${L}" y="44" fill="${MUTED}" font-size="11">${esc(`${subtitle} · lower is better`)}</text>`);
   for (const v of [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000]) {
     if (v < yMin || v > yMax) continue;
@@ -69,7 +71,7 @@ export function frameChart({ scene, subtitle, series }: ChartScene): string {
     s.push(`<line x1="${lx(v)}" x2="${lx(v)}" y1="${T}" y2="${T + ph}" stroke="${GRID}"/>`);
     s.push(`<text x="${lx(v)}" y="${T + ph + 18}" fill="${MUTED}" font-size="11" text-anchor="middle">${kfmt(v)}</text>`);
   }
-  s.push(`<text x="${L + pw / 2}" y="${H - 12}" fill="${MUTED}" font-size="11" text-anchor="middle">${scene === "raycaster" ? "enemies" : "sprites"} (log scale)</text>`);
+  s.push(`<text x="${L + pw / 2}" y="${H - 12}" fill="${MUTED}" font-size="11" text-anchor="middle">${UNIT[scene]?.[1] ?? "sprites"} (log scale)</text>`);
   s.push(`<line x1="${L}" x2="${L + pw}" y1="${ly(BUDGET)}" y2="${ly(BUDGET)}" stroke="${TEXT}" stroke-dasharray="5 4" opacity="0.7"/>`);
   s.push(`<text x="${L + 6}" y="${ly(BUDGET) - 6}" fill="${TEXT}" font-size="11" opacity="0.8">60 fps budget (16.7 ms)</text>`);
   const sorted = [...series].sort((a, b) => b.maxAt60fps - a.maxAt60fps);

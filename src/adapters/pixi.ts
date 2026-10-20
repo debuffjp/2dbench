@@ -1,6 +1,6 @@
 import type * as Pixi from "pixi.js";
 import { readPixel } from "../gl.js";
-import { type Adapter, type AdapterInstance, BACKGROUND_CSS, HEIGHT, type SceneSpec, WIDTH } from "../types.js";
+import { type Adapter, type AdapterInstance, BACKGROUND_CSS, type FrameState, HEIGHT, type SceneSpec, WIDTH } from "../types.js";
 
 /**
  * PixiJS 8, WebGL renderer (measured faster than its WebGPU renderer on these scenes; see METHOD.md),
@@ -24,6 +24,30 @@ async function app(canvas: HTMLCanvasElement) {
   return { PIXI, application, gl };
 }
 
+/**
+ * Churn scenes: keep `objs` in step with the frame's ids. The oldest leave the front and new ones are appended,
+ * so dead objects are removed and destroyed and new ones created, as a game spawning and despawning would.
+ * If the ids don't line up (the scene was resized, which reorders it), everything is rebuilt.
+ */
+function syncChurn<T>(objs: T[], ids: number[], s: FrameState, make: (i: number) => T, remove: (count: number) => void): void {
+  let drop = 0;
+  while (drop < ids.length && (ids[drop] as number) < (s.id[0] as number)) drop++;
+  const kept = ids.length - drop;
+  const aligned = kept <= s.count && (kept === 0 || (ids[drop] === s.id[0] && ids[ids.length - 1] === s.id[kept - 1]));
+  const gone = aligned ? drop : ids.length;
+  if (gone) {
+    remove(gone);
+    objs.splice(0, gone);
+    ids.splice(0, gone);
+  }
+  for (let i = objs.length; i < s.count; i++) {
+    objs.push(make(i));
+    ids.push(s.id[i] as number);
+  }
+  // Cheap check that the timed path stays honest: exactly the frame's sprites, in the frame's order.
+  if (objs.length !== s.count || (s.count && (ids[0] !== s.id[0] || ids[s.count - 1] !== s.id[s.count - 1]))) throw new Error("churn: objects out of step with the frame");
+}
+
 const textureOf = (PIXI: typeof Pixi, image: HTMLCanvasElement) => {
   const t = PIXI.Texture.from(image);
   t.source.scaleMode = "nearest";
@@ -35,7 +59,7 @@ export const pixiSprite: Adapter = {
   id: "pixi-sprite",
   label: "PixiJS Sprite",
   package: "pixi.js",
-  setup: "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame. Slice scenes: a cached Texture per source rectangle on the shared source, and a pool of Sprites shown or hidden as the count changes.",
+  setup: "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame. Churn: dead Sprites are removed and destroyed, new ones created and added. Slice scenes: a cached Texture per source rectangle on the shared source, and a pool of Sprites shown or hidden as the count changes.",
   supports: () => true,
   async create(canvas, textures, scene): Promise<AdapterInstance> {
     const { PIXI, application, gl } = await app(canvas);
@@ -80,8 +104,19 @@ export const pixiSprite: Adapter = {
         sync: () => readPixel(gl),
       };
     }
+    const ids: number[] = [];
+    const make = (i: number, s: FrameState) => {
+      const sp = new PIXI.Sprite(texs[s.texture[i] as number]);
+      sp.anchor.set(0.5);
+      application.stage.addChild(sp);
+      return sp;
+    };
     return {
       draw(s) {
+        if (scene.churn)
+          syncChurn(sprites, ids, s, (i) => make(i, s), (n) => {
+            for (const sp of application.stage.removeChildren(0, n)) sp.destroy();
+          });
         for (let i = 0; i < s.count; i++) {
           let sp = sprites[i];
           if (!sp) {
@@ -113,7 +148,7 @@ export const pixiParticle: Adapter = {
   id: "pixi-particle",
   label: "PixiJS ParticleContainer",
   package: "pixi.js",
-  setup: "Application as for Sprite; one ParticleContainer with dynamicProperties set to exactly what the scene changes per frame (position, plus rotation, scale and color where used).",
+  setup: "Application as for Sprite; one ParticleContainer with dynamicProperties set to exactly what the scene changes per frame (position, plus rotation, scale and color where used). Churn: dead particles removed with removeParticles, new ones created and added.",
   // A ParticleContainer shares one texture region across particles; slices need a different one per sprite.
   supports: (scene: SceneSpec) => scene.textures === 1 && !scene.slices,
   async create(canvas, textures, scene): Promise<AdapterInstance> {
@@ -124,8 +159,21 @@ export const pixiParticle: Adapter = {
     });
     application.stage.addChild(container);
     const particles: Pixi.Particle[] = [];
+    const ids: number[] = [];
     return {
       draw(s) {
+        if (scene.churn)
+          syncChurn(
+            particles,
+            ids,
+            s,
+            () => {
+              const p = new PIXI.Particle({ texture: tex, anchorX: 0.5, anchorY: 0.5 });
+              container.addParticle(p);
+              return p;
+            },
+            (n) => container.removeParticles(0, n),
+          );
         for (let i = 0; i < s.count; i++) {
           let p = particles[i];
           if (!p) {

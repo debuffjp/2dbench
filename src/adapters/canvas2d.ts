@@ -6,9 +6,9 @@ export const canvas2d: Adapter = {
   id: "canvas2d",
   label: "Canvas 2D drawImage",
   package: "",
-  setup: "getContext('2d', { alpha: false }), imageSmoothingEnabled = false, one drawImage per sprite.",
+  setup: "getContext('2d', { alpha: false }), imageSmoothingEnabled = false, one drawImage per sprite (the nine-argument form for slices).",
   supports: (scene) => !scene.color,
-  async create(canvas, textures) {
+  async create(canvas, textures, scene) {
     const ctx = canvas.getContext("2d", { alpha: false }) as CanvasRenderingContext2D;
     ctx.imageSmoothingEnabled = false;
     return {
@@ -16,6 +16,13 @@ export const canvas2d: Adapter = {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillStyle = BACKGROUND_CSS;
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        if (scene.slices) {
+          // Slices: part of the texture at x, y (top-left), one nine-argument drawImage each.
+          const image = textures[0] as HTMLCanvasElement;
+          for (let i = 0; i < s.count; i++)
+            ctx.drawImage(image, s.sx[i] as number, s.sy[i] as number, s.sw[i] as number, s.sh[i] as number, s.x[i] as number, s.y[i] as number, s.w[i] as number, s.h[i] as number);
+          return;
+        }
         for (let i = 0; i < s.count; i++) {
           const image = textures[s.texture[i] as number] as HTMLCanvasElement;
           const k = s.scale[i] as number;

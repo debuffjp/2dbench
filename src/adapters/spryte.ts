@@ -1,8 +1,9 @@
-import { createRenderer } from "spryte";
 import { readPixel } from "../gl.js";
 import { type Adapter, BACKGROUND, HEIGHT, WIDTH } from "../types.js";
 
-const setup = (canvas: HTMLCanvasElement) => {
+// Imported when the adapter is created, as PixiJS is, so startup timings count each library's own load.
+const setup = async (canvas: HTMLCanvasElement) => {
+  const { createRenderer } = await import("spryte");
   const draw = createRenderer(canvas, { backend: "webgl2", smooth: false });
   draw.resize(WIDTH, HEIGHT);
   const raw = draw.raw;
@@ -18,7 +19,7 @@ export const spryteSprite: Adapter = {
   setup: "createRenderer(canvas, { smooth: false }); one draw.sprite per sprite with a reused options object. Slice scenes: one reused Frame object whose source rectangle changes per call.",
   supports: () => true,
   async create(canvas, textures, scene) {
-    const { draw, gl } = setup(canvas);
+    const { draw, gl } = await setup(canvas);
     const o = { rotation: 0, scaleX: 1, scaleY: 1, tint: 0xffffffff };
     // Slices: one reused Frame object, since draw.sprite reads it immediately (no allocation per slice).
     const frame = { image: textures[0] as HTMLCanvasElement, x: 0, y: 0, w: 1, h: 1 };
@@ -65,7 +66,7 @@ export const spryteBulk: Adapter = {
   // draw.sprites draws one frame at many positions; slices need a different source region per copy.
   supports: (scene) => scene.textures === 1 && !scene.slices,
   async create(canvas, textures, scene) {
-    const { draw, gl } = setup(canvas);
+    const { draw, gl } = await setup(canvas);
     let pos = new Float32Array(0);
     const image = textures[0] as HTMLCanvasElement;
     return {

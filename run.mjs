@@ -31,7 +31,7 @@ if (flags.has("--help")) {
 const JSON_OUT = flags.has("--json");
 const out = console.log;
 if (JSON_OUT) console.log = (...a) => console.error(...a);
-const SCENE_IDS = ["bunny", "mixed", "particles", "raycaster"];
+const SCENE_IDS = ["bunny", "mixed", "particles", "raycaster", "tilemap", "churn"];
 const scene = SCENE_IDS.find((s) => process.argv.includes(s)) ?? "bunny";
 // 5 rounds by default: the variance study (METHOD.md, Statistics) found 3 can miss the ratio by 10–15%.
 const rounds = Number(process.argv.find((a) => a.startsWith("rounds="))?.slice(7) ?? 5);
@@ -116,6 +116,7 @@ let list;
 let gpu = "unknown";
 const parity = {};
 const samples = {};
+const startups = {};
 let adapters = [];
 try {
   // Which adapters exist and what they support comes from the page, so adding one never touches this file.
@@ -141,7 +142,10 @@ try {
   const chosen = process.argv.slice(2).filter((a) => list.some((x) => x.id === a));
   const reference = list[0].id;
   adapters = list.filter((a) => a.scenes.includes(scene) && (!chosen.length || chosen.includes(a.id) || a.id === reference)).map((a) => a.id);
-  for (const a of adapters) samples[a] = {};
+  for (const a of adapters) {
+    samples[a] = {};
+    startups[a] = [];
+  }
 
   // Software rendering (SwiftShader, llvmpipe) makes timings meaningless. Parity still checks fine on it (CI
   // does exactly that), but a timed run is refused unless explicitly allowed. On Linux, try HEADED=1.
@@ -183,6 +187,8 @@ try {
     const order = adapters.map((_, i) => adapters[(i + round) % adapters.length]);
     for (const a of order) {
       const page = await open(a);
+      // Fresh page, so the first frame here is the adapter's real first frame.
+      startups[a].push(await page.evaluate(() => window.__bench.startup()));
       let over = false;
       for (const count of COUNTS) {
         if (over && (count > lastPublished || !PUBLISHED.includes(count))) {
@@ -227,6 +233,10 @@ const results = adapters.map((id) => {
         maxFrameMs: Math.max(...frame),
         p95FrameMs: median(runs.map((r) => r.p95FrameMs)),
         submitMs: median(runs.map((r) => r.submitMs)),
+        // The shared simulation's part of frameMs: identical work for every adapter.
+        simMs: median(runs.map((r) => r.simMs)),
+        // JS heap after this count's frames, per round (Chrome's coarse counter), to show growth over a run.
+        roundsHeapMB: runs.map((r) => r.heapMB),
         // Every round's median frame, in round order, so anyone can redo the statistics.
         roundsFrameMs: frame.map((v) => +v.toFixed(3)),
       };
@@ -235,7 +245,9 @@ const results = adapters.map((id) => {
   // Largest ladder step measured in every round whose median frame fits the budget (steps are up to 2× apart).
   let maxAt60fps = 0;
   for (const c of counts) if (c.runs === rounds && c.frameMs <= BUDGET_MS) maxAt60fps = c.count;
-  return { adapter: id, label: meta.label, package: meta.package, version: meta.package ? version(meta.package) : "", setup: meta.setup, maxAt60fps, parity: parity[id], counts };
+  const st = startups[id];
+  const startup = { readyMs: median(st.map((s) => s.readyMs)), createMs: median(st.map((s) => s.createMs)), firstFrameMs: median(st.map((s) => s.firstFrameMs)), rounds: st };
+  return { adapter: id, label: meta.label, package: meta.package, version: meta.package ? version(meta.package) : "", setup: meta.setup, maxAt60fps, startup, parity: parity[id], counts };
 });
 
 const report = {
@@ -261,7 +273,8 @@ const report = {
     framesPerCount: 100,
     warmupFrames: 20,
     publishedCounts: PUBLISHED,
-    timing: "simulation through GPU completion (1-pixel readback); median per count per round, then median across rounds",
+    timing: "simulation through GPU completion (1-pixel readback); median per count per round, then median across rounds. simMs is the shared simulation's part.",
+    startup: "fresh page per round: readyMs since navigation, createMs for adapter setup (lazy library import included), firstFrameMs for the first 1,000-sprite frame through GPU completion",
     parity: { ...GATE, reference: adapters[0] },
   },
   results,
@@ -276,13 +289,16 @@ const cell = (r, n) => {
   return c ? `${c.frameMs.toFixed(1)} ms (${c.minFrameMs.toFixed(1)}–${c.maxFrameMs.toFixed(1)})${c.frameMs < 2 ? " †" : ""}` : "n/a";
 };
 console.log(`\n${scene}: ${rounds} rounds · ${gpu} · ${report.environment.browser} · ${report.environment.cpu} · ${report.environment.power}\n`);
-console.log(`| Adapter | Version | Max @60fps | ${PUBLISHED.map((n) => `${n / 1000}k`).join(" | ")} |`);
-console.log(`| --- | --- | --- | ${PUBLISHED.map(() => "---").join(" | ")} |`);
-for (const r of results) console.log(`| ${r.label} | ${r.version || "-"} | ${r.maxAt60fps.toLocaleString("en")} | ${PUBLISHED.map((n) => cell(r, n)).join(" | ")} |`);
+console.log(`| Adapter | Version | Max @60fps | ${PUBLISHED.map((n) => `${n / 1000}k`).join(" | ")} | Ready | First frame |`);
+console.log(`| --- | --- | --- | ${PUBLISHED.map(() => "---").join(" | ")} | --- | --- |`);
+for (const r of results)
+  console.log(
+    `| ${r.label} | ${r.version || "-"} | ${r.maxAt60fps.toLocaleString("en")} | ${PUBLISHED.map((n) => cell(r, n)).join(" | ")} | ${r.startup.readyMs.toFixed(0)} ms | ${r.startup.firstFrameMs.toFixed(1)} ms |`,
+  );
 console.log("\n† under 2 ms per frame: low precision, compare with care.");
 console.log(`Saved ${file}`);
 if (JSON_OUT) {
   const ms = (r) => Object.fromEntries(PUBLISHED.map((n) => [n, r.counts.find((c) => c.count === n)?.frameMs ?? null]));
-  const summary = results.map((r) => ({ adapter: r.adapter, label: r.label, version: r.version, maxAt60fps: r.maxAt60fps, ms: ms(r) }));
+  const summary = results.map((r) => ({ adapter: r.adapter, label: r.label, version: r.version, maxAt60fps: r.maxAt60fps, ms: ms(r), startup: { readyMs: r.startup.readyMs, firstFrameMs: r.startup.firstFrameMs } }));
   out(JSON.stringify({ file, scene, rounds, gpu, parity: "passed", results: summary }, null, 2));
 }
