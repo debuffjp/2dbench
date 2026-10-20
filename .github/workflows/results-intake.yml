@@ -1,13 +1,14 @@
 name: results-intake
-# A "results" issue (from the template, or mobile.html's Submit on GitHub) becomes a pull request that adds
-# the results to results/community/. A maintainer reviews and merges it. No servers, nothing scheduled.
+# A "results" issue (from the template, or mobile.html's Submit buttons) is validated and, if it passes, committed
+# straight to results/community/ on main, then the issue is closed and the results page rebuilt. No PRs to merge:
+# validation is the gate, and a bad file can be reverted. No servers, nothing scheduled.
 on:
   issues:
     types: [opened, edited, labeled]
 permissions:
   contents: write
-  pull-requests: write
   issues: write
+  actions: write
 concurrency:
   group: results-intake-${{ github.event.issue.number }}
   cancel-in-progress: true
@@ -29,26 +30,24 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           COMMENT: ${{ steps.intake.outputs.comment }}
         run: gh issue comment ${{ github.event.issue.number }} --body "$COMMENT"
-      - name: Open or update the pull request
+      - name: Commit to main
         if: steps.intake.outputs.ok == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           FILES: ${{ steps.intake.outputs.files }}
           DEVICE: ${{ steps.intake.outputs.device }}
-          SUMMARY: ${{ steps.intake.outputs.summary }}
           ISSUE: ${{ github.event.issue.number }}
         run: |
-          branch="results/issue-$ISSUE"
           git config user.name "2dbench results bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -B "$branch"
           echo "$FILES" | while IFS= read -r f; do [ -n "$f" ] && git add "$f"; done
-          git commit -m "Results: $DEVICE (#$ISSUE)"
-          git push --force origin "$branch"
-          if gh pr view "$branch" --json number >/dev/null 2>&1; then
-            gh issue comment "$ISSUE" --body "Updated the pull request with your edit: $(gh pr view "$branch" --json url --jq .url)"
-          else
-            url=$(gh pr create --head "$branch" --title "Results: $DEVICE" --label results \
-              --body "Adds results from #$ISSUE: $SUMMARY. Validated automatically; a maintainer checks it looks plausible and merges. Closes #$ISSUE.")
-            gh issue comment "$ISSUE" --body "Thank you! Your results passed validation and are in $url. Once it's merged they appear on the [community results page](https://debuffjp.github.io/2dbench/results.html)."
+          if git diff --cached --quiet; then
+            gh issue close "$ISSUE" --comment "These results are already in the dataset. Thank you!"
+            exit 0
           fi
+          git commit -m "Results: $DEVICE (#$ISSUE)"
+          # Another submission may have landed meanwhile: rebase and retry.
+          for i in 1 2 3 4 5; do git pull --rebase -q origin main && git push -q origin HEAD:main && break; sleep $((i * 3)); done
+          # Pushes made with this token don't trigger other workflows, so rebuild the results page explicitly.
+          gh workflow run pages.yml --ref main
+          gh issue close "$ISSUE" --comment "Thank you! Your results passed validation and are now in the dataset. They'll appear on the [community results page](https://debuffjp.github.io/2dbench/results.html) in a minute or two."

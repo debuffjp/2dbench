@@ -71,7 +71,7 @@ Files in `results/community/` come from GitHub issues, through the results-intak
 
 ## Submitting results
 
-See the README's "Submit your results". In short: tap **Submit on GitHub** in `mobile.html`, or run `node submit.mjs <file>` for a desktop file. Either opens an issue, which a workflow validates (`scripts/validate-results.mjs`) and turns into a pull request. A desktop result whose parity gate failed is never written, so every desktop file has passed it. A phone file can include an adapter that failed, but that adapter has no timings.
+See the README's "Submit your results". In short: tap **Submit** (no account) or **Submit on GitHub** in `mobile.html`, or run `node submit.mjs <file>` for a desktop file. Either opens an issue, which a workflow validates (`scripts/validate-results.mjs`) and commits to `results/community/`. A desktop result whose parity gate failed is never written, so every desktop file has passed it. A phone file can include an adapter that failed, but that adapter has no timings.
 
 ## Charts
 

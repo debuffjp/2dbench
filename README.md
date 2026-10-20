@@ -132,7 +132,7 @@ The more varied the devices, the more useful the data. Phones, tablets, Chromebo
 - **From a desktop run:** `node submit.mjs results/<file>.json`. It validates the file, shows exactly what will be public, asks for your device model, and opens the issue with the GitHub CLI (`gh`).
 - **By hand:** open a [results issue](../../issues/new?template=results.yml) and paste the JSON.
 
-**What happens next:** a workflow checks the JSON. If it can't be accepted, it says why on the issue, and editing the issue re-runs it. If it can, the workflow opens a pull request adding it to `results/community/` and links it on your issue. A maintainer checks it looks plausible and merges. The [community results page](https://debuffjp.github.io/2dbench/results.html) rebuilds from the repository, so it appears there. No server or database is involved: it's all in this repository, in the open.
+**What happens next:** a workflow checks the JSON. If it can't be accepted, it says why on the issue, and editing the issue re-runs it. If it can, the workflow commits it to `results/community/`, closes your issue and rebuilds the [community results page](https://debuffjp.github.io/2dbench/results.html), so it appears there within a couple of minutes. Validation is the gate; a file that turns out to be wrong is reverted in the open. No server or database is involved: it's all in this repository, in the open.
 
 **What's public:** the results file, which holds timings, the browser user agent, GPU string, CPU and OS where known, and your device note, plus your GitHub username on the issue. Nothing else is collected. Results data is released under [CC0](https://creativecommons.org/publicdomain/zero/1.0/), so anyone can reuse it.
 
