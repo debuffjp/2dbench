@@ -16,6 +16,7 @@ Before timing, each adapter draws the same seeded frame (10 steps in, at 2,000 a
 
 - **Coverage:** the adapter's drawn area divided by the reference's. Skipped, culled or missing sprites show here. The run fails outside 99.5–100.5%.
 - **Interior differences:** pixels that differ (any channel by more than 8 levels) where the 3×3 neighbourhood is a single flat colour in both frames. Any edge, even a sprite drawn over another sprite, breaks flatness, so different rounding rules for rotated edges don't count. A wrong tint, alpha, blend or texture inside a sprite does. The run fails above 0.5%. This metric was validated by deliberately giving one library a wrong tint: interior differences rose from 0% to 22%.
+- **On phones** (`mobile.html`), the same gate runs in the page: it renders the reference's frame and each adapter's, then compares them on the device with the same code (`src/parity.ts`), so no frames have to leave the phone. An adapter that fails isn't timed in that scene, and its parity numbers are kept in the file. This checks what desktop runs can't: mobile GPUs and their shader precision. Phone files made before this have no parity data and show as unchecked on the results page.
 - **Differing pixels overall** are reported for transparency. Libraries legitimately differ at the edges of rotated sprites (for example PixiJS's `roundPixels` snaps rotated corners). `PARITY_DUMP=1` writes each frame and a diff image to `results/parity/`.
 
 ## Honest timing

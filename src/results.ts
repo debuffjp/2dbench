@@ -20,7 +20,7 @@ interface MobileResult {
   rounds: number;
   environment: { gpu?: string; userAgent?: string; note?: string };
   submission?: { device?: string };
-  results: Record<string, Record<string, { maxAt60fps: number; counts: Record<string, number[]> }>>;
+  results: Record<string, Record<string, { maxAt60fps: number; counts: Record<string, number[]>; parity?: Record<string, unknown> }>>;
 }
 
 /** One device's numbers for one scene, from either file format. */
@@ -30,6 +30,8 @@ interface Row {
   date: string;
   rounds: number;
   file: string;
+  /** Whether the parity gate ran: always for run.mjs; for mobile.html, only in files made since it gained the gate. */
+  checked: boolean;
   byAdapter: Record<string, { max: number; at50k?: number }>;
 }
 
@@ -56,6 +58,7 @@ for (const [path, r] of Object.entries(files)) {
       date: rr.date.slice(0, 10),
       rounds: rr.rounds,
       file,
+      checked: true,
       byAdapter: Object.fromEntries(rr.results.map((a) => [a.adapter, { max: a.maxAt60fps, at50k: a.counts.find((c) => c.count === 50_000)?.frameMs }])),
     });
   } else {
@@ -67,8 +70,10 @@ for (const [path, r] of Object.entries(files)) {
         date: mr.date.slice(0, 10),
         rounds: mr.rounds,
         file,
+        checked: Object.values(adapters).every((e) => e.parity && Object.keys(e.parity).length),
         byAdapter: Object.fromEntries(
-          Object.entries(adapters).map(([id, e]) => [id, { max: e.maxAt60fps, at50k: e.counts["50000"] ? median(e.counts["50000"]) : undefined }]),
+          // An adapter that failed parity wasn't timed; leave it out rather than show a 0.
+          Object.entries(adapters).filter(([, e]) => Object.keys(e.counts).length).map(([id, e]) => [id, { max: e.maxAt60fps, at50k: e.counts["50000"] ? median(e.counts["50000"]) : undefined }]),
         ),
       });
     }
@@ -81,7 +86,7 @@ for (const scene of SCENE_ORDER) {
   const rows = byScene[scene] ?? [];
   if (!rows.length) continue;
   const adapters = [...new Set(rows.flatMap((r) => Object.keys(r.byAdapter)))].sort();
-  html += `<h2>${scene}</h2><p class="dim">Most sprites at 60 fps, then the median frame at 50k sprites (ms). Higher count, lower ms is better. ${rows.length} device${rows.length === 1 ? "" : "s"}.</p>`;
+  html += `<h2>${scene}</h2><p class="dim">Most sprites at 60 fps, then the median frame at 50k sprites (ms). Higher count, lower ms is better. Rows marked unchecked predate the parity gate on phones. ${rows.length} device${rows.length === 1 ? "" : "s"}.</p>`;
   html += `<div class="scroll"><table><tr><th>Device</th><th>Browser · GPU</th>${adapters.map((a) => `<th><span class="swatch" style="background:${colour(a)}"></span>${esc(LABELS[a] ?? a)}</th>`).join("")}<th>Rounds</th><th>Data</th></tr>`;
   for (const r of rows.sort((a, b) => a.device.localeCompare(b.device))) {
     // Long device notes (a full spec line) are cut to the first two parts; the whole note is in the tooltip.
@@ -91,7 +96,7 @@ for (const scene of SCENE_ORDER) {
       const e = r.byAdapter[a];
       html += e ? `<td class="num">${e.max.toLocaleString("en")}<br><small>${e.at50k === undefined ? "–" : `${e.at50k.toFixed(1)} ms`}</small></td>` : "<td>–</td>";
     }
-    html += `<td>${r.rounds}</td><td><a href="https://github.com/debuffjp/2dbench/blob/main/${esc(r.file)}">json</a></td></tr>`;
+    html += `<td>${r.rounds}${r.checked ? "" : ` <small class="dim" title="Run before mobile.html checked parity: the libraries weren't confirmed to draw the same frame on this device.">unchecked</small>`}</td><td><a href="https://github.com/debuffjp/2dbench/blob/main/${esc(r.file)}">json</a></td></tr>`;
   }
   html += "</table></div>";
 }
