@@ -1,9 +1,11 @@
 // Self-running benchmark for phones and tablets: the same page run.mjs drives, run from inside the browser.
 // Each adapter runs in a fresh iframe (a fresh GPU context); results show in a table and copy as JSON.
-// There's no parity check here (phones can't easily ship frames back); desktop runs carry the parity gate.
+// Before timing a scene, the parity gate runs here too: every adapter's seeded frame is compared with the
+// reference's in this page (src/parity.ts, the same code run.mjs uses), so no frames need to leave the phone.
 import "./site.css";
-import { ADAPTERS } from "./adapters/index.js";
+import { ADAPTERS, REFERENCE } from "./adapters/index.js";
 import { fromMobile, frameChart, maxChart, shortGpu } from "./charts.js";
+import { compare, GATE, PARITY_COUNTS, type Parity, passes } from "./parity.js";
 import { SCENES as SCENE_SPECS } from "./scenes.js";
 
 /** Every scene, with the adapters that support it. */
@@ -27,7 +29,17 @@ interface Measure {
 interface Bench {
   ready: boolean;
   measure(count: number, frames?: number): Promise<Measure>;
+  snapshot(count: number): { width: number; height: number; rgba: string };
 }
+interface Entry {
+  maxAt60fps: number;
+  counts: Record<number, number[]>;
+  /** Per parity count, compared with the reference. An adapter that fails isn't timed. */
+  parity?: Record<number, Parity>;
+}
+type Results = Record<string, Record<string, Entry>>;
+
+const failed = (e: Entry) => !!e.parity && !Object.values(e.parity).every(passes);
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const say = (text: string) => {
@@ -86,6 +98,36 @@ async function open(renderer: string, scene: string): Promise<{ bench: Bench; cl
   }
 }
 
+/** One seeded frame from a fresh page (snapshot() needs one), as RGBA bytes. */
+async function frameOf(renderer: string, scene: string, count: number): Promise<Uint8Array> {
+  const page = await open(renderer, scene);
+  try {
+    const bin = atob(page.bench.snapshot(count).rgba);
+    const px = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) px[i] = bin.charCodeAt(i);
+    return px;
+  } finally {
+    page.close();
+  }
+}
+
+/** The parity gate for one scene: each adapter's frame against the reference's, at every parity count. */
+async function parity(scene: string, renderers: string[], results: Results, tick: () => void): Promise<void> {
+  for (const count of PARITY_COUNTS) {
+    say(`${scene} · checking every library draws the same frame (${count.toLocaleString("en")} sprites)`);
+    const ref = await frameOf(REFERENCE, scene, count);
+    for (const renderer of renderers) {
+      tick();
+      const entry = (results[scene] as Record<string, Entry>)[renderer] as Entry;
+      try {
+        (entry.parity ??= {})[count] = compare(ref, renderer === REFERENCE ? ref : await frameOf(renderer, scene, count));
+      } catch (e) {
+        say(String(e));
+      }
+    }
+  }
+}
+
 const median = (xs: number[]) => {
   const s = [...xs].sort((a, b) => a - b);
   return s.length % 2 ? (s[(s.length - 1) / 2] as number) : ((s[s.length / 2 - 1] as number) + (s[s.length / 2] as number)) / 2;
@@ -105,21 +147,26 @@ async function run(): Promise<void> {
   $("done").hidden = true;
   const bar = $("bar");
   (bar.parentElement as HTMLElement).hidden = false;
-  const total = Object.values(SCENES).reduce((n, r) => n + r.length * rounds, 0);
+  const total = Object.values(SCENES).reduce((n, r) => n + r.length * (rounds + PARITY_COUNTS.length), 0);
   let step = 0;
   const startBattery = await battery();
-  const results: Record<string, Record<string, { maxAt60fps: number; counts: Record<number, number[]> }>> = {};
+  const results: Results = {};
+  const tick = () => {
+    bar.style.width = `${(100 * step++) / total}%`;
+  };
   try {
     for (const [scene, renderers] of Object.entries(SCENES)) {
-      results[scene] = {};
+      results[scene] = Object.fromEntries(renderers.map((r) => [r, { maxAt60fps: 0, counts: {} }]));
+      await parity(scene, renderers, results, tick);
       for (let round = 0; round < rounds; round++) {
         // Rotate the order each round so heat and ordering spread evenly.
         const order = renderers.map((_, i) => renderers[(i + round) % renderers.length] as string);
         for (const renderer of order) {
+          tick();
+          const entry = results[scene][renderer] as Entry;
+          // Different output means the timings aren't comparable: a library that failed parity isn't timed.
+          if (failed(entry)) continue;
           say(`${scene} · ${LABELS[renderer] ?? renderer} · round ${round + 1}/${rounds}`);
-          bar.style.width = `${(100 * step++) / total}%`;
-          results[scene][renderer] ??= { maxAt60fps: 0, counts: {} };
-          const entry = results[scene][renderer];
           let page: Awaited<ReturnType<typeof open>>;
           try {
             page = await open(renderer, scene);
@@ -146,6 +193,7 @@ async function run(): Promise<void> {
       date: new Date().toISOString(),
       rounds,
       framesPerCount: FRAMES,
+      method: { parity: { ...GATE, reference: REFERENCE } },
       environment: { ...environment(), battery: { start: startBattery, end: await battery() } },
       results,
     };
@@ -170,12 +218,12 @@ async function run(): Promise<void> {
   }
 }
 
-function show(results: Record<string, Record<string, { maxAt60fps: number; counts: Record<number, number[]> }>>): void {
+function show(results: Results): void {
   const at = (e: { counts: Record<number, number[]> }, n: number) => (e.counts[n] ? `${median(e.counts[n]).toFixed(1)} ms` : "n/a");
-  let html = "<tr><th>Scene</th><th>Renderer</th><th>Max @60fps</th><th>10k</th><th>50k</th></tr>";
+  let html = "<tr><th>Scene</th><th>Renderer</th><th>Parity</th><th>Max @60fps</th><th>10k</th><th>50k</th></tr>";
   for (const [scene, byRenderer] of Object.entries(results))
     for (const [renderer, e] of Object.entries(byRenderer))
-      html += `<tr><td>${scene}</td><td>${LABELS[renderer] ?? renderer}</td><td>${e.maxAt60fps.toLocaleString("en")}</td><td>${at(e, 10_000)}</td><td>${at(e, 50_000)}</td></tr>`;
+      html += `<tr><td>${scene}</td><td>${LABELS[renderer] ?? renderer}</td><td>${!e.parity ? "–" : failed(e) ? "<b>failed, not timed</b>" : "ok"}</td><td>${e.maxAt60fps.toLocaleString("en")}</td><td>${at(e, 10_000)}</td><td>${at(e, 50_000)}</td></tr>`;
   $("results").innerHTML = html;
 }
 

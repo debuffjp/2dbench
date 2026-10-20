@@ -51,6 +51,13 @@ export function validate(r) {
           cells++;
           if (!Array.isArray(frames) || !frames.every(sane)) problems.push(`${scene} ${adapter} @${count}: frame times are not sane numbers.`);
         }
+        // Files from before mobile.html ran the gate have no parity; they're accepted and shown as unchecked.
+        // When it's there, an adapter outside the gate must not have been timed.
+        const parity = Object.values(e?.parity ?? {});
+        if (parity.some((p) => ![p?.coveragePercent, p?.interiorDifferingPercent].every((n) => typeof n === "number" && Number.isFinite(n))))
+          problems.push(`${scene} ${adapter}: parity values are not numbers.`);
+        else if (parity.some((p) => p.coveragePercent < 99.5 || p.coveragePercent > 100.5 || p.interiorDifferingPercent > 0.5) && Object.keys(e?.counts ?? {}).length)
+          problems.push(`${scene} ${adapter}: timed although its parity is outside the gate.`);
       }
     }
   }

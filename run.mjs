@@ -16,6 +16,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright-core";
 import { build, preview } from "vite";
+// The gate itself is shared with mobile.html, so phones and desktops judge frames by the same rules.
+import { compare, GATE, PARITY_COUNTS, PARITY_TOLERANCE, passes } from "./src/parity.ts";
 
 const root = dirname(fileURLToPath(import.meta.url));
 const flags = new Set(process.argv.slice(2).filter((a) => a.startsWith("--")));
@@ -37,12 +39,8 @@ const COUNTS = [1_000, 2_000, 5_000, 10_000, 20_000, 50_000, 100_000, 200_000, 4
 // Every adapter is measured at these counts in every round, even past the 60 fps budget.
 const PUBLISHED = [10_000, 50_000, 200_000];
 const BUDGET_MS = 1000 / 60;
-const PARITY_COUNTS = [2_000, 50_000];
-const PARITY_TOLERANCE = 8;
 /** GPU strings of software renderers. */
 const SOFTWARE = /SwiftShader|llvmpipe|softpipe|Microsoft Basic Render/i;
-const COVERAGE_RANGE = [99.5, 100.5];
-const MAX_INTERIOR_PERCENT = 0.5;
 const W = 960;
 const H = 540;
 
@@ -68,48 +66,6 @@ function power() {
   const source = status === "" ? "no battery (desktop)" : status === "2" ? "AC power" : `battery (status ${status})`;
   const plan = sh("powercfg /getactivescheme").match(/\(([^)]+)\)/)?.[1] ?? "unknown plan";
   return `${source}, power plan ${plan}`;
-}
-
-/**
- * Compare a frame with the reference's. Coverage: drawn area relative to the reference (skipped or culled
- * sprites show here). Interior: differing pixels whose 3×3 neighbourhood is flat in both frames. Any edge,
- * even a sprite over another sprite, breaks flatness, so rounding rules that move edges don't count; a wrong
- * tint, alpha or texture inside a sprite does.
- */
-function compare(ref, px) {
-  const diff = (a, b, i, j = i) => Math.max(Math.abs(a[i] - b[j]), Math.abs(a[i + 1] - b[j + 1]), Math.abs(a[i + 2] - b[j + 2]));
-  const flat = (b, x, y) => {
-    const c = (y * W + x) * 4;
-    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (diff(b, b, ((y + dy) * W + x + dx) * 4, c) > PARITY_TOLERANCE) return false;
-    return true;
-  };
-  const bg = (b, i) => b[i] === 0x11 && b[i + 1] === 0x14 && b[i + 2] === 0x0d;
-  let differ = 0;
-  let drawn = 0;
-  let own = 0;
-  let refOwn = 0;
-  let interior = 0;
-  for (let i = 0; i < ref.length; i += 4) {
-    const a = bg(ref, i);
-    const b = bg(px, i);
-    if (!b) own++;
-    if (!a) refOwn++;
-    if (a && b) continue;
-    drawn++;
-    if (diff(ref, px, i) > PARITY_TOLERANCE) {
-      differ++;
-      const x = (i / 4) % W;
-      const y = (i / 4 / W) | 0;
-      if (x > 0 && y > 0 && x < W - 1 && y < H - 1 && flat(ref, x, y) && flat(px, x, y)) interior++;
-    }
-  }
-  const pct = (n, d) => (d ? +((100 * n) / d).toFixed(2) : 0);
-  return {
-    drawnPixels: drawn,
-    differingPercent: pct(differ, drawn),
-    coveragePercent: refOwn ? +((100 * own) / refOwn).toFixed(1) : 0,
-    interiorDifferingPercent: pct(interior, drawn),
-  };
 }
 
 await build({ root, logLevel: "error" });
@@ -212,7 +168,7 @@ try {
       const p = compare(snaps[reference][count], snaps[a][count]);
       parity[a][count] = p;
       if (process.env.PARITY_DUMP) await dump(`${a}-${count}`, snaps[a][count], snaps[reference][count]);
-      const ok = p.coveragePercent >= COVERAGE_RANGE[0] && p.coveragePercent <= COVERAGE_RANGE[1] && p.interiorDifferingPercent <= MAX_INTERIOR_PERCENT;
+      const ok = passes(p);
       if (!ok) failures.push(`${a} at ${count}`);
       console.log(
         `parity ${ok ? "ok  " : "FAIL"} ${a.padEnd(16)} ${String(count).padStart(6)}: coverage ${p.coveragePercent}%, ${p.differingPercent}% of drawn pixels differ (${p.interiorDifferingPercent}% inside sprites)`,
@@ -306,7 +262,7 @@ const report = {
     warmupFrames: 20,
     publishedCounts: PUBLISHED,
     timing: "simulation through GPU completion (1-pixel readback); median per count per round, then median across rounds",
-    parity: { counts: PARITY_COUNTS, tolerance: PARITY_TOLERANCE, reference: adapters[0], gate: { coveragePercent: COVERAGE_RANGE, maxInteriorDifferingPercent: MAX_INTERIOR_PERCENT } },
+    parity: { ...GATE, reference: adapters[0] },
   },
   results,
 };

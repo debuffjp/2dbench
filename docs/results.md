@@ -63,7 +63,7 @@
 
 ## Phone results (`mobile.html`)
 
-Files from `mobile.html` hold every scene in one file, in a lighter format: `results[scene][adapter] = { maxAt60fps, counts: { "<count>": [one median frame time per round] } }`. `environment` adds `userAgent`, `devicePixelRatio`, `screen`, `cores`, `memoryGB`, `timerResolutionMs` (the smallest step of `performance.now()`: about 0.1 ms in desktop Chrome, 1 ms on iOS) and battery state where the browser exposes it. There's no parity data: phones can't easily ship frames back. Adapters don't change behaviour per device, so desktop parity covers them.
+Files from `mobile.html` hold every scene in one file, in a lighter format: `results[scene][adapter] = { maxAt60fps, counts: { "<count>": [one median frame time per round] } }`. `environment` adds `userAgent`, `devicePixelRatio`, `screen`, `cores`, `memoryGB`, `timerResolutionMs` (the smallest step of `performance.now()`: about 0.1 ms in desktop Chrome, 1 ms on iOS) and battery state where the browser exposes it. Each adapter's entry also has `parity`, in the same shape as a desktop file's (`{ "<count>": { coveragePercent, differingPercent, interiorDifferingPercent, drawnPixels } }`), computed on the phone against the reference. `method.parity` records the counts, tolerance, reference and gate. An adapter outside the gate isn't timed, so its `counts` is empty. Files made before mobile.html ran the gate have no `parity`; they're accepted and marked unchecked on the results page.
 
 ## `submission` (community results)
 
@@ -71,7 +71,7 @@ Files in `results/community/` come from GitHub issues, through the results-intak
 
 ## Submitting results
 
-See the README's "Submit your results". In short: tap **Submit on GitHub** in `mobile.html`, or run `node submit.mjs <file>` for a desktop file. Either opens an issue, which a workflow validates (`scripts/validate-results.mjs`) and turns into a pull request. A result whose parity gate failed is never written, so every desktop file has passed it.
+See the README's "Submit your results". In short: tap **Submit on GitHub** in `mobile.html`, or run `node submit.mjs <file>` for a desktop file. Either opens an issue, which a workflow validates (`scripts/validate-results.mjs`) and turns into a pull request. A desktop result whose parity gate failed is never written, so every desktop file has passed it. A phone file can include an adapter that failed, but that adapter has no timings.
 
 ## Charts
 
