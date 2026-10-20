@@ -1,7 +1,7 @@
 import type * as Pixi from "pixi.js";
 import { readPixel } from "../gl.js";
 import { TEXT_SIZE } from "../text.js";
-import { type Adapter, type AdapterInstance, BACKGROUND_CSS, type FrameState, HEIGHT, type SceneSpec, WIDTH } from "../types.js";
+import { type Adapter, type AdapterInstance, BACKGROUND_CSS, type FrameState, PANELS, HEIGHT, type SceneSpec, WIDTH } from "../types.js";
 
 /**
  * PixiJS 8, WebGL renderer (measured faster than its WebGPU renderer on these scenes; see METHOD.md),
@@ -47,6 +47,47 @@ function syncChurn<T>(objs: T[], ids: number[], s: FrameState, make: (i: number)
   }
   // Cheap check that the timed path stays honest: exactly the frame's sprites, in the frame's order.
   if (objs.length !== s.count || (s.count && (ids[0] !== s.id[0] || ids[s.count - 1] !== s.id[s.count - 1]))) throw new Error("churn: objects out of step with the frame");
+}
+
+/**
+ * The scene's framing: an uploaded layer under everything, a low-resolution RenderTexture drawn scaled, or
+ * masked panel containers. `parent(i)` is where sprite i goes; `render()` replaces application.render().
+ */
+function framing(PIXI: typeof Pixi, application: Pixi.Application, scene: SceneSpec, textures: HTMLCanvasElement[]) {
+  const stage = application.stage;
+  let layer: Pixi.Texture | null = null;
+  if (scene.upload) {
+    layer = textureOf(PIXI, textures[textures.length - 1] as HTMLCanvasElement);
+    stage.addChild(new PIXI.Sprite(layer));
+  }
+  let root: Pixi.Container = stage;
+  let target: Pixi.RenderTexture | null = null;
+  if (scene.target) {
+    root = new PIXI.Container();
+    target = PIXI.RenderTexture.create({ width: scene.target.width, height: scene.target.height, scaleMode: "nearest" });
+    const shown = new PIXI.Sprite(target);
+    shown.scale.set(scene.target.scale);
+    stage.addChild(shown);
+  }
+  const panels = scene.clip
+    ? PANELS.map(([x, y, w, h]) => {
+        const panel = new PIXI.Container();
+        // A rectangular mask, which PixiJS applies as a scissor or stencil clip.
+        const mask = new PIXI.Graphics().rect(x, y, w, h).fill(0xffffff);
+        panel.mask = mask;
+        stage.addChild(mask, panel);
+        return panel;
+      })
+    : null;
+  return {
+    parent: (i: number) => (panels ? (panels[i % panels.length] as Pixi.Container) : root),
+    render() {
+      // The game repainted the layer's canvas: tell PixiJS to re-upload it.
+      layer?.source.update();
+      if (target) application.renderer.render({ container: root, target, clear: true, clearColor: BACKGROUND_CSS });
+      application.render();
+    },
+  };
 }
 
 /** TEXT_FONT as a PixiJS text style. */
@@ -98,7 +139,7 @@ export const pixiSprite: Adapter = {
   id: "pixi-sprite",
   label: "PixiJS Sprite",
   package: "pixi.js",
-  setup: "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame. Churn: dead Sprites are removed and destroyed, new ones created and added. Text: one Text per label (canvas-rasterised, resolution 1), string set each frame. Slice scenes: a cached Texture per source rectangle on the shared source, and a pool of Sprites shown or hidden as the count changes.",
+  setup: "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame. Churn: dead Sprites are removed and destroyed, new ones created and added. Render target: sprites in a Container rendered to a RenderTexture (nearest), shown by a scaled Sprite. Clip: a Container per panel with a rectangle Graphics mask. Upload: a Sprite of the layer, texture.source.update() each frame. Text: one Text per label (canvas-rasterised, resolution 1), string set each frame. Slice scenes: a cached Texture per source rectangle on the shared source, and a pool of Sprites shown or hidden as the count changes.",
   supports: () => true,
   async create(canvas, textures, scene): Promise<AdapterInstance> {
     const { PIXI, application, gl } = await app(canvas);
@@ -147,17 +188,18 @@ export const pixiSprite: Adapter = {
       };
     }
     const ids: number[] = [];
+    const frame = framing(PIXI, application, scene, textures);
     const make = (i: number, s: FrameState) => {
       const sp = new PIXI.Sprite(texs[s.texture[i] as number]);
       sp.anchor.set(0.5);
-      application.stage.addChild(sp);
+      frame.parent(i).addChild(sp);
       return sp;
     };
     return {
       draw(s) {
         if (scene.churn)
           syncChurn(sprites, ids, s, (i) => make(i, s), (n) => {
-            for (const sp of application.stage.removeChildren(0, n)) sp.destroy();
+            for (const sp of frame.parent(0).removeChildren(0, n)) sp.destroy();
           });
         for (let i = 0; i < s.count; i++) {
           let sp = sprites[i];
@@ -165,7 +207,7 @@ export const pixiSprite: Adapter = {
             sp = new PIXI.Sprite(texs[s.texture[i] as number]);
             sp.anchor.set(0.5);
             sprites.push(sp);
-            application.stage.addChild(sp);
+            frame.parent(i).addChild(sp);
           }
           sp.x = s.x[i] as number;
           sp.y = s.y[i] as number;
@@ -178,7 +220,7 @@ export const pixiSprite: Adapter = {
           }
         }
         // Sprites beyond count (count only grows in a run) don't exist.
-        application.render();
+        frame.render();
       },
       sync: () => readPixel(gl),
     };
@@ -190,16 +232,18 @@ export const pixiParticle: Adapter = {
   id: "pixi-particle",
   label: "PixiJS ParticleContainer",
   package: "pixi.js",
-  setup: "Application as for Sprite; one ParticleContainer with dynamicProperties set to exactly what the scene changes per frame (position, plus rotation, scale and color where used). Churn: dead particles removed with removeParticles, new ones created and added.",
+  setup: "Application as for Sprite; one ParticleContainer with dynamicProperties set to exactly what the scene changes per frame (position, plus rotation, scale and color where used). Churn: dead particles removed with removeParticles, new ones created and added. Render target and upload as for Sprite.",
   // A ParticleContainer shares one texture region across particles; slices need a different one per sprite.
-  supports: (scene: SceneSpec) => scene.textures === 1 && !scene.slices,
+  // Clip would need a ParticleContainer per panel; not measured yet.
+  supports: (scene: SceneSpec) => scene.textures === 1 && !scene.slices && !scene.clip,
   async create(canvas, textures, scene): Promise<AdapterInstance> {
     const { PIXI, application, gl } = await app(canvas);
     const tex = textureOf(PIXI, textures[0] as HTMLCanvasElement);
     const container = new PIXI.ParticleContainer({
       dynamicProperties: { position: true, rotation: scene.rotation, scale: scene.scale, color: scene.color },
     });
-    application.stage.addChild(container);
+    const frame = framing(PIXI, application, scene, textures);
+    frame.parent(0).addChild(container);
     const particles: Pixi.Particle[] = [];
     const ids: number[] = [];
     return {
@@ -233,7 +277,7 @@ export const pixiParticle: Adapter = {
             p.alpha = (c & 0xff) / 255;
           }
         }
-        application.render();
+        frame.render();
       },
       sync: () => readPixel(gl),
     };

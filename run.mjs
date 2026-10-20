@@ -31,7 +31,7 @@ if (flags.has("--help")) {
 const JSON_OUT = flags.has("--json");
 const out = console.log;
 if (JSON_OUT) console.log = (...a) => console.error(...a);
-const SCENE_IDS = ["bunny", "mixed", "particles", "raycaster", "tilemap", "churn", "text"];
+const SCENE_IDS = ["bunny", "mixed", "particles", "raycaster", "tilemap", "churn", "text", "lowres", "clip", "upload"];
 const scene = SCENE_IDS.find((s) => process.argv.includes(s)) ?? "bunny";
 // 5 rounds by default: the variance study (METHOD.md, Statistics) found 3 can miss the ratio by 10–15%.
 const rounds = Number(process.argv.find((a) => a.startsWith("rounds="))?.slice(7) ?? 5);
@@ -118,6 +118,7 @@ let sceneGate = null;
 const parity = {};
 const samples = {};
 const startups = {};
+const contextLoss = {};
 let adapters = [];
 try {
   // Which adapters exist and what they support comes from the page, so adding one never touches this file.
@@ -182,6 +183,14 @@ try {
       );
     }
   }
+  // Context loss: does each adapter draw the same frame again after the WebGL context is lost and restored?
+  for (const a of adapters) {
+    const page = await open(a);
+    contextLoss[a] = await page.evaluate(() => window.__bench.contextLoss());
+    await page.close();
+    const c = contextLoss[a];
+    console.log(`context  ${a.padEnd(16)} ${c === null ? "n/a (not WebGL)" : c.recovered ? `recovered in ${c.ms} ms` : `NOT recovered: ${c.reason}`}`);
+  }
   if (failures.length) throw new Error(`Parity failed (${failures.join(", ")}): these adapters don't draw the same scene, so timings aren't comparable.`);
 
   // 2. Timing, interleaved: each round rotates the order so heat and ordering spread evenly.
@@ -215,7 +224,7 @@ try {
 if (rounds === 0) {
   // Parity only (CI, or a quick check while writing an adapter): nothing timed, so nothing to save.
   console.log("\nParity passed for every adapter. rounds=0, so no timing and no results file.");
-  if (JSON_OUT) out(JSON.stringify({ scene, gpu, parity: "passed", adapters, details: parity }, null, 2));
+  if (JSON_OUT) out(JSON.stringify({ scene, gpu, parity: "passed", adapters, details: parity, contextLoss }, null, 2));
   process.exit(0);
 }
 
@@ -250,7 +259,7 @@ const results = adapters.map((id) => {
   for (const c of counts) if (c.runs === rounds && c.frameMs <= BUDGET_MS) maxAt60fps = c.count;
   const st = startups[id];
   const startup = { readyMs: median(st.map((s) => s.readyMs)), createMs: median(st.map((s) => s.createMs)), firstFrameMs: median(st.map((s) => s.firstFrameMs)), rounds: st };
-  return { adapter: id, label: meta.label, package: meta.package, version: meta.package ? version(meta.package) : "", setup: meta.setup, maxAt60fps, startup, parity: parity[id], counts };
+  return { adapter: id, label: meta.label, package: meta.package, version: meta.package ? version(meta.package) : "", setup: meta.setup, maxAt60fps, startup, contextLoss: contextLoss[id] ?? null, parity: parity[id], counts };
 });
 
 const report = {

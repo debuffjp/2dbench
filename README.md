@@ -96,11 +96,11 @@ Parity passed in every scene (desktop; re-checked against PixiJS `Sprite` as the
 
 | Adapter | Library and API | Scenes |
 | --- | --- | --- |
-| `canvas2d` | Canvas 2D `drawImage`, `fillText` | bunny, tilemap, churn, text (no per-draw tint) |
+| `canvas2d` | Canvas 2D `drawImage`, `fillText` | every scene without per-sprite tint |
 | `spryte` | spryte `draw.sprite`, `draw.text` | all |
-| `spryte-bulk` | spryte `draw.sprites` | bunny, particles, churn |
+| `spryte-bulk` | spryte `draw.sprites` | bunny, particles, churn, lowres, clip, upload |
 | `pixi-sprite` | PixiJS `Sprite`, `Text` (the parity reference) | all |
-| `pixi-particle` | PixiJS `ParticleContainer` | bunny, particles, churn |
+| `pixi-particle` | PixiJS `ParticleContainer` | bunny, particles, churn, lowres, upload |
 | `pixi-bitmaptext` | PixiJS `BitmapText` | text |
 
 `raycaster` needs a different texture region per sprite. spryte `draw.sprite` and PixiJS `Sprite` do that; the bulk paths (`draw.sprites`, `ParticleContainer`) share one region per call, and Canvas 2D can't tint for the shading, so they sit this one out.
@@ -117,9 +117,12 @@ Wanted: Phaser, KAPLAY, Excalibur, LittleJS, three.js, Babylon.js, melonJS, and 
 | `tilemap` | Scrolling tile layers: an opaque ground layer with animated water, then sparse decoration layers, each scrolling at its own speed. The count is tiles drawn (2,135 per full layer). | The workload of nearly every platformer and top-down game: many small slices of one atlas, moving every frame. |
 | `churn` | Every sprite lives 60 frames, so a sixtieth of them are destroyed and created each frame, and they grow as they age. | Bullets, pickups and effects. Retained-mode libraries pay for creating and destroying objects, as a game would. |
 | `text` | A grid of numbers scrolling up; each changes every 8 frames and its colour every 16. Drawn with each library's native text API. The count is labels (540 fill the screen). | Scores, timers and damage numbers: text that changes often, the case that makes retained text re-rasterise. |
+| `lowres` | Bunnies drawn into a 480×270 offscreen target, which is then drawn at 2× to fill the canvas. | Pixel-art games rendered at low resolution and upscaled: render targets on every frame. Post-effect shaders aren't measured, since each library's shader API differs. |
+| `clip` | A 4×3 grid of UI panels, each clipping the bunnies bouncing through it. | Inventories, scrolling lists and minimaps: per-panel clipping. |
+| `upload` | A 960×540 layer repainted on the CPU every frame and re-uploaded, under bunnies. | Destructible terrain, paint canvases and software effects: a full-screen texture upload per frame. |
 | `raycaster` | A retro first-person maze (the Wolfenstein 3D technique): 480 textured wall slices, distance shading, and squish-blob enemies billboarded and clipped column by column. The count is the number of enemies. | Thousands of thin quads per frame, each from a different region of one texture atlas: what raycasters, sprite-sheet animation and tile atlases do. |
 
-Every property a scene uses changes over time, so no library can win by caching values that never change. In `raycaster`, the shared simulation does all the game work (casting rays, shading, projecting and depth-clipping enemies), and adapters only draw the resulting slices. Text uses each library's own text API, so glyphs are rasterised differently. It has its own, declared parity gate: coverage within 90–110% at 100 and 540 labels, where labels don't overlap. Labels land within 1–2 pixels of each other, so it catches missing, extra or wrong labels but not pixel-exact glyphs. Planned: clipping, render targets and post-effects, texture uploads, and context loss.
+Every property a scene uses changes over time, so no library can win by caching values that never change. In `raycaster`, the shared simulation does all the game work (casting rays, shading, projecting and depth-clipping enemies), and adapters only draw the resulting slices. Text uses each library's own text API, so glyphs are rasterised differently. It has its own, declared parity gate: coverage within 90–110% at 100 and 540 labels, where labels don't overlap. Labels land within 1–2 pixels of each other, so it catches missing, extra or wrong labels but not pixel-exact glyphs. Every run also checks **context loss**: each WebGL adapter draws a frame, the context is lost and restored, and the run records how long until the adapter draws the same frame again (or that it never did). Planned: post-effect shaders.
 
 ## Run it
 

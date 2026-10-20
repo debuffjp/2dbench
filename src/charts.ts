@@ -34,7 +34,7 @@ const BUDGET = 1000 / 60;
 const FONT = `font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif"`;
 const esc = (s: unknown) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string);
 const kfmt = (n: number) => (n >= 1e6 ? `${n / 1e6}M` : n >= 1e3 ? `${n / 1e3}k` : String(n));
-export const SCENE_ORDER = ["bunny", "particles", "mixed", "raycaster", "tilemap", "churn", "text"];
+export const SCENE_ORDER = ["bunny", "particles", "mixed", "raycaster", "tilemap", "churn", "text", "lowres", "clip", "upload"];
 /** What a scene's count counts, for axis labels. */
 const UNIT: Record<string, [string, string]> = { raycaster: ["enemy", "enemies"], tilemap: ["tile", "tiles"], text: ["label", "labels"] };
 

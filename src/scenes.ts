@@ -58,6 +58,37 @@ export const SCENES: Record<string, SceneSpec> = {
     slices: false,
     churn: true,
   },
+  lowres: {
+    id: "lowres",
+    description: "Low-resolution render target: bunnies drawn into a 480×270 offscreen image, which is then drawn at 2× to fill the canvas",
+    rotation: false,
+    scale: false,
+    color: false,
+    textures: 1,
+    slices: false,
+    world: [480, 270],
+    target: { width: 480, height: 270, scale: 2 },
+  },
+  clip: {
+    id: "clip",
+    description: "Clipped panels: a 4×3 grid of UI panels, each clipping the bunnies bouncing through it",
+    rotation: false,
+    scale: false,
+    color: false,
+    textures: 1,
+    slices: false,
+    clip: true,
+  },
+  upload: {
+    id: "upload",
+    description: "Texture upload: a 960×540 layer repainted on the CPU every frame (like destructible terrain or a paint canvas) and re-uploaded, under bunnies",
+    rotation: false,
+    scale: false,
+    color: false,
+    textures: 1,
+    slices: false,
+    upload: true,
+  },
   text: {
     id: "text",
     description: "Text: a grid of numbers scrolling up, each changing every 8 frames and colour every 16, drawn with each library's native text API",
@@ -105,8 +136,12 @@ export class Simulation implements Sim {
   private vx = new Float32Array(0);
   private vy = new Float32Array(0);
   private seed = 1;
+  /** The box sprites bounce in: the canvas, or the scene's `world`. */
+  private readonly w: number;
+  private readonly h: number;
 
   constructor(private readonly scene: SceneSpec) {
+    [this.w, this.h] = scene.world ?? [WIDTH, HEIGHT];
     this.state = emptyState();
   }
 
@@ -135,8 +170,8 @@ export class Simulation implements Sim {
       this.vy = grow(this.vy, (n) => new Float32Array(n));
     }
     for (let i = s.count; i < count; i++) {
-      s.x[i] = this.rand() * WIDTH;
-      s.y[i] = this.rand() * HEIGHT * 0.5;
+      s.x[i] = this.rand() * this.w;
+      s.y[i] = this.rand() * this.h * 0.5;
       this.vx[i] = this.rand() * 10 - 5;
       this.vy[i] = this.rand() * 10 - 5;
       s.texture[i] = this.scene.textures > 1 ? i % this.scene.textures : 0;
@@ -153,10 +188,10 @@ export class Simulation implements Sim {
       x[i] = (x[i] as number) + (vx[i] as number);
       y[i] = (y[i] as number) + (vy[i] as number);
       vy[i] = (vy[i] as number) + 0.75;
-      if ((x[i] as number) > WIDTH || (x[i] as number) < 0) vx[i] = -(vx[i] as number);
-      if ((y[i] as number) > HEIGHT) {
+      if ((x[i] as number) > this.w || (x[i] as number) < 0) vx[i] = -(vx[i] as number);
+      if ((y[i] as number) > this.h) {
         vy[i] = (vy[i] as number) * -0.85;
-        y[i] = HEIGHT;
+        y[i] = this.h;
       } else if ((y[i] as number) < 0) {
         vy[i] = 0;
         y[i] = 0;

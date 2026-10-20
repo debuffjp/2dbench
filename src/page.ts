@@ -4,7 +4,9 @@ import { ADAPTERS } from "./adapters/index.js";
 import { ChurnSim } from "./churn.js";
 import { makeRaycasterAtlas, RaycasterSim } from "./raycaster.js";
 import { makeTextures, SCENES, Simulation } from "./scenes.js";
+import { ClipSim } from "./panels.js";
 import { TextSim } from "./text.js";
+import { UploadSim } from "./upload.js";
 import { makeTilemapAtlas, TilemapSim } from "./tilemap.js";
 import { HEIGHT, type Sim, WIDTH } from "./types.js";
 
@@ -38,8 +40,22 @@ canvas.width = WIDTH;
 canvas.height = HEIGHT;
 // Each scene brings its own simulation and textures; adapters see only the frame state and textures.
 const sim: Sim =
-  scene.id === "raycaster" ? new RaycasterSim() : scene.id === "tilemap" ? new TilemapSim() : scene.id === "churn" ? new ChurnSim() : scene.id === "text" ? new TextSim() : new Simulation(scene);
+  scene.id === "raycaster"
+    ? new RaycasterSim()
+    : scene.id === "tilemap"
+      ? new TilemapSim()
+      : scene.id === "churn"
+        ? new ChurnSim()
+        : scene.id === "text"
+          ? new TextSim()
+          : scene.clip
+            ? new ClipSim(scene)
+            : scene.upload
+              ? new UploadSim(scene)
+              : new Simulation(scene);
 const textures = scene.id === "raycaster" ? [makeRaycasterAtlas()] : scene.id === "tilemap" ? [makeTilemapAtlas()] : makeTextures(scene);
+// Upload scenes: the layer the simulation repaints goes last.
+if (sim instanceof UploadSim) textures.push(sim.layer);
 const createStart = performance.now();
 const instance = await adapter.create(canvas, textures, scene);
 const readyAt = performance.now();
@@ -136,4 +152,63 @@ function snapshot(count: number, steps = 10): { width: number; height: number; r
   return { width: WIDTH, height: HEIGHT, rgba: btoa(bin) };
 }
 
-(window as unknown as { __bench: unknown }).__bench = { adapter: adapter.id, scene: scene.id, measure, snapshot, startup, ready: true };
+export interface ContextLoss {
+  /** The adapter drew the same frame again after the context came back. */
+  recovered: boolean;
+  /** From restoreContext() to the first correct frame, polling once per animation frame. */
+  ms: number | null;
+  /** Why not, when it didn't. */
+  reason?: string;
+}
+
+/**
+ * Context loss (a backgrounded phone tab, a GPU reset): on a fresh page, draw a frame, lose and restore the
+ * WebGL context, then redraw the same state each animation frame until the pixels match again (2 s cap).
+ * Null for adapters that don't use WebGL.
+ */
+async function contextLoss(count = 2_000): Promise<ContextLoss | null> {
+  if (sim.state.count) throw new Error("contextLoss() needs a fresh page");
+  const gl = canvas.getContext("webgl2");
+  const ext = gl?.getExtension("WEBGL_lose_context");
+  if (!gl || !ext) return null;
+  sim.resize(count);
+  sim.step();
+  const read = () => {
+    const px = new Uint8Array(WIDTH * HEIGHT * 4);
+    gl.readPixels(0, 0, WIDTH, HEIGHT, gl.RGBA, gl.UNSIGNED_BYTE, px);
+    return px;
+  };
+  instance.draw(sim.state);
+  const ref = read();
+  // Restoring only works if someone called preventDefault on "webglcontextlost" (the library's job), so
+  // each wait gives up after 2 s.
+  const event = (name: string) =>
+    Promise.race([new Promise<boolean>((r) => canvas.addEventListener(name, () => r(true), { once: true })), new Promise<boolean>((r) => setTimeout(() => r(false), 2_000))]);
+  const lost = event("webglcontextlost");
+  ext.loseContext();
+  await lost;
+  // Restoring during the lost event's dispatch is ignored; wait a task.
+  await new Promise((r) => setTimeout(r, 0));
+  const restored = event("webglcontextrestored");
+  const t0 = performance.now();
+  ext.restoreContext();
+  if (!(await restored)) return { recovered: false, ms: null, reason: "context never restored (nobody called preventDefault on webglcontextlost)" };
+  let last = "";
+  while (performance.now() - t0 < 2_000) {
+    await new Promise(requestAnimationFrame);
+    try {
+      instance.draw(sim.state);
+    } catch (e) {
+      last = `draw threw: ${(e as Error).message}`;
+      continue;
+    }
+    const px = read();
+    let differ = 0;
+    for (let i = 0; i < px.length; i += 4) if (Math.abs((px[i] as number) - (ref[i] as number)) > 8 || Math.abs((px[i + 1] as number) - (ref[i + 1] as number)) > 8) differ++;
+    if (differ / (WIDTH * HEIGHT) < 0.001) return { recovered: true, ms: +(performance.now() - t0).toFixed(1) };
+    last = `${((100 * differ) / (WIDTH * HEIGHT)).toFixed(1)}% of pixels still differ`;
+  }
+  return { recovered: false, ms: null, reason: last };
+}
+
+(window as unknown as { __bench: unknown }).__bench = { adapter: adapter.id, scene: scene.id, measure, snapshot, startup, contextLoss, ready: true };

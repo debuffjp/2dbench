@@ -35,6 +35,17 @@ export interface SceneSpec {
    * `x, y` (top-left) in colour `color`. Rotation, scale and texture aren't used.
    */
   text?: boolean;
+  /** Sprites bounce in this box instead of the canvas (for `target`, the target's size). */
+  world?: [number, number];
+  /** Draw the frame into an offscreen target of this size, then draw the target at `scale`× to the canvas. */
+  target?: { width: number; height: number; scale: number };
+  /** Sprite i belongs to panel i % PANELS.length and is clipped to that panel's rectangle. */
+  clip?: boolean;
+  /**
+   * The last texture (after the scene's `textures`) is a WIDTH × HEIGHT canvas the simulation repaints every
+   * frame. Adapters draw it first, at 0, 0, telling their library it changed, then the sprites.
+   */
+  upload?: boolean;
   /**
    * A scene-specific parity gate, declared with the scene (never adjusted to let an adapter pass). Text needs
    * one because every library rasterises glyphs its own way.
@@ -112,3 +123,6 @@ export const HEIGHT = 540;
 export const BACKGROUND = 0x11140dff;
 export const BACKGROUND_CSS = "#11140d";
 export const SPRITE = 16;
+
+/** Clip scenes: panel rectangles [x, y, w, h], a 4×3 grid with 8-pixel gutters. */
+export const PANELS: [number, number, number, number][] = Array.from({ length: 12 }, (_, i) => [8 + (i % 4) * 238, 8 + ((i / 4) | 0) * 176, 230, 168]);

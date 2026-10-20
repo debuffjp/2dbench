@@ -1,6 +1,6 @@
 import { syncCanvas } from "../gl.js";
 import { TEXT_FONT } from "../text.js";
-import { type Adapter, BACKGROUND_CSS, HEIGHT, SPRITE, WIDTH } from "../types.js";
+import { type Adapter, BACKGROUND_CSS, type FrameState, HEIGHT, PANELS, SPRITE, WIDTH } from "../types.js";
 
 /** CSS colour per 0xRRGGBB, so text doesn't build a string per label per frame. */
 const CSS: Record<number, string> = {};
@@ -10,12 +10,37 @@ export const canvas2d: Adapter = {
   id: "canvas2d",
   label: "Canvas 2D drawImage",
   package: "",
-  setup: "getContext('2d', { alpha: false }), imageSmoothingEnabled = false, one drawImage per sprite (the nine-argument form for slices). Text: fillText with textBaseline top.",
+  setup: "getContext('2d', { alpha: false }), imageSmoothingEnabled = false, one drawImage per sprite (the nine-argument form for slices). Text: fillText with textBaseline top. Render target: an offscreen canvas drawn scaled. Clip: save, rect, clip, restore per panel. Upload: the layer canvas drawn directly.",
   // fillText takes any colour, so text scenes are supported.
   supports: (scene) => !scene.color || !!scene.text,
   async create(canvas, textures, scene) {
     const ctx = canvas.getContext("2d", { alpha: false }) as CanvasRenderingContext2D;
     ctx.imageSmoothingEnabled = false;
+    const layer = scene.upload ? (textures[textures.length - 1] as HTMLCanvasElement) : null;
+    // Render target: an offscreen canvas of the target's size, drawn scaled.
+    const target = scene.target ? Object.assign(document.createElement("canvas"), { width: scene.target.width, height: scene.target.height }) : null;
+    const tctx = target?.getContext("2d", { alpha: false }) ?? null;
+    if (tctx) tctx.imageSmoothingEnabled = false;
+    const sprites = (g: CanvasRenderingContext2D, s: FrameState, first: number, stride: number) => {
+      for (let i = first; i < s.count; i += stride) {
+        const image = textures[s.texture[i] as number] as HTMLCanvasElement;
+        const k = s.scale[i] as number;
+        const r = s.rotation[i] as number;
+        const x = s.x[i] as number;
+        const y = s.y[i] as number;
+        if (r === 0) {
+          // Whole-pixel origin for unrotated sprites, like every other adapter.
+          g.setTransform(1, 0, 0, 1, 0, 0);
+          g.drawImage(image, Math.round(x - (SPRITE / 2) * k), Math.round(y - (SPRITE / 2) * k), SPRITE * k, SPRITE * k);
+        } else {
+          const c = Math.cos(r) * k;
+          const sn = Math.sin(r) * k;
+          g.setTransform(c, sn, -sn, c, x, y);
+          g.drawImage(image, -SPRITE / 2, -SPRITE / 2);
+        }
+      }
+      g.setTransform(1, 0, 0, 1, 0, 0);
+    };
     return {
       draw(s) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -38,23 +63,22 @@ export const canvas2d: Adapter = {
             ctx.drawImage(image, s.sx[i] as number, s.sy[i] as number, s.sw[i] as number, s.sh[i] as number, s.x[i] as number, s.y[i] as number, s.w[i] as number, s.h[i] as number);
           return;
         }
-        for (let i = 0; i < s.count; i++) {
-          const image = textures[s.texture[i] as number] as HTMLCanvasElement;
-          const k = s.scale[i] as number;
-          const r = s.rotation[i] as number;
-          const x = s.x[i] as number;
-          const y = s.y[i] as number;
-          if (r === 0) {
-            // Whole-pixel origin for unrotated sprites, like every other adapter.
-            ctx.setTransform(1, 0, 0, 1, 0, 0);
-            ctx.drawImage(image, Math.round(x - (SPRITE / 2) * k), Math.round(y - (SPRITE / 2) * k), SPRITE * k, SPRITE * k);
-          } else {
-            const c = Math.cos(r) * k;
-            const sn = Math.sin(r) * k;
-            ctx.setTransform(c, sn, -sn, c, x, y);
-            ctx.drawImage(image, -SPRITE / 2, -SPRITE / 2);
-          }
-        }
+        if (layer) ctx.drawImage(layer, 0, 0);
+        if (target && tctx) {
+          tctx.fillStyle = BACKGROUND_CSS;
+          tctx.fillRect(0, 0, target.width, target.height);
+          sprites(tctx, s, 0, 1);
+          ctx.drawImage(target, 0, 0, target.width * (scene.target?.scale ?? 1), target.height * (scene.target?.scale ?? 1));
+        } else if (scene.clip)
+          PANELS.forEach(([x, y, w, h], p) => {
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(x, y, w, h);
+            ctx.clip();
+            sprites(ctx, s, p, PANELS.length);
+            ctx.restore();
+          });
+        else sprites(ctx, s, 0, 1);
       },
       sync: () => syncCanvas(canvas),
     };
