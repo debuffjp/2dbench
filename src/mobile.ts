@@ -39,7 +39,7 @@ interface Entry {
 }
 type Results = Record<string, Record<string, Entry>>;
 
-const failed = (e: Entry) => !!e.parity && !Object.values(e.parity).every(passes);
+const failed = (e: Entry, scene: string) => !!e.parity && !Object.values(e.parity).every((p) => passes(p, SCENE_SPECS[scene]?.gate));
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const say = (text: string) => {
@@ -113,7 +113,7 @@ async function frameOf(renderer: string, scene: string, count: number): Promise<
 
 /** The parity gate for one scene: each adapter's frame against the reference's, at every parity count. */
 async function parity(scene: string, renderers: string[], results: Results, tick: () => void): Promise<void> {
-  for (const count of PARITY_COUNTS) {
+  for (const count of SCENE_SPECS[scene]?.gate?.counts ?? PARITY_COUNTS) {
     say(`${scene} · checking every library draws the same frame (${count.toLocaleString("en")} sprites)`);
     const ref = await frameOf(REFERENCE, scene, count);
     for (const renderer of renderers) {
@@ -165,7 +165,7 @@ async function run(): Promise<void> {
           tick();
           const entry = results[scene][renderer] as Entry;
           // Different output means the timings aren't comparable: a library that failed parity isn't timed.
-          if (failed(entry)) continue;
+          if (failed(entry, scene)) continue;
           say(`${scene} · ${LABELS[renderer] ?? renderer} · round ${round + 1}/${rounds}`);
           let page: Awaited<ReturnType<typeof open>>;
           try {
@@ -223,7 +223,7 @@ function show(results: Results): void {
   let html = "<tr><th>Scene</th><th>Renderer</th><th>Parity</th><th>Max @60fps</th><th>10k</th><th>50k</th></tr>";
   for (const [scene, byRenderer] of Object.entries(results))
     for (const [renderer, e] of Object.entries(byRenderer))
-      html += `<tr><td>${scene}</td><td>${LABELS[renderer] ?? renderer}</td><td>${!e.parity ? "–" : failed(e) ? "<b>failed, not timed</b>" : "ok"}</td><td>${e.maxAt60fps.toLocaleString("en")}</td><td>${at(e, 10_000)}</td><td>${at(e, 50_000)}</td></tr>`;
+      html += `<tr><td>${scene}</td><td>${LABELS[renderer] ?? renderer}</td><td>${!e.parity ? "–" : failed(e, scene) ? "<b>failed, not timed</b>" : "ok"}</td><td>${e.maxAt60fps.toLocaleString("en")}</td><td>${at(e, 10_000)}</td><td>${at(e, 50_000)}</td></tr>`;
   $("results").innerHTML = html;
 }
 

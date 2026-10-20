@@ -34,9 +34,9 @@ const BUDGET = 1000 / 60;
 const FONT = `font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif"`;
 const esc = (s: unknown) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] as string);
 const kfmt = (n: number) => (n >= 1e6 ? `${n / 1e6}M` : n >= 1e3 ? `${n / 1e3}k` : String(n));
-export const SCENE_ORDER = ["bunny", "particles", "mixed", "raycaster", "tilemap", "churn"];
+export const SCENE_ORDER = ["bunny", "particles", "mixed", "raycaster", "tilemap", "churn", "text"];
 /** What a scene's count counts, for axis labels. */
-const UNIT: Record<string, [string, string]> = { raycaster: ["enemy", "enemies"], tilemap: ["tile", "tiles"] };
+const UNIT: Record<string, [string, string]> = { raycaster: ["enemy", "enemies"], tilemap: ["tile", "tiles"], text: ["label", "labels"] };
 
 /** Frame time against count, both log scale (counts double; times span 1–1000 ms), one line per adapter with its min–max band. */
 export function frameChart({ scene, subtitle, series }: ChartScene): string {

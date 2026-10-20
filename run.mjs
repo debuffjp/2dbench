@@ -31,7 +31,7 @@ if (flags.has("--help")) {
 const JSON_OUT = flags.has("--json");
 const out = console.log;
 if (JSON_OUT) console.log = (...a) => console.error(...a);
-const SCENE_IDS = ["bunny", "mixed", "particles", "raycaster", "tilemap", "churn"];
+const SCENE_IDS = ["bunny", "mixed", "particles", "raycaster", "tilemap", "churn", "text"];
 const scene = SCENE_IDS.find((s) => process.argv.includes(s)) ?? "bunny";
 // 5 rounds by default: the variance study (METHOD.md, Statistics) found 3 can miss the ratio by 10–15%.
 const rounds = Number(process.argv.find((a) => a.startsWith("rounds="))?.slice(7) ?? 5);
@@ -114,6 +114,7 @@ const open = async (adapter) => {
 
 let list;
 let gpu = "unknown";
+let sceneGate = null;
 const parity = {};
 const samples = {};
 const startups = {};
@@ -123,6 +124,8 @@ try {
   const lister = await browser.newPage();
   await lister.goto(`${base}?list`);
   list = await lister.waitForFunction(() => window.__list).then((h) => h.jsonValue());
+  // A scene may declare its own gate (text: glyph rasterisation differs by library). It's recorded with results.
+  sceneGate = (await lister.evaluate(() => window.__gates))[scene] ?? null;
   gpu = await lister.evaluate(() => {
     const gl = document.createElement("canvas").getContext("webgl2");
     const ext = gl?.getExtension("WEBGL_debug_renderer_info");
@@ -158,7 +161,7 @@ try {
   const snaps = {};
   for (const a of adapters) {
     snaps[a] = {};
-    for (const count of PARITY_COUNTS) {
+    for (const count of sceneGate?.counts ?? PARITY_COUNTS) {
       const page = await open(a);
       const snap = await page.evaluate((n) => window.__bench.snapshot(n), count);
       snaps[a][count] = Buffer.from(snap.rgba, "base64");
@@ -168,11 +171,11 @@ try {
   const failures = [];
   for (const a of adapters) {
     parity[a] = {};
-    for (const count of PARITY_COUNTS) {
+    for (const count of sceneGate?.counts ?? PARITY_COUNTS) {
       const p = compare(snaps[reference][count], snaps[a][count]);
       parity[a][count] = p;
       if (process.env.PARITY_DUMP) await dump(`${a}-${count}`, snaps[a][count], snaps[reference][count]);
-      const ok = passes(p);
+      const ok = passes(p, sceneGate ?? undefined);
       if (!ok) failures.push(`${a} at ${count}`);
       console.log(
         `parity ${ok ? "ok  " : "FAIL"} ${a.padEnd(16)} ${String(count).padStart(6)}: coverage ${p.coveragePercent}%, ${p.differingPercent}% of drawn pixels differ (${p.interiorDifferingPercent}% inside sprites)`,
@@ -275,7 +278,7 @@ const report = {
     publishedCounts: PUBLISHED,
     timing: "simulation through GPU completion (1-pixel readback); median per count per round, then median across rounds. simMs is the shared simulation's part.",
     startup: "fresh page per round: readyMs since navigation, createMs for adapter setup (lazy library import included), firstFrameMs for the first 1,000-sprite frame through GPU completion",
-    parity: { ...GATE, reference: adapters[0] },
+    parity: { ...GATE, ...(sceneGate ? { gate: sceneGate } : {}), reference: adapters[0] },
   },
   results,
 };

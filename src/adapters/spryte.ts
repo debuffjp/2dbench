@@ -1,4 +1,5 @@
 import { readPixel } from "../gl.js";
+import { TEXT_FONT } from "../text.js";
 import { type Adapter, BACKGROUND, HEIGHT, WIDTH } from "../types.js";
 
 // Imported when the adapter is created, as PixiJS is, so startup timings count each library's own load.
@@ -16,17 +17,27 @@ export const spryteSprite: Adapter = {
   id: "spryte",
   label: "spryte draw.sprite",
   package: "spryte",
-  setup: "createRenderer(canvas, { smooth: false }); one draw.sprite per sprite with a reused options object. Slice scenes: one reused Frame object whose source rectangle changes per call.",
+  setup: "createRenderer(canvas, { smooth: false }); one draw.sprite per sprite with a reused options object. Slice scenes: one reused Frame object whose source rectangle changes per call. Text: draw.text with a CSS font and a reused options object.",
   supports: () => true,
   async create(canvas, textures, scene) {
     const { draw, gl } = await setup(canvas);
     const o = { rotation: 0, scaleX: 1, scaleY: 1, tint: 0xffffffff };
     // Slices: one reused Frame object, since draw.sprite reads it immediately (no allocation per slice).
     const frame = { image: textures[0] as HTMLCanvasElement, x: 0, y: 0, w: 1, h: 1 };
+    const label = { font: TEXT_FONT, color: 0xffffffff, baseline: "top" as const };
     const slice = { origin: [0, 0] as const, scaleX: 1, scaleY: 1, tint: 0xffffffff };
     return {
       draw(s) {
         draw.begin(BACKGROUND, WIDTH, HEIGHT, 1);
+        if (scene.text) {
+          const text = s.text as string[];
+          for (let i = 0; i < s.count; i++) {
+            label.color = s.color[i] as number;
+            draw.text(text[i] as string, s.x[i] as number, s.y[i] as number, label);
+          }
+          draw.end();
+          return;
+        }
         if (scene.slices) {
           for (let i = 0; i < s.count; i++) {
             frame.x = s.sx[i] as number;

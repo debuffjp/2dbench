@@ -30,6 +30,16 @@ export interface SceneSpec {
    * destroy and create objects as a game would.
    */
   churn?: boolean;
+  /**
+   * Text scenes: each sprite is a label, `text[i]`, drawn with the library's native text API in TEXT_FONT at
+   * `x, y` (top-left) in colour `color`. Rotation, scale and texture aren't used.
+   */
+  text?: boolean;
+  /**
+   * A scene-specific parity gate, declared with the scene (never adjusted to let an adapter pass). Text needs
+   * one because every library rasterises glyphs its own way.
+   */
+  gate?: { coveragePercent: [number, number]; maxInteriorDifferingPercent: number; counts?: number[]; why: string };
 }
 
 /**
@@ -59,6 +69,8 @@ export interface FrameState {
   h: Float32Array;
   /** `churn` scenes only: a unique, increasing id per sprite. Empty otherwise. */
   id: Uint32Array;
+  /** `text` scenes only: each label's string. */
+  text?: string[];
 }
 
 /** An empty frame state, for simulations to fill. */

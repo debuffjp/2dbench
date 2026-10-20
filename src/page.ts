@@ -4,6 +4,7 @@ import { ADAPTERS } from "./adapters/index.js";
 import { ChurnSim } from "./churn.js";
 import { makeRaycasterAtlas, RaycasterSim } from "./raycaster.js";
 import { makeTextures, SCENES, Simulation } from "./scenes.js";
+import { TextSim } from "./text.js";
 import { makeTilemapAtlas, TilemapSim } from "./tilemap.js";
 import { HEIGHT, type Sim, WIDTH } from "./types.js";
 
@@ -24,6 +25,7 @@ if (params.has("list")) {
       .filter((s) => a.supports(s))
       .map((s) => s.id),
   }));
+  (window as unknown as { __gates: unknown }).__gates = Object.fromEntries(Object.values(SCENES).map((s) => [s.id, s.gate ?? null]));
   throw new Error("listed");
 }
 const adapter = ADAPTERS.find((a) => a.id === params.get("adapter"));
@@ -36,7 +38,7 @@ canvas.width = WIDTH;
 canvas.height = HEIGHT;
 // Each scene brings its own simulation and textures; adapters see only the frame state and textures.
 const sim: Sim =
-  scene.id === "raycaster" ? new RaycasterSim() : scene.id === "tilemap" ? new TilemapSim() : scene.id === "churn" ? new ChurnSim() : new Simulation(scene);
+  scene.id === "raycaster" ? new RaycasterSim() : scene.id === "tilemap" ? new TilemapSim() : scene.id === "churn" ? new ChurnSim() : scene.id === "text" ? new TextSim() : new Simulation(scene);
 const textures = scene.id === "raycaster" ? [makeRaycasterAtlas()] : scene.id === "tilemap" ? [makeTilemapAtlas()] : makeTextures(scene);
 const createStart = performance.now();
 const instance = await adapter.create(canvas, textures, scene);

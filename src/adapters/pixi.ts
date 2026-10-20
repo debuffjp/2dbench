@@ -1,5 +1,6 @@
 import type * as Pixi from "pixi.js";
 import { readPixel } from "../gl.js";
+import { TEXT_SIZE } from "../text.js";
 import { type Adapter, type AdapterInstance, BACKGROUND_CSS, type FrameState, HEIGHT, type SceneSpec, WIDTH } from "../types.js";
 
 /**
@@ -48,6 +49,44 @@ function syncChurn<T>(objs: T[], ids: number[], s: FrameState, make: (i: number)
   if (objs.length !== s.count || (s.count && (ids[0] !== s.id[0] || ids[s.count - 1] !== s.id[s.count - 1]))) throw new Error("churn: objects out of step with the frame");
 }
 
+/** TEXT_FONT as a PixiJS text style. */
+const TEXT_STYLE = { fontFamily: "monospace", fontWeight: "bold", fontSize: TEXT_SIZE } as const;
+
+/** Text scenes: one label object per label, created once; its string is set every frame (PixiJS skips unchanged ones) and its fill when the colour changes. */
+function labels(
+  application: Pixi.Application,
+  gl: WebGL2RenderingContext,
+  make: (text: string, fill: number) => Pixi.Text | Pixi.BitmapText,
+  recolour: (t: Pixi.Text | Pixi.BitmapText, fill: number) => void,
+): AdapterInstance {
+  const items: (Pixi.Text | Pixi.BitmapText)[] = [];
+  const fills: number[] = [];
+  return {
+    draw(s) {
+      const text = s.text as string[];
+      for (let i = 0; i < s.count; i++) {
+        let t = items[i];
+        if (!t) {
+          t = make(text[i] as string, (s.color[i] as number) >>> 8);
+          items.push(t);
+          fills.push((s.color[i] as number) >>> 8);
+          application.stage.addChild(t);
+        }
+        const fill = (s.color[i] as number) >>> 8;
+        if (fills[i] !== fill) {
+          recolour(t, fill);
+          fills[i] = fill;
+        }
+        t.text = text[i] as string;
+        t.x = s.x[i] as number;
+        t.y = s.y[i] as number;
+      }
+      application.render();
+    },
+    sync: () => readPixel(gl),
+  };
+}
+
 const textureOf = (PIXI: typeof Pixi, image: HTMLCanvasElement) => {
   const t = PIXI.Texture.from(image);
   t.source.scaleMode = "nearest";
@@ -59,10 +98,13 @@ export const pixiSprite: Adapter = {
   id: "pixi-sprite",
   label: "PixiJS Sprite",
   package: "pixi.js",
-  setup: "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame. Churn: dead Sprites are removed and destroyed, new ones created and added. Slice scenes: a cached Texture per source rectangle on the shared source, and a pool of Sprites shown or hidden as the count changes.",
+  setup: "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame. Churn: dead Sprites are removed and destroyed, new ones created and added. Text: one Text per label (canvas-rasterised, resolution 1), string set each frame. Slice scenes: a cached Texture per source rectangle on the shared source, and a pool of Sprites shown or hidden as the count changes.",
   supports: () => true,
   async create(canvas, textures, scene): Promise<AdapterInstance> {
     const { PIXI, application, gl } = await app(canvas);
+    if (scene.text) return labels(application, gl, (str, fill) => new PIXI.Text({ text: str, style: { ...TEXT_STYLE, fill }, resolution: 1 }), (t, fill) => {
+        t.style.fill = fill;
+      });
     const texs = textures.map((t) => textureOf(PIXI, t));
     const sprites: Pixi.Sprite[] = [];
     if (scene.slices) {
@@ -195,5 +237,27 @@ export const pixiParticle: Adapter = {
       },
       sync: () => readPixel(gl),
     };
+  },
+};
+
+/** PixiJS `BitmapText`: the API PixiJS recommends for text that changes often. Text scenes only. */
+export const pixiBitmapText: Adapter = {
+  id: "pixi-bitmaptext",
+  label: "PixiJS BitmapText",
+  package: "pixi.js",
+  setup: "Application as for Sprite; BitmapFont.install once (white, the scene's font, resolution 1, nearest filtering, digits); one BitmapText per label, string set each frame, colour by tint.",
+  supports: (scene) => !!scene.text,
+  async create(canvas): Promise<AdapterInstance> {
+    const { PIXI, application, gl } = await app(canvas);
+    // A white font installed once, crisp (resolution 1, nearest filtering, like every other scene), tinted per label.
+    PIXI.BitmapFont.install({ name: "bench", chars: "0123456789", resolution: 1, style: { ...TEXT_STYLE, fill: 0xffffff }, textureStyle: { scaleMode: "nearest" } });
+    return labels(
+      application,
+      gl,
+      (str, fill) => new PIXI.BitmapText({ text: str, style: { fontFamily: "bench", fontSize: TEXT_SIZE }, tint: fill }),
+      (t, fill) => {
+        t.tint = fill;
+      },
+    );
   },
 };

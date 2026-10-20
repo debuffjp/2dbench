@@ -25,8 +25,18 @@ export const GATE = {
   gate: { coveragePercent: COVERAGE_RANGE, maxInteriorDifferingPercent: MAX_INTERIOR_PERCENT },
 };
 
-export function passes(p: Parity): boolean {
-  return p.coveragePercent >= (COVERAGE_RANGE[0] as number) && p.coveragePercent <= (COVERAGE_RANGE[1] as number) && p.interiorDifferingPercent <= MAX_INTERIOR_PERCENT;
+/** A scene's own gate, when it declares one (text), replacing the default limits. */
+export interface SceneGate {
+  coveragePercent: [number, number];
+  maxInteriorDifferingPercent: number;
+  /** Counts to check instead of PARITY_COUNTS. */
+  counts?: number[];
+}
+
+export function passes(p: Parity, gate?: SceneGate): boolean {
+  const [lo, hi] = gate?.coveragePercent ?? COVERAGE_RANGE;
+  const interior = gate?.maxInteriorDifferingPercent ?? MAX_INTERIOR_PERCENT;
+  return p.coveragePercent >= (lo as number) && p.coveragePercent <= (hi as number) && p.interiorDifferingPercent <= interior;
 }
 
 type Pixels = ArrayLike<number>;

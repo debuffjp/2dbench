@@ -58,6 +58,23 @@ export const SCENES: Record<string, SceneSpec> = {
     slices: false,
     churn: true,
   },
+  text: {
+    id: "text",
+    description: "Text: a grid of numbers scrolling up, each changing every 8 frames and colour every 16, drawn with each library's native text API",
+    rotation: false,
+    scale: false,
+    color: true,
+    textures: 0,
+    slices: false,
+    text: true,
+    countMeans: "text labels (2–4 characters each)",
+    gate: {
+      coveragePercent: [90, 110],
+      maxInteriorDifferingPercent: 5,
+      counts: [100, 540],
+      why: "glyph rasterisation and text box metrics differ between libraries, so pixels rarely match exactly; coverage still catches missing or extra labels. Checked at counts where labels don't overlap (540 fill the screen).",
+    },
+  },
 };
 
 const TINTS = [0xffffff, 0xff8080, 0x80ff80, 0x8080ff];

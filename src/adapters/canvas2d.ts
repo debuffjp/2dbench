@@ -1,13 +1,18 @@
 import { syncCanvas } from "../gl.js";
+import { TEXT_FONT } from "../text.js";
 import { type Adapter, BACKGROUND_CSS, HEIGHT, SPRITE, WIDTH } from "../types.js";
+
+/** CSS colour per 0xRRGGBB, so text doesn't build a string per label per frame. */
+const CSS: Record<number, string> = {};
 
 /** Plain Canvas 2D `drawImage`. Canvas 2D has no per-draw tint, so scenes that need colour are not supported. */
 export const canvas2d: Adapter = {
   id: "canvas2d",
   label: "Canvas 2D drawImage",
   package: "",
-  setup: "getContext('2d', { alpha: false }), imageSmoothingEnabled = false, one drawImage per sprite (the nine-argument form for slices).",
-  supports: (scene) => !scene.color,
+  setup: "getContext('2d', { alpha: false }), imageSmoothingEnabled = false, one drawImage per sprite (the nine-argument form for slices). Text: fillText with textBaseline top.",
+  // fillText takes any colour, so text scenes are supported.
+  supports: (scene) => !scene.color || !!scene.text,
   async create(canvas, textures, scene) {
     const ctx = canvas.getContext("2d", { alpha: false }) as CanvasRenderingContext2D;
     ctx.imageSmoothingEnabled = false;
@@ -16,6 +21,16 @@ export const canvas2d: Adapter = {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
         ctx.fillStyle = BACKGROUND_CSS;
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        if (scene.text) {
+          const text = s.text as string[];
+          ctx.font = TEXT_FONT;
+          ctx.textBaseline = "top";
+          for (let i = 0; i < s.count; i++) {
+            ctx.fillStyle = CSS[(s.color[i] as number) >>> 8] ??= `#${((s.color[i] as number) >>> 8).toString(16).padStart(6, "0")}`;
+            ctx.fillText(text[i] as string, s.x[i] as number, s.y[i] as number);
+          }
+          return;
+        }
         if (scene.slices) {
           // Slices: part of the texture at x, y (top-left), one nine-argument drawImage each.
           const image = textures[0] as HTMLCanvasElement;
