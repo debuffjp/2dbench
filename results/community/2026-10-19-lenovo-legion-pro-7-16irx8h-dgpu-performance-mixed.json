@@ -1,0 +1,354 @@
+{
+  "date": "2026-10-19T12:15:41.897Z",
+  "scene": "mixed",
+  "rounds": 5,
+  "environment": {
+    "gpu": "ANGLE (NVIDIA Corporation, NVIDIA GeForce RTX 4080 Laptop GPU/PCIe/SSE2, OpenGL ES 3.2)",
+    "browser": "Chrome 156.0.8078.4",
+    "os": "linux 7.2.11-1-cachyos x64",
+    "cpu": "13th Gen Intel(R) Core(TM) i9-13900HX",
+    "memoryGB": 31,
+    "power": "not detected on this OS; add it to NOTE",
+    "headless": false,
+    "softwareRendering": false,
+    "note": "Lenovo Legion Pro 7 16IRX8H, CachyOS, niri Wayland, dGPU-only (MUX), no external monitor, power profile performance, AC power, nothing else running, Playwright Chromium 156 headed",
+    "commit": "36a6d61"
+  },
+  "method": {
+    "budgetMs": 16.666666666666668,
+    "framesPerCount": 100,
+    "warmupFrames": 20,
+    "publishedCounts": [
+      10000,
+      50000,
+      200000
+    ],
+    "timing": "simulation through GPU completion (1-pixel readback); median per count per round, then median across rounds",
+    "parity": {
+      "counts": [
+        2000,
+        50000
+      ],
+      "tolerance": 8,
+      "reference": "pixi-sprite",
+      "gate": {
+        "coveragePercent": [
+          99.5,
+          100.5
+        ],
+        "maxInteriorDifferingPercent": 0.5
+      }
+    }
+  },
+  "results": [
+    {
+      "adapter": "pixi-sprite",
+      "label": "PixiJS Sprite",
+      "package": "pixi.js",
+      "version": "8.22.0",
+      "setup": "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame. Slice scenes: a cached Texture per source rectangle on the shared source, and a pool of Sprites shown or hidden as the count changes.",
+      "maxAt60fps": 50000,
+      "parity": {
+        "2000": {
+          "drawnPixels": 183959,
+          "differingPercent": 0,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 334563,
+          "differingPercent": 0,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 5,
+          "frameMs": 0.39999999990686774,
+          "minFrameMs": 0.2999999999301508,
+          "maxFrameMs": 0.6000000000931323,
+          "p95FrameMs": 0.7000000000698492,
+          "submitMs": 0.19999999995343387,
+          "roundsFrameMs": [
+            0.4,
+            0.3,
+            0.3,
+            0.4,
+            0.6
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 5,
+          "frameMs": 0.6999999999534339,
+          "minFrameMs": 0.5,
+          "maxFrameMs": 1,
+          "p95FrameMs": 1.1000000000931323,
+          "submitMs": 0.39999999990686774,
+          "roundsFrameMs": [
+            0.7,
+            0.5,
+            0.6,
+            0.9,
+            1
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 5,
+          "frameMs": 1.599999999976717,
+          "minFrameMs": 1.5,
+          "maxFrameMs": 1.7000000000698492,
+          "p95FrameMs": 1.900000000023283,
+          "submitMs": 0.8999999999068677,
+          "roundsFrameMs": [
+            1.6,
+            1.6,
+            1.7,
+            1.7,
+            1.5
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 5,
+          "frameMs": 2.699999999953434,
+          "minFrameMs": 2.5,
+          "maxFrameMs": 2.799999999930151,
+          "p95FrameMs": 3,
+          "submitMs": 1.6999999999534339,
+          "roundsFrameMs": [
+            2.7,
+            2.8,
+            2.6,
+            2.7,
+            2.5
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 5,
+          "frameMs": 4.900000000023283,
+          "minFrameMs": 4.699999999953434,
+          "maxFrameMs": 5.099999999860302,
+          "p95FrameMs": 5.5,
+          "submitMs": 3.699999999953434,
+          "roundsFrameMs": [
+            4.9,
+            5,
+            4.8,
+            5.1,
+            4.7
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 5,
+          "frameMs": 14.199999999953434,
+          "minFrameMs": 12.099999999976717,
+          "maxFrameMs": 14.5,
+          "p95FrameMs": 15.699999999953434,
+          "submitMs": 11.099999999860302,
+          "roundsFrameMs": [
+            12.1,
+            14.3,
+            14.2,
+            13.6,
+            14.5
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 5,
+          "frameMs": 31.5,
+          "minFrameMs": 27.300000000046566,
+          "maxFrameMs": 32,
+          "p95FrameMs": 34.60000000009313,
+          "submitMs": 22.899999999906868,
+          "roundsFrameMs": [
+            27.3,
+            32,
+            27.8,
+            31.8,
+            31.5
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 5,
+          "frameMs": 56.20000000006985,
+          "minFrameMs": 55.40000000002328,
+          "maxFrameMs": 60.89999999990687,
+          "p95FrameMs": 65,
+          "submitMs": 48.199999999953434,
+          "roundsFrameMs": [
+            55.4,
+            56.2,
+            57.3,
+            55.6,
+            60.9
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "spryte",
+      "label": "spryte draw.sprite",
+      "package": "spryte",
+      "version": "0.1.0",
+      "setup": "createRenderer(canvas, { smooth: false }); one draw.sprite per sprite with a reused options object. Slice scenes: one reused Frame object whose source rectangle changes per call.",
+      "maxAt60fps": 100000,
+      "parity": {
+        "2000": {
+          "drawnPixels": 186977,
+          "differingPercent": 8.78,
+          "coveragePercent": 99.9,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 335041,
+          "differingPercent": 12.66,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 5,
+          "frameMs": 0.19999999995343387,
+          "minFrameMs": 0.19999999995343387,
+          "maxFrameMs": 1.3000000000465661,
+          "p95FrameMs": 0.8000000000465661,
+          "submitMs": 0.10000000009313226,
+          "roundsFrameMs": [
+            0.2,
+            0.4,
+            0.2,
+            1.3,
+            0.2
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 5,
+          "frameMs": 0.2999999999301508,
+          "minFrameMs": 0.20000000018626451,
+          "maxFrameMs": 1.3000000000465661,
+          "p95FrameMs": 0.7999999999301508,
+          "submitMs": 0.19999999995343387,
+          "roundsFrameMs": [
+            0.3,
+            0.4,
+            0.2,
+            1.3,
+            0.3
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 5,
+          "frameMs": 0.7000000000698492,
+          "minFrameMs": 0.5999999999767169,
+          "maxFrameMs": 1.1999999999534339,
+          "p95FrameMs": 1.099999999976717,
+          "submitMs": 0.40000000002328306,
+          "roundsFrameMs": [
+            0.6,
+            0.7,
+            0.6,
+            1.2,
+            1
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 5,
+          "frameMs": 1.5,
+          "minFrameMs": 1.3000000000465661,
+          "maxFrameMs": 1.8000000000465661,
+          "p95FrameMs": 1.8000000000465661,
+          "submitMs": 0.8000000000465661,
+          "roundsFrameMs": [
+            1.5,
+            1.3,
+            1.4,
+            1.8,
+            1.5
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 5,
+          "frameMs": 2.400000000023283,
+          "minFrameMs": 2.199999999953434,
+          "maxFrameMs": 2.5,
+          "p95FrameMs": 2.6000000000931323,
+          "submitMs": 1.5,
+          "roundsFrameMs": [
+            2.4,
+            2.2,
+            2.5,
+            2.3,
+            2.5
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 5,
+          "frameMs": 5,
+          "minFrameMs": 5,
+          "maxFrameMs": 5.2999999998137355,
+          "p95FrameMs": 5.299999999930151,
+          "submitMs": 3.9000000001396984,
+          "roundsFrameMs": [
+            5,
+            5,
+            5.3,
+            5,
+            5.1
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 5,
+          "frameMs": 10.699999999953434,
+          "minFrameMs": 10.300000000046566,
+          "maxFrameMs": 11.300000000046566,
+          "p95FrameMs": 11.5,
+          "submitMs": 7.799999999930151,
+          "roundsFrameMs": [
+            10.5,
+            10.3,
+            10.9,
+            11.3,
+            10.7
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 5,
+          "frameMs": 22.800000000046566,
+          "minFrameMs": 22.399999999906868,
+          "maxFrameMs": 24.4000000001397,
+          "p95FrameMs": 25.70000000006985,
+          "submitMs": 15.5,
+          "roundsFrameMs": [
+            22.8,
+            22.7,
+            23.5,
+            24.4,
+            22.4
+          ]
+        }
+      ]
+    }
+  ],
+  "submission": {
+    "device": "Lenovo Legion Pro 7 16IRX8H, dGPU/performance, NVIDIA GeForce RTX 4080 Laptop GPU (ANGLE, OpenGL ES 3.2), Intel Core i9-13900HX, 32 GB",
+    "conditions": "Playwright Chromium 156.0.8078.4 (headed, --ozone-platform=wayland), CachyOS Linux 7.2.11, niri. dGPU-only via the MUX (internal panel on the NVIDIA GPU), no external monitor, power profile performance, AC power, nothing else running.",
+    "submittedBy": "LoopyJack"
+  }
+}

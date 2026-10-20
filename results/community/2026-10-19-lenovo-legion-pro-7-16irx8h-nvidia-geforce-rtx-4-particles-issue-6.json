@@ -9,7 +9,7 @@
     "cpu": "13th Gen Intel(R) Core(TM) i9-13900HX",
     "memoryGB": 31,
     "power": "not detected on this OS; add it to NOTE",
-    "note": "Linux CachyOS, niri Wayland, AC power, power profile performance, Playwright Chromium 156 headed",
+    "note": "Lenovo Legion Pro 7 16IRX8H, CachyOS, niri Wayland, hybrid graphics, balanced power mode, external 1440p 100 Hz HDMI monitor attached, AC power, Playwright Chromium 156 headed",
     "commit": "6f74094, modified"
   },
   "method": {
@@ -714,8 +714,8 @@
   ],
   "submission": {
     "issue": 6,
-    "device": "Lenovo Legion Pro 7 16IRX8H, NVIDIA GeForce RTX 4080 Laptop GPU (ANGLE, OpenGL ES 3.2), Intel Core i9-13900HX, 32 GB",
-    "conditions": "Playwright Chromium 156.0.8078.4 (headed, `--ozone-platform=wayland`), CachyOS Linux 7.2.11, niri (Wayland) compositor rendering on the dGPU in hybrid mode (internal panel scanned out by the Intel iGPU). On AC power, power-profiles-daemon set to `performance`. Machine idle during the run. Rounds: bu",
+    "device": "Lenovo Legion Pro 7 16IRX8H, hybrid/balanced, NVIDIA GeForce RTX 4080 Laptop GPU (ANGLE, OpenGL ES 3.2), Intel Core i9-13900HX, 32 GB",
+    "conditions": "Playwright Chromium 156.0.8078.4 (headed, --ozone-platform=wayland), CachyOS Linux 7.2.11, niri on the dGPU. Corrected after submission: hybrid graphics (internal panel on the Intel iGPU), balanced power mode, an external 1440p 100 Hz HDMI monitor attached. On AC power.",
     "submittedBy": "LoopyJack"
   }
 }
