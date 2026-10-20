@@ -14,6 +14,21 @@ Renderer benchmarks are easy to rig, usually by accident: a library left on a sl
 
 Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryzen 7 260, on AC power with power plan Turbo. The median frame (simulation through GPU completion) is in ms; lower is better. † marks frames under 2 ms, which are low precision ([why](METHOD.md#statistics)). Raw data, with every round's value, is in [`results/`](results).
 
+### Across devices
+
+`particles`, one draw call per sprite (spryte `draw.sprite` against PixiJS `Sprite`), every property changing. Most sprites held at 60 fps, and how much faster spryte's frame was at 50k sprites (10k on the Android phone):
+
+| Device | GPU | Browser | spryte | PixiJS | spryte faster |
+| --- | --- | --- | --- | --- | --- |
+| Laptop (reference) | NVIDIA RTX 5060 | Chrome 155, Windows | 50,000 | 20,000 | 3.8× |
+| Lenovo Legion Pro 7 | NVIDIA RTX 4080 | Chromium 156, Linux | 100,000 | 50,000 | 2.7× |
+| Windows laptop | AMD Radeon 780M (integrated) | Chrome, Windows | 50,000 | 20,000 | 3.3× |
+| iPhone | Apple GPU | Safari, iOS 18 | 100,000 | 20,000 | 3.7× |
+| iPhone | Apple GPU | Chrome, iOS 26 (2 runs) | 50,000–100,000 | 20,000 | 3.5–3.8× |
+| Android phone | Mali-T760 class | Firefox | 10,000 | 5,000 | 1.6× |
+
+spryte's one-call-per-sprite path is ahead on every device so far. The bulk paths (spryte `draw.sprites` against `ParticleContainer`) are 2.5–4× apart on desktop GPUs, but on iPhones they finish level, because there the GPU's fill rate, not JavaScript, is the limit. Phone runs are one quick round each with coarse timers, so treat them as indicative. Every row is a file in [`results/`](results).
+
 **`bunny`**: one texture, position only, 7 rounds
 
 ![bunny: frame time by count per library, with the 60 fps budget](docs/charts/bunny.svg)
