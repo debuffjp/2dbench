@@ -1,0 +1,572 @@
+{
+  "date": "2026-10-20T01:46:32.088Z",
+  "rounds": 1,
+  "framesPerCount": 60,
+  "method": {
+    "parity": {
+      "counts": [
+        2000,
+        50000
+      ],
+      "tolerance": 8,
+      "gate": {
+        "coveragePercent": [
+          99.5,
+          100.5
+        ],
+        "maxInteriorDifferingPercent": 0.5
+      },
+      "reference": "pixi-sprite"
+    }
+  },
+  "environment": {
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6.1 Mobile/15E148 Safari/604.1",
+    "gpu": "Apple GPU",
+    "devicePixelRatio": 3,
+    "screen": "393×852",
+    "cores": 4,
+    "timerResolutionMs": 1,
+    "memoryGB": null,
+    "note": "iPhone, Safari",
+    "battery": {
+      "start": "not exposed by this browser",
+      "end": "not exposed by this browser"
+    }
+  },
+  "results": {
+    "bunny": {
+      "pixi-sprite": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            1
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            2
+          ],
+          "10000": [
+            4
+          ],
+          "20000": [
+            7.000000000000227
+          ],
+          "50000": [
+            18.999999999999545
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172260,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317440,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "pixi-particle": {
+        "maxAt60fps": 200000,
+        "counts": {
+          "1000": [
+            1
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            1
+          ],
+          "10000": [
+            2
+          ],
+          "20000": [
+            4
+          ],
+          "50000": [
+            8
+          ],
+          "100000": [
+            11.000000000000227
+          ],
+          "200000": [
+            13
+          ],
+          "400000": [
+            19
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172260,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317440,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            1
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            2
+          ],
+          "10000": [
+            5
+          ],
+          "20000": [
+            7
+          ],
+          "50000": [
+            8.000000000000227
+          ],
+          "100000": [
+            12
+          ],
+          "200000": [
+            19
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172298,
+            "differingPercent": 0.04,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317499,
+            "differingPercent": 0.08,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte-bulk": {
+        "maxAt60fps": 400000,
+        "counts": {
+          "1000": [
+            1
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            1
+          ],
+          "10000": [
+            2
+          ],
+          "20000": [
+            3
+          ],
+          "50000": [
+            7
+          ],
+          "100000": [
+            10
+          ],
+          "200000": [
+            13
+          ],
+          "400000": [
+            16
+          ],
+          "800000": [
+            29
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172298,
+            "differingPercent": 0.04,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317499,
+            "differingPercent": 0.08,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "canvas2d": {
+        "maxAt60fps": 10000,
+        "counts": {
+          "1000": [
+            3
+          ],
+          "2000": [
+            4
+          ],
+          "5000": [
+            6
+          ],
+          "10000": [
+            10
+          ],
+          "20000": [
+            18
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172298,
+            "differingPercent": 0.04,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317499,
+            "differingPercent": 0.08,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "mixed": {
+      "pixi-sprite": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            1
+          ],
+          "2000": [
+            2
+          ],
+          "5000": [
+            4
+          ],
+          "10000": [
+            7
+          ],
+          "20000": [
+            13
+          ],
+          "50000": [
+            33
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 183374,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 334540,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            1
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            3
+          ],
+          "10000": [
+            5
+          ],
+          "20000": [
+            7
+          ],
+          "50000": [
+            9.999999999999773
+          ],
+          "100000": [
+            14.000000000000455
+          ],
+          "200000": [
+            23
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 186511,
+            "differingPercent": 8.83,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 335028,
+            "differingPercent": 12.63,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "particles": {
+      "pixi-sprite": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            1
+          ],
+          "2000": [
+            2
+          ],
+          "5000": [
+            4
+          ],
+          "10000": [
+            6.999999999999886
+          ],
+          "20000": [
+            12.999999999999773
+          ],
+          "50000": [
+            33
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 183374,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 334540,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "pixi-particle": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            1
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            2
+          ],
+          "10000": [
+            3
+          ],
+          "20000": [
+            6
+          ],
+          "50000": [
+            8
+          ],
+          "100000": [
+            16
+          ],
+          "200000": [
+            28
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 183379,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 334540,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            1
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            3
+          ],
+          "10000": [
+            4
+          ],
+          "20000": [
+            7
+          ],
+          "50000": [
+            9
+          ],
+          "100000": [
+            15
+          ],
+          "200000": [
+            22
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 186511,
+            "differingPercent": 8.62,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 335028,
+            "differingPercent": 11.42,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte-bulk": {
+        "maxAt60fps": 200000,
+        "counts": {
+          "1000": [
+            1
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            2
+          ],
+          "10000": [
+            3
+          ],
+          "20000": [
+            5
+          ],
+          "50000": [
+            9
+          ],
+          "100000": [
+            12
+          ],
+          "200000": [
+            14
+          ],
+          "400000": [
+            20
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 186511,
+            "differingPercent": 8.62,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 335028,
+            "differingPercent": 11.42,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "raycaster": {
+      "pixi-sprite": {
+        "maxAt60fps": 2000,
+        "counts": {
+          "1000": [
+            6
+          ],
+          "2000": [
+            10
+          ],
+          "5000": [
+            19
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 513118,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 518400,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 10000,
+        "counts": {
+          "1000": [
+            3
+          ],
+          "2000": [
+            5
+          ],
+          "5000": [
+            8
+          ],
+          "10000": [
+            13
+          ],
+          "20000": [
+            20
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 513174,
+            "differingPercent": 0.3,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 518400,
+            "differingPercent": 1.24,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    }
+  },
+  "submission": {
+    "issue": 20,
+    "device": "iPhone, Safari",
+    "conditions": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/26.6.1 Mobile/15E148 Safari/604.1",
+    "submittedBy": "h0ds"
+  }
+}
