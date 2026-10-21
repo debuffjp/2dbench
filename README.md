@@ -6,7 +6,7 @@ Renderer benchmarks are easy to rig, usually by accident: a library left on a sl
 
 > **Conflict of interest, in the open.** 2dbench was started by the [debuff](https://debuff.jp) project, whose renderer [spryte](https://github.com/debuffjp/spryte) is one of the contestants. The parity reference is PixiJS `Sprite`, the most widely used 2D web renderer, not spryte. Every library's setup is documented, and library maintainers are invited to review theirs ([CONTRIBUTING](CONTRIBUTING.md)). If your library is configured badly, please send a PR.
 
-**Status: early.** Four scenes and five adapters, measured so far on desktop and laptop GPUs, iPhones and an Android phone. **Your device would help:** see [Submit your results](#submit-your-results), and the [community results](https://debuffjp.github.io/2dbench/results.html). Phone and other-browser results are the most wanted contribution.
+**Status: early.** Four scenes and eight adapters across spryte, PixiJS, Phaser and Canvas 2D, measured so far on desktop and laptop GPUs, iPhones and an Android phone. **Your device would help:** see [Submit your results](#submit-your-results), and the [community results](https://debuffjp.github.io/2dbench/results.html). Phone and other-browser results are the most wanted contribution.
 
 ## Results so far
 
@@ -28,6 +28,10 @@ Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryz
 | Android phone | Mali-T760 class | Firefox | 10,000 | 5,000 | 1.6× |
 
 spryte's one-call-per-sprite path is ahead on every device so far. The bulk paths (spryte `draw.sprites` against `ParticleContainer`) are 2.5–4.2× apart on desktop GPUs, but on iPhones they finish level, because there the GPU's fill rate, not JavaScript, is the limit. Phone runs are one quick round each with coarse timers, so treat them as indicative. Every row is a file in [`results/`](results).
+
+### Phaser
+
+On the reference laptop (RTX 5060, 5 rounds, 50k sprites), spryte `draw.sprite` was 2.7–3.1× faster than Phaser 4 `Image` in bunny, mixed and particles, and spryte `draw.sprites` 5.0× faster than `SpriteGPULayer` in particles. Phaser `Image` beat PixiJS `Sprite` in mixed and particles. `SpriteGPULayer` is built for members that rarely change, so these scenes use it against its design; it's Phaser's only bulk path with per-sprite rotation, scale and tint. Raw data: [`results/community/2026-10-21-rtx-5060-laptop-phaser-*.json`](results/community). Write-up: [spryte vs Phaser](https://debuff.jp/blog/spryte-vs-phaser).
 
 **`bunny`**: one texture, position only, 7 rounds
 
@@ -102,10 +106,13 @@ Parity passed in every scene (desktop; re-checked against PixiJS `Sprite` as the
 | `pixi-sprite` | PixiJS `Sprite`, `Text` (the parity reference) | all |
 | `pixi-particle` | PixiJS `ParticleContainer` | bunny, particles, churn, lowres, upload |
 | `pixi-bitmaptext` | PixiJS `BitmapText` | text |
+| `phaser-image` | Phaser 4 `Image` (WebGL1; Phaser has no WebGL2 option) | bunny, mixed, particles, raycaster |
+| `phaser-gpulayer` | Phaser 4 `SpriteGPULayer`, every member rewritten each frame | bunny, particles |
+| `phaser-blitter` | Phaser 4 `Blitter` (position only) | bunny |
 
 `raycaster` needs a different texture region per sprite. spryte `draw.sprite` and PixiJS `Sprite` do that; the bulk paths (`draw.sprites`, `ParticleContainer`) share one region per call, and Canvas 2D can't tint for the shading, so they sit this one out.
 
-Wanted: Phaser, KAPLAY, Excalibur, LittleJS, three.js, Babylon.js, melonJS, and Canvas 2D in an `OffscreenCanvas` worker. See [Adding a library](#adding-a-library).
+Wanted: KAPLAY, Excalibur, LittleJS, three.js, Babylon.js, melonJS, and Canvas 2D in an `OffscreenCanvas` worker. See [Adding a library](#adding-a-library).
 
 ## Scenes
 
