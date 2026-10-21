@@ -91,7 +91,8 @@ async function measure(count: number, frames = 100): Promise<Measure> {
     instance.draw(sim.state);
     await instance.sync();
   }
-  await new Promise(requestAnimationFrame);
+  // Yield a task (not an animation frame: a hidden or background tab may never deliver one, which hung web runs).
+  await new Promise((r) => setTimeout(r, 0));
   const total: number[] = [];
   const submit: number[] = [];
   const simulate: number[] = [];
@@ -195,7 +196,8 @@ async function contextLoss(count = 2_000): Promise<ContextLoss | null> {
   if (!(await restored)) return { recovered: false, ms: null, reason: "context never restored (nobody called preventDefault on webglcontextlost)" };
   let last = "";
   while (performance.now() - t0 < 2_000) {
-    await new Promise(requestAnimationFrame);
+    // Yield a task (not an animation frame: a hidden or background tab may never deliver one, which hung web runs).
+  await new Promise((r) => setTimeout(r, 0));
     try {
       instance.draw(sim.state);
     } catch (e) {

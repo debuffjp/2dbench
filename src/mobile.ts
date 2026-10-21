@@ -43,7 +43,8 @@ const failed = (e: Entry, scene: string) => !!e.parity && !Object.values(e.parit
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const say = (text: string) => {
-  $("status").textContent = text;
+  const status = $("status");
+  status.textContent = "warn" in status.dataset ? `${text} · tab was hidden: timings may be throttled` : text;
 };
 
 /**
@@ -150,6 +151,15 @@ async function run(): Promise<void> {
   const total = Object.values(SCENES).reduce((n, r) => n + r.length * (rounds + PARITY_COUNTS.length), 0);
   let step = 0;
   const startBattery = await battery();
+  // A hidden tab throttles timers and the GPU process, so its timings aren't comparable. Flag it, and record it.
+  let hiddenDuringRun = false;
+  delete $("status").dataset.warn;
+  const onVisibility = () => {
+    if (!document.hidden) return;
+    hiddenDuringRun = true;
+    $("status").dataset.warn = "";
+  };
+  document.addEventListener("visibilitychange", onVisibility);
   const results: Results = {};
   const tick = () => {
     bar.style.width = `${(100 * step++) / total}%`;
@@ -194,11 +204,17 @@ async function run(): Promise<void> {
       rounds,
       framesPerCount: FRAMES,
       method: { parity: { ...GATE, reference: REFERENCE } },
-      environment: { ...environment(), battery: { start: startBattery, end: await battery() } },
+      environment: { ...environment(), hiddenDuringRun, battery: { start: startBattery, end: await battery() } },
       results,
     };
     bar.style.width = "100%";
-    say("Done. Your charts are below; tap Submit to add them to the public dataset.");
+    document.removeEventListener("visibilitychange", onVisibility);
+    delete $("status").dataset.warn;
+    say(
+      hiddenDuringRun
+        ? "Done, but this tab was hidden during the run, so some timings are throttled. Keep it in front and run again for numbers worth submitting."
+        : "Done. Your charts are below; tap Submit to add them to the public dataset.",
+    );
     const env = environment();
     const subtitle = `${$<HTMLInputElement>("note").value || "this device"} · ${shortGpu(env.gpu)} · ${rounds} round${rounds === 1 ? "" : "s"}`;
     const scenes = fromMobile(results, LABELS, subtitle);

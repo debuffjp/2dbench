@@ -1,3 +1,5 @@
 node_modules
 dist
 results/parity/
+results/*.png
+results/*.svg

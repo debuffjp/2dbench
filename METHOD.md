@@ -18,12 +18,12 @@ Before timing, each adapter draws the same seeded frame (10 steps in, at 2,000 a
 - **Interior differences:** pixels that differ (any channel by more than 8 levels) where the 3×3 neighbourhood is a single flat colour in both frames. Any edge, even a sprite drawn over another sprite, breaks flatness, so different rounding rules for rotated edges don't count. A wrong tint, alpha, blend or texture inside a sprite does. The run fails above 0.5%. This metric was validated by deliberately giving one library a wrong tint: interior differences rose from 0% to 22%.
 - **On phones** (`mobile.html`), the same gate runs in the page: it renders the reference's frame and each adapter's, then compares them on the device with the same code (`src/parity.ts`), so no frames have to leave the phone. An adapter that fails isn't timed in that scene, and its parity numbers are kept in the file. This checks what desktop runs can't: mobile GPUs and their shader precision. Phone files made before this have no parity data and show as unchecked on the results page.
 - **Scene gates.** A scene may declare its own gate in `src/scenes.ts`, with its reason, before any adapter is checked against it. It's recorded in every results file. Only `text` has one: libraries rasterise glyphs and place text boxes differently (measured: 1–2 pixels apart), so it checks coverage within 90–110% at 100 and 540 labels, where none overlap. That catches missing, extra or misplaced labels, not glyph shapes. A scene gate is never widened to let an adapter pass.
-- **Differing pixels overall** are reported for transparency. Libraries legitimately differ at the edges of rotated sprites (for example PixiJS's `roundPixels` snaps rotated corners). `PARITY_DUMP=1` writes each frame and a diff image to `results/parity/`.
+- **Differing pixels overall** are reported for transparency. Libraries legitimately differ at the edges of rotated sprites (for example PixiJS's `roundPixels` snaps rotated corners). In scenes with rotation and scale (`particles`) that's typically 8–12% of drawn pixels, with 0% inside sprites; in `bunny` (no rotation) it's under 0.1%. `PARITY_DUMP=1` writes each frame and a diff image to `results/parity/`.
 
 ## Honest timing
 
 - Each frame is timed from simulation start to GPU completion. The sync is a 1-pixel `readPixels`, which waits for all submitted GPU work (Canvas 2D uses `createImageBitmap`). Without it, frames look as fast as the CPU can queue them.
-- 20 warm-up frames first (JIT, texture upload, buffer growth, and any objects a retained-mode library creates), then 100 measured frames. Reported per count: the median frame, the p95 frame, the median main-thread time before the sync, the shared simulation's mean time (so it can be subtracted to compare renderers alone), and the JS heap afterwards (Chrome only, coarse), so growth over a run shows.
+- 20 warm-up frames first (JIT, texture upload, buffer growth, and any objects a retained-mode library creates), then 100 measured frames (60 on `mobile.html`; see [Desktop runner and web page](#desktop-runner-and-web-page)). Between warm-up and timing the page yields one task, not one animation frame: a hidden tab may never deliver an animation frame, which used to stall web runs. Reported per count: the median frame, the p95 frame, the median main-thread time before the sync, the shared simulation's mean time (so it can be subtracted to compare renderers alone), and the JS heap afterwards (Chrome only, coarse), so growth over a run shows.
 - Context loss, once per adapter per run, on a fresh page: draw 2,000 sprites, lose the WebGL context (`WEBGL_lose_context`), restore it a task later, then redraw the same state each animation frame until under 0.1% of pixels differ from before the loss, for up to 2 seconds. Recorded as time from restore to that frame, or why it didn't recover. Phones don't run this yet.
 - Startup, once per round on a fresh page: time from navigation until the adapter is ready, the adapter's own setup (each library is imported lazily, so its load counts against it, not against everyone), and the first 1,000-sprite frame through GPU completion, which includes shader compiles and first texture uploads.
 - The canvas is 960×540 at device pixel ratio 1, so every device draws the same number of pixels.
@@ -32,7 +32,7 @@ Before timing, each adapter draws the same seeded frame (10 steps in, at 2,000 a
 
 - Several rounds (default 5; see Statistics). Each round starts every adapter on a fresh page, in a rotated order, so thermal throttling and ordering spread evenly.
 - Reported: the median across rounds, with min–max. Ratios between libraries within one run are the signal. Absolute times vary between days, even on the same machine.
-- **Max at 60 fps** is the largest ladder step (1k, 2k, 5k, 10k, 20k, 50k, 100k, …) measured in every round whose median frame is at most 16.7 ms. Steps are up to 2× apart, so treat it as a lower bound.
+- **Max at 60 fps** is the largest ladder step (1k, 2k, 5k, 10k, 20k, 50k, 100k, …) measured in every round whose median frame is at most 16.7 ms. Steps are up to 2× apart, so treat it as a lower bound. It's also a cliff: a library whose frame sits near 16.7 ms at one step can flip a whole step between runs (seen: spryte `draw.sprite` in `particles`, 100k in the 7-round reference, 50k in a 1-round run on the same laptop). Frame times at fixed counts are the steadier comparison.
 - The **published counts** (10k, 50k, 200k) are measured for every adapter in every round, even once a frame exceeds 16.7 ms, so no cell mixes different numbers of rounds.
 
 ## Environment
@@ -66,7 +66,7 @@ Choices here come from a variance study: the `bunny` and `particles` scenes, 7 r
 | bunny, PixiJS `ParticleContainer` / spryte `draw.sprites` | 200k | 3.07× | 2.55–3.38× |
 | bunny, PixiJS `ParticleContainer` / spryte `draw.sprites` | 10k | 2.33× | 1.00–4.00× (frames under 1 ms: not meaningful) |
 
-**What we publish:** medians with min–max per count, and ratios at counts where frames are 2 ms or more. Cells under 2 ms are flagged `†` in the runner's table. They aren't wrong, but they're low precision.
+**What we publish:** medians with min–max per count, and ratios at counts where frames are 2 ms or more. Scenes published with fewer than 5 rounds (`raycaster`, 3) and every phone or web result (1 round) are indicative by this study's own numbers: expect them to move by up to about 30%. Cells under 2 ms are flagged `†` in the runner's table. They aren't wrong, but they're low precision.
 
 **Benchmark design moves ratios.** Every frame includes the shared simulation, so a cheaper simulation leaves more of the frame to the renderer, and ratios grow. 2dbench's structure-of-arrays simulation is lighter than the object-based one in debuff's own bench, and the same two libraries come out further apart here (particles at 200k: about 4.7× here, against 3.8× there). Neither number is "the" ratio. Both are true of their benchmark, which is why every result states its method, and why ratios from different benchmarks shouldn't be mixed.
 
@@ -77,7 +77,7 @@ Each threat says what could make a result misleading, and what 2dbench does abou
 | Threat | Effect | Mitigation | Residual risk |
 | --- | --- | --- | --- |
 | **The sync costs time.** A 1-pixel `readPixels` stalls the pipeline. A real game never does this; it lets frames overlap. | Absolute frame times include one full CPU–GPU round trip, so they're higher than a pipelined game would see. | Every adapter pays the same stall, so ratios are fair. Without it, frames would look as fast as the CPU can queue them, which is far worse. | Renderers that lean on CPU–GPU overlap would do relatively better in a real game than here. |
-| **Headless, automated Chrome.** | Background-tab throttling and compositor differences. | Headless Chrome uses the real GPU on Windows and macOS (the GPU string is recorded). On Linux it falls back to SwiftShader, so runs there use `HEADED=1` (a visible window), which gets the real GPU. Frames are timed directly, not through `requestAnimationFrame`, so throttling and vsync don't apply. `mobile.html` runs in a normal tab. | Compositing and presentation costs aren't measured. |
+| **Headless, automated Chrome.** | Background-tab throttling and compositor differences. | Headless Chrome uses the real GPU on Windows and macOS (the GPU string is recorded). On Linux it falls back to SwiftShader, so runs there use `HEADED=1` (a visible window), which gets the real GPU. Frames are timed directly, never waiting on `requestAnimationFrame`, so vsync doesn't apply. `mobile.html` runs in a normal tab, where a hidden tab is still throttled (timers, GPU priority), so the page records `hiddenDuringRun` and warns. | Compositing and presentation costs aren't measured. |
 | **Garbage collection.** | GC pauses inflate some frames. | Medians resist outliers. `p95FrameMs` shows them. Adapters must not allocate per frame unless the library itself does, which is what's being measured. | A GC-heavy library looks better in the median than it feels in play. Read `p95FrameMs` too. |
 | **Thermal throttling and background load.** | Later measurements run hotter. | Rounds rotate the adapter order. The power source and plan are recorded. Min–max is reported. | Long runs on fanless laptops and phones drift. Compare ratios within one file only. |
 | **The simulation is in the timed frame.** | Absolute numbers include the shared simulation, which grows with the sprite count. | Identical for every adapter, as in a real game. Its mean time is recorded per count (`simMs`). | Ratios of `frameMs` slightly understate differences between renderers; subtract `simMs` to compare renderers alone. |
@@ -85,6 +85,22 @@ Each threat says what could make a result misleading, and what 2dbench does abou
 | **One frame of parity.** | A renderer could differ only on frames that weren't checked. | Two counts (2k and 50k) after 10 seeded steps. Adapters draw from the same arrays, so there's no per-frame branching to hide in. | A library that culls only above 50k sprites wouldn't be caught. |
 | **Library setup.** | A badly configured library looks slow. | `setup` is documented in every result. Maintainers are invited to correct it ([CONTRIBUTING](CONTRIBUTING.md)). Alternatives that were measured (WebGPU, atlases, `roundPixels`) are listed above. | Until a library's maintainers review its adapter, treat its numbers as provisional. |
 | **Conflict of interest.** | The project was started by spryte's authors. | The incumbent library (PixiJS) as parity reference, public method and adapters, outside review for changes that help spryte, and maintainers welcome. | Trust has to be earned over time. Re-run it yourself. |
+
+## Desktop runner and web page
+
+The same page and the same `measure()` and parity code run in both, but the protocol around them differs, so a desktop result from `mobile.html` isn't equivalent to a `run.mjs` result on the same machine.
+
+| | `run.mjs` (desktop) | `mobile.html` (any browser) |
+| --- | --- | --- |
+| Browser | Playwright-launched Chrome, headless by default, clean profile | The visitor's own browser and profile (extensions included) |
+| Page | Top-level page, 960×540 viewport, DPR 1 | An iframe per adapter inside the site; the canvas is still 960×540 at DPR 1 |
+| Frames per count | 100 | 60 |
+| Rounds | 5 by default | 1 ("quick run", default) or 3 |
+| Context loss, startup | Measured | Not measured |
+| Software GPU | Refused unless `ALLOW_SOFTWARE=1` | Recorded in the GPU string, not refused |
+| Hidden tab | Not possible | Throttled; recorded as `hiddenDuringRun` |
+
+Compare ratios within one file, and prefer `run.mjs` results where both exist.
 
 ## Known limits
 

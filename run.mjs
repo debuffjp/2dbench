@@ -17,6 +17,7 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright-core";
 import { build, preview } from "vite";
 // The gate itself is shared with mobile.html, so phones and desktops judge frames by the same rules.
+import { colour, frameChart, fromRunner } from "./src/charts.ts";
 import { compare, GATE, PARITY_COUNTS, PARITY_TOLERANCE, passes } from "./src/parity.ts";
 
 const root = dirname(fileURLToPath(import.meta.url));
@@ -300,7 +301,7 @@ const cell = (r, n) => {
   // † marks frames under 2 ms, where browser timer resolution makes rounds vary by 20–35% (METHOD.md, Statistics).
   return c ? `${c.frameMs.toFixed(1)} ms (${c.minFrameMs.toFixed(1)}–${c.maxFrameMs.toFixed(1)})${c.frameMs < 2 ? " †" : ""}` : "n/a";
 };
-console.log(`\n${scene}: ${rounds} rounds · ${gpu} · ${report.environment.browser} · ${report.environment.cpu} · ${report.environment.power}\n`);
+console.log(`\n${scene}: ${rounds} round${rounds === 1 ? "" : "s"} · ${gpu} · ${report.environment.browser} · ${report.environment.cpu} · ${report.environment.power}\n`);
 console.log(`| Adapter | Version | Max @60fps | ${PUBLISHED.map((n) => `${n / 1000}k`).join(" | ")} | Ready | First frame |`);
 console.log(`| --- | --- | --- | ${PUBLISHED.map(() => "---").join(" | ")} | --- | --- |`);
 for (const r of results)
@@ -309,8 +310,37 @@ for (const r of results)
   );
 console.log("\n† under 2 ms per frame: low precision, compare with care.");
 console.log(`Saved ${file}`);
+
+// Visual feedback. A bar chart in the terminal (largest count at 60 fps, log scale), and the same chart the
+// README uses as SVG and PNG next to the results file, so an agent can look at the run, not just read it.
+const tty = process.stderr.isTTY && !process.env.NO_COLOR;
+const paint = (hex, text) => {
+  if (!tty) return text;
+  const [r, g, b] = [1, 3, 5].map((i) => Number.parseInt(hex.slice(i, i + 2), 16));
+  return `[38;2;${r};${g};${b}m${text}[0m`;
+};
+const top = Math.max(...results.map((r) => r.maxAt60fps), COUNTS[0]);
+const width = Math.max(...results.map((r) => r.label.length));
+console.log(`
+Most ${scene === "raycaster" ? "enemies" : "sprites"} at 60 fps (log scale)`);
+for (const r of results) {
+  const n = r.maxAt60fps ? Math.max(1, Math.round((40 * Math.log2(r.maxAt60fps / (COUNTS[0] / 2))) / Math.log2(top / (COUNTS[0] / 2)))) : 0;
+  console.log(`  ${r.label.padEnd(width)}  ${paint(colour(r.adapter), "█".repeat(n))} ${r.maxAt60fps ? r.maxAt60fps.toLocaleString("en") : "under 1k"}`);
+}
+const svg = frameChart(fromRunner(report));
+const chart = file.replace(/\.json$/, ".png");
+if (svg) {
+  writeFileSync(file.replace(/\.json$/, ".svg"), `${svg}
+`);
+  const shot = await chromium.launch({ headless: true, channel: process.env.BROWSER_CHANNEL ?? "chrome" });
+  const page = await shot.newPage({ viewport: { width: 760, height: 400 }, deviceScaleFactor: 2 });
+  await page.setContent(`<body style="margin:0">${svg}</body>`);
+  await page.locator("svg").screenshot({ path: chart });
+  await shot.close();
+  console.log(`Chart ${chart} (and .svg)`);
+}
 if (JSON_OUT) {
   const ms = (r) => Object.fromEntries(PUBLISHED.map((n) => [n, r.counts.find((c) => c.count === n)?.frameMs ?? null]));
   const summary = results.map((r) => ({ adapter: r.adapter, label: r.label, version: r.version, maxAt60fps: r.maxAt60fps, ms: ms(r), startup: { readyMs: r.startup.readyMs, firstFrameMs: r.startup.firstFrameMs } }));
-  out(JSON.stringify({ file, scene, rounds, gpu, parity: "passed", results: summary }, null, 2));
+  out(JSON.stringify({ file, chart: svg ? chart : null, scene, rounds, gpu, parity: "passed", results: summary }, null, 2));
 }

@@ -11,7 +11,7 @@ node run.mjs raycaster rounds=0 --json    # parity check only, about a minute
 node run.mjs raycaster --json             # full timed run, several minutes; run it in the background
 ```
 
-With `--json`, stdout is exactly one JSON document and progress goes to stderr, so pipe stdout straight into a parser. The full result file is the `file` field. Unknown arguments fail fast with the valid list.
+With `--json`, stdout is exactly one JSON document and progress goes to stderr, so pipe stdout straight into a parser. The full result file is the `file` field. Every timed run also draws its frame-time chart next to the result file (`.png` and `.svg`, path in the `chart` field): look at it before reporting, and show it to the human. Lines that bend sharply or cross other adapters at one count are worth a second run. Unknown arguments fail fast with the valid list.
 
 Timed runs need a real GPU and are refused on SwiftShader or llvmpipe (check `softwareRendering` in `--list`). On Linux, headless Chrome is always software, so use `HEADED=1`. Don't report timings from a laptop on battery, and don't run two timed runs at once.
 

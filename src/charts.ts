@@ -52,7 +52,7 @@ export function frameChart({ scene, subtitle, series }: ChartScene): string {
   if (!all.length) return "";
   const xMin = Math.min(...all.map((c) => c.count));
   const xMax = Math.max(xMin * 2, ...all.map((c) => c.count));
-  const yMin = Math.max(0.5, Math.min(...all.map((c) => c.min ?? c.ms)) * 0.8);
+  const yMin = Math.max(0.1, Math.min(...all.map((c) => c.min ?? c.ms)) * 0.8);
   const yMax = Math.max(BUDGET * 2, ...all.map((c) => c.max ?? c.ms)) * 1.1;
   const lx = (v: number) => L + ((Math.log10(v) - Math.log10(xMin)) / (Math.log10(xMax) - Math.log10(xMin))) * pw;
   const ly = (v: number) => T + ph - ((Math.log10(v) - Math.log10(yMin)) / (Math.log10(yMax) - Math.log10(yMin))) * ph;
@@ -61,7 +61,7 @@ export function frameChart({ scene, subtitle, series }: ChartScene): string {
   s.push(`<rect width="${W}" height="${H}" rx="10" fill="${BG}"/>`);
   s.push(`<text x="${L}" y="26" fill="${TEXT}" font-size="15" font-weight="600">${esc(scene)}: frame time by ${UNIT[scene]?.[0] ?? "sprite"} count</text>`);
   s.push(`<text x="${L}" y="44" fill="${MUTED}" font-size="11">${esc(`${subtitle} · lower is better`)}</text>`);
-  for (const v of [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000]) {
+  for (const v of [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000]) {
     if (v < yMin || v > yMax) continue;
     s.push(`<line x1="${L}" x2="${L + pw}" y1="${ly(v)}" y2="${ly(v)}" stroke="${GRID}"/>`);
     s.push(`<text x="${L - 8}" y="${ly(v) + 4}" fill="${MUTED}" font-size="11" text-anchor="end">${v} ms</text>`);
@@ -78,7 +78,7 @@ export function frameChart({ scene, subtitle, series }: ChartScene): string {
   for (const r of sorted) {
     const c = colour(r.adapter);
     const pts = r.points.filter((p) => p.ms > 0);
-    if (pts.some((p) => p.min !== undefined)) {
+    if (pts.some((p) => p.min !== undefined && p.min !== p.max)) {
       const lo = pts.map((p) => `${lx(p.count)},${ly(Math.max(yMin, p.min ?? p.ms))}`);
       const hi = [...pts].reverse().map((p) => `${lx(p.count)},${ly(Math.min(yMax, p.max ?? p.ms))}`);
       s.push(`<polygon points="${[...lo, ...hi].join(" ")}" fill="${c}" opacity="0.15"/>`);
@@ -155,7 +155,7 @@ export const shortGpu = (gpu = "") =>
 export function fromRunner(r: RunnerReport): ChartScene {
   return {
     scene: r.scene,
-    subtitle: `${shortGpu(r.environment.gpu)} · ${r.environment.browser ?? ""} · ${r.rounds} rounds`,
+    subtitle: `${shortGpu(r.environment.gpu)} · ${r.environment.browser ?? ""} · ${r.rounds} round${r.rounds === 1 ? "" : "s"}`,
     series: r.results.map((a) => ({
       adapter: a.adapter,
       label: a.label,
