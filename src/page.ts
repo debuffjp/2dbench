@@ -141,7 +141,7 @@ function snapshot(count: number, steps = 10): { width: number; height: number; r
   for (let i = 0; i < steps; i++) sim.step();
   instance.draw(sim.state);
   const out = new Uint8Array(WIDTH * HEIGHT * 4);
-  const gl = canvas.getContext("webgl2");
+  const gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl"); // Phaser 4 uses WebGL1
   if (gl) {
     // Same task as the draw, so the drawing buffer hasn't been presented and cleared yet.
     const raw = new Uint8Array(out.length);
@@ -169,7 +169,7 @@ export interface ContextLoss {
  */
 async function contextLoss(count = 2_000): Promise<ContextLoss | null> {
   if (sim.state.count) throw new Error("contextLoss() needs a fresh page");
-  const gl = canvas.getContext("webgl2");
+  const gl = canvas.getContext("webgl2") ?? canvas.getContext("webgl"); // Phaser 4 uses WebGL1
   const ext = gl?.getExtension("WEBGL_lose_context");
   if (!gl || !ext) return null;
   sim.resize(count);
