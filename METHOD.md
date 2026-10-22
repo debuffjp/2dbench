@@ -14,11 +14,11 @@ Scenes (`src/scenes.ts`) own a seeded simulation and write structure-of-arrays s
 
 Before timing, each adapter draws the same seeded frame (10 steps in, at 2,000 and at 50,000 sprites), and its pixels are compared with the reference's: **PixiJS `Sprite`**. It's the most widely used 2D web renderer, it supports every scene, and it isn't made by 2dbench's authors. (An earlier hand-written WebGL2 reference was dropped: it was close to spryte's own design, so it neither referees independently nor adds information as a contestant.)
 
-- **Coverage:** the adapter's drawn area divided by the reference's. Skipped, culled or missing sprites show here. The run fails outside 99.5–100.5%.
-- **Interior differences:** pixels that differ (any channel by more than 8 levels) where the 3×3 neighbourhood is a single flat colour in both frames. Any edge, even a sprite drawn over another sprite, breaks flatness, so different rounding rules for rotated edges don't count. A wrong tint, alpha, blend or texture inside a sprite does. The run fails above 0.5%. This metric was validated by deliberately giving one library a wrong tint: interior differences rose from 0% to 22%.
+- **Coverage:** the adapter's drawn area divided by the reference's. Skipped, culled or missing sprites show here. The run fails outside 99.5-100.5%.
+- **Interior differences:** pixels that differ (any channel by more than 8 levels) where the 3x3 neighbourhood is a single flat colour in both frames. Any edge, even a sprite drawn over another sprite, breaks flatness, so different rounding rules for rotated edges don't count. A wrong tint, alpha, blend or texture inside a sprite does. The run fails above 0.5%. This metric was validated by deliberately giving one library a wrong tint: interior differences rose from 0% to 22%.
 - **On phones** (`mobile.html`), the same gate runs in the page: it renders the reference's frame and each adapter's, then compares them on the device with the same code (`src/parity.ts`), so no frames have to leave the phone. An adapter that fails isn't timed in that scene, and its parity numbers are kept in the file. This checks what desktop runs can't: mobile GPUs and their shader precision. Phone files made before this have no parity data and show as unchecked on the results page.
-- **Scene gates.** A scene may declare its own gate in `src/scenes.ts`, with its reason, before any adapter is checked against it. It's recorded in every results file. Only `text` has one: libraries rasterise glyphs and place text boxes differently (measured: 1–2 pixels apart), so it checks coverage within 90–110% at 100 and 540 labels, where none overlap. That catches missing, extra or misplaced labels, not glyph shapes. A scene gate is never widened to let an adapter pass.
-- **Differing pixels overall** are reported for transparency. Libraries legitimately differ at the edges of rotated sprites (for example PixiJS's `roundPixels` snaps rotated corners). In scenes with rotation and scale (`particles`) that's typically 8–12% of drawn pixels, with 0% inside sprites; in `bunny` (no rotation) it's under 0.1%. `PARITY_DUMP=1` writes each frame and a diff image to `results/parity/`.
+- **Scene gates.** A scene may declare its own gate in `src/scenes.ts`, with its reason, before any adapter is checked against it. It's recorded in every results file. Only `text` has one: libraries rasterise glyphs and place text boxes differently (measured: 1-2 pixels apart), so it checks coverage within 90-110% at 100 and 540 labels, where none overlap. That catches missing, extra or misplaced labels, not glyph shapes. A scene gate is never widened to let an adapter pass.
+- **Differing pixels overall** are reported for transparency. Libraries legitimately differ at the edges of rotated sprites (for example PixiJS's `roundPixels` snaps rotated corners). In scenes with rotation and scale (`particles`) that's typically 8-12% of drawn pixels, with 0% inside sprites; in `bunny` (no rotation) it's under 0.1%. `PARITY_DUMP=1` writes each frame and a diff image to `results/parity/`.
 
 ## Honest timing
 
@@ -26,13 +26,13 @@ Before timing, each adapter draws the same seeded frame (10 steps in, at 2,000 a
 - 20 warm-up frames first (JIT, texture upload, buffer growth, and any objects a retained-mode library creates), then 100 measured frames (60 on `mobile.html`; see [Desktop runner and web page](#desktop-runner-and-web-page)). Between warm-up and timing the page yields one task, not one animation frame: a hidden tab may never deliver an animation frame, which used to stall web runs. Reported per count: the median frame, the p95 frame, the median main-thread time before the sync, the shared simulation's mean time (so it can be subtracted to compare renderers alone), and the JS heap afterwards (Chrome only, coarse), so growth over a run shows.
 - Context loss, once per adapter per run, on a fresh page: draw 2,000 sprites, lose the WebGL context (`WEBGL_lose_context`), restore it a task later, then redraw the same state each animation frame until under 0.1% of pixels differ from before the loss, for up to 2 seconds. Recorded as time from restore to that frame, or why it didn't recover. Phones don't run this yet.
 - Startup, once per round on a fresh page: time from navigation until the adapter is ready, the adapter's own setup (each library is imported lazily, so its load counts against it, not against everyone), and the first 1,000-sprite frame through GPU completion, which includes shader compiles and first texture uploads.
-- The canvas is 960×540 at device pixel ratio 1, so every device draws the same number of pixels.
+- The canvas is 960x540 at device pixel ratio 1, so every device draws the same number of pixels.
 
 ## Noise and ordering
 
 - Several rounds (default 5; see Statistics). Each round starts every adapter on a fresh page, in a rotated order, so thermal throttling and ordering spread evenly.
-- Reported: the median across rounds, with min–max. Ratios between libraries within one run are the signal. Absolute times vary between days, even on the same machine.
-- **Max at 60 fps** is the largest ladder step (1k, 2k, 5k, 10k, 20k, 50k, 100k, …) measured in every round whose median frame is at most 16.7 ms. Steps are up to 2× apart, so treat it as a lower bound. It's also a cliff: a library whose frame sits near 16.7 ms at one step can flip a whole step between runs (seen: spryte `draw.sprite` in `particles`, 100k in the 7-round reference, 50k in a 1-round run on the same laptop). Frame times at fixed counts are the steadier comparison.
+- Reported: the median across rounds, with min-max. Ratios between libraries within one run are the signal. Absolute times vary between days, even on the same machine.
+- **Max at 60 fps** is the largest ladder step (1k, 2k, 5k, 10k, 20k, 50k, 100k, …) measured in every round whose median frame is at most 16.7 ms. Steps are up to 2x apart, so treat it as a lower bound. It's also a cliff: a library whose frame sits near 16.7 ms at one step can flip a whole step between runs (seen: spryte `draw.sprite` in `particles`, 100k in the 7-round reference, 50k in a 1-round run on the same laptop). Frame times at fixed counts are the steadier comparison.
 - The **published counts** (10k, 50k, 200k) are measured for every adapter in every round, even once a frame exceeds 16.7 ms, so no cell mixes different numbers of rounds.
 
 ## Environment
@@ -52,7 +52,7 @@ Choices here come from a variance study: the `bunny` and `particles` scenes, 7 r
 
 **Why medians.** A frame time distribution has a long right tail (GC pauses, OS interrupts). The median of 100 frames ignores the tail, which `p95FrameMs` reports separately. Across rounds, the median of the per-round medians resists a single bad round, such as a background task waking up.
 
-**How noisy rounds are.** At the published counts (10k, 50k, 200k), one round's median frame differs from another's with a coefficient of variation of **9.2% (median cell)**, and up to 35.8%. The noisiest cells are the fastest ones: frames under about 2 ms, where the browser's timer resolution and scheduling jitter are a large share of the frame. At 10k sprites, the bulk APIs (about 0.5–1.5 ms per frame) varied by 24–36%.
+**How noisy rounds are.** At the published counts (10k, 50k, 200k), one round's median frame differs from another's with a coefficient of variation of **9.2% (median cell)**, and up to 35.8%. The noisiest cells are the fastest ones: frames under about 2 ms, where the browser's timer resolution and scheduling jitter are a large share of the frame. At 10k sprites, the bulk APIs (about 0.5-1.5 ms per frame) varied by 24-36%.
 
 **Why 5 rounds, not 3.** Taking every window of 3 consecutive rounds from the 7, the 3-round median missed the 7-round median by **9.8% (median cell), up to 28.6%**. The ratios between libraries, which is what the claims are about, missed by up to 15% at 50k and 200k, and up to 29% at 10k for the bulk APIs. So the default is now 5 rounds, and every result keeps `roundsFrameMs`, so anyone can compute their own intervals.
 
@@ -60,15 +60,15 @@ Choices here come from a variance study: the `bunny` and `particles` scenes, 7 r
 
 | Scene, pair | Count | Ratio (7-round medians) | Range of per-round ratios |
 | --- | --- | --- | --- |
-| particles, PixiJS `Sprite` / spryte `draw.sprite` | 50k | 3.82× | 3.18–4.07× |
-| particles, PixiJS `ParticleContainer` / spryte `draw.sprites` | 200k | 4.74× | 4.03–5.19× |
-| bunny, PixiJS `Sprite` / spryte `draw.sprite` | 50k | 2.72× | 2.31–3.24× |
-| bunny, PixiJS `ParticleContainer` / spryte `draw.sprites` | 200k | 3.07× | 2.55–3.38× |
-| bunny, PixiJS `ParticleContainer` / spryte `draw.sprites` | 10k | 2.33× | 1.00–4.00× (frames under 1 ms: not meaningful) |
+| particles, PixiJS `Sprite` / spryte `draw.sprite` | 50k | 3.82x | 3.18-4.07x |
+| particles, PixiJS `ParticleContainer` / spryte `draw.sprites` | 200k | 4.74x | 4.03-5.19x |
+| bunny, PixiJS `Sprite` / spryte `draw.sprite` | 50k | 2.72x | 2.31-3.24x |
+| bunny, PixiJS `ParticleContainer` / spryte `draw.sprites` | 200k | 3.07x | 2.55-3.38x |
+| bunny, PixiJS `ParticleContainer` / spryte `draw.sprites` | 10k | 2.33x | 1.00-4.00x (frames under 1 ms: not meaningful) |
 
-**What we publish:** medians with min–max per count, and ratios at counts where frames are 2 ms or more. Scenes published with fewer than 5 rounds (`raycaster`, 3) and every phone or web result (1 round) are indicative by this study's own numbers: expect them to move by up to about 30%. Cells under 2 ms are flagged `†` in the runner's table. They aren't wrong, but they're low precision.
+**What we publish:** medians with min-max per count, and ratios at counts where frames are 2 ms or more. Scenes published with fewer than 5 rounds (`raycaster`, 3) and every phone or web result (1 round) are indicative by this study's own numbers: expect them to move by up to about 30%. Cells under 2 ms are flagged `†` in the runner's table. They aren't wrong, but they're low precision.
 
-**Benchmark design moves ratios.** Every frame includes the shared simulation, so a cheaper simulation leaves more of the frame to the renderer, and ratios grow. 2dbench's structure-of-arrays simulation is lighter than the object-based one in debuff's own bench, and the same two libraries come out further apart here (particles at 200k: about 4.7× here, against 3.8× there). Neither number is "the" ratio. Both are true of their benchmark, which is why every result states its method, and why ratios from different benchmarks shouldn't be mixed.
+**Benchmark design moves ratios.** Every frame includes the shared simulation, so a cheaper simulation leaves more of the frame to the renderer, and ratios grow. 2dbench's structure-of-arrays simulation is lighter than the object-based one in debuff's own bench, and the same two libraries come out further apart here (particles at 200k: about 4.7x here, against 3.8x there). Neither number is "the" ratio. Both are true of their benchmark, which is why every result states its method, and why ratios from different benchmarks shouldn't be mixed.
 
 ## Threats to validity
 
@@ -76,10 +76,10 @@ Each threat says what could make a result misleading, and what 2dbench does abou
 
 | Threat | Effect | Mitigation | Residual risk |
 | --- | --- | --- | --- |
-| **The sync costs time.** A 1-pixel `readPixels` stalls the pipeline. A real game never does this; it lets frames overlap. | Absolute frame times include one full CPU–GPU round trip, so they're higher than a pipelined game would see. | Every adapter pays the same stall, so ratios are fair. Without it, frames would look as fast as the CPU can queue them, which is far worse. | Renderers that lean on CPU–GPU overlap would do relatively better in a real game than here. |
+| **The sync costs time.** A 1-pixel `readPixels` stalls the pipeline. A real game never does this; it lets frames overlap. | Absolute frame times include one full CPU-GPU round trip, so they're higher than a pipelined game would see. | Every adapter pays the same stall, so ratios are fair. Without it, frames would look as fast as the CPU can queue them, which is far worse. | Renderers that lean on CPU-GPU overlap would do relatively better in a real game than here. |
 | **Headless, automated Chrome.** | Background-tab throttling and compositor differences. | Headless Chrome uses the real GPU on Windows and macOS (the GPU string is recorded). On Linux it falls back to SwiftShader, so runs there use `HEADED=1` (a visible window), which gets the real GPU. Frames are timed directly, never waiting on `requestAnimationFrame`, so vsync doesn't apply. `mobile.html` runs in a normal tab, where a hidden tab is still throttled (timers, GPU priority), so the page records `hiddenDuringRun` and warns. | Compositing and presentation costs aren't measured. |
 | **Garbage collection.** | GC pauses inflate some frames. | Medians resist outliers. `p95FrameMs` shows them. Adapters must not allocate per frame unless the library itself does, which is what's being measured. | A GC-heavy library looks better in the median than it feels in play. Read `p95FrameMs` too. |
-| **Thermal throttling and background load.** | Later measurements run hotter. | Rounds rotate the adapter order. The power source and plan are recorded. Min–max is reported. | Long runs on fanless laptops and phones drift. Compare ratios within one file only. |
+| **Thermal throttling and background load.** | Later measurements run hotter. | Rounds rotate the adapter order. The power source and plan are recorded. Min-max is reported. | Long runs on fanless laptops and phones drift. Compare ratios within one file only. |
 | **The simulation is in the timed frame.** | Absolute numbers include the shared simulation, which grows with the sprite count. | Identical for every adapter, as in a real game. Its mean time is recorded per count (`simMs`). | Ratios of `frameMs` slightly understate differences between renderers; subtract `simMs` to compare renderers alone. |
 | **Scenes are synthetic.** | Real games mix workloads. | Several scenes, each stating its purpose, including tilemaps, spawn/despawn churn and text, render targets, clipping and texture uploads, with more planned (post-effect shaders). | No benchmark predicts a specific game. Profile your own (for example with myaku). |
 | **One frame of parity.** | A renderer could differ only on frames that weren't checked. | Two counts (2k and 50k) after 10 seeded steps. Adapters draw from the same arrays, so there's no per-frame branching to hide in. | A library that culls only above 50k sprites wouldn't be caught. |
@@ -93,7 +93,7 @@ The same page and the same `measure()` and parity code run in both, but the prot
 | | `run.mjs` (desktop) | `mobile.html` (any browser) |
 | --- | --- | --- |
 | Browser | Playwright-launched Chrome, headless by default, clean profile | The visitor's own browser and profile (extensions included) |
-| Page | Top-level page, 960×540 viewport, DPR 1 | An iframe per adapter inside the site; the canvas is still 960×540 at DPR 1 |
+| Page | Top-level page, 960x540 viewport, DPR 1 | An iframe per adapter inside the site; the canvas is still 960x540 at DPR 1 |
 | Frames per count | 100 | 60 |
 | Rounds | 5 by default | 1 ("quick run", default) or 3 |
 | Context loss, startup | Measured | Not measured |

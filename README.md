@@ -20,18 +20,18 @@ Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryz
 
 | Device | GPU | Browser | spryte | PixiJS | spryte faster |
 | --- | --- | --- | --- | --- | --- |
-| Laptop (reference) | NVIDIA RTX 5060 | Chrome 155, Windows | 100,000 | 20,000 | 3.3× |
-| Lenovo Legion Pro 7 | NVIDIA RTX 4080 | Chromium 156, Linux | 100,000 | 50,000 | 2.7× |
-| Windows laptop | AMD Radeon 780M (integrated) | Chrome, Windows | 50,000 | 20,000 | 3.3× |
-| iPhone | Apple GPU | Safari, iOS 18 | 100,000 | 20,000 | 3.7× |
-| iPhone | Apple GPU | Chrome, iOS 26 (2 runs) | 50,000–100,000 | 20,000 | 3.5–3.8× |
-| Android phone | Mali-T760 class | Firefox | 10,000 | 5,000 | 1.6× |
+| Laptop (reference) | NVIDIA RTX 5060 | Chrome 155, Windows | 100,000 | 20,000 | 3.3x |
+| Lenovo Legion Pro 7 | NVIDIA RTX 4080 | Chromium 156, Linux | 100,000 | 50,000 | 2.7x |
+| Windows laptop | AMD Radeon 780M (integrated) | Chrome, Windows | 50,000 | 20,000 | 3.3x |
+| iPhone | Apple GPU | Safari, iOS 18 | 100,000 | 20,000 | 3.7x |
+| iPhone | Apple GPU | Chrome, iOS 26 (2 runs) | 50,000-100,000 | 20,000 | 3.5-3.8x |
+| Android phone | Mali-T760 class | Firefox | 10,000 | 5,000 | 1.6x |
 
-spryte's one-call-per-sprite path is ahead on every device so far. The bulk paths (spryte `draw.sprites` against `ParticleContainer`) are 2.5–4.2× apart on desktop GPUs, but on iPhones they finish level, because there the GPU's fill rate, not JavaScript, is the limit. Phone runs are one quick round each with coarse timers, so treat them as indicative. Every row is a file in [`results/`](results).
+spryte's one-call-per-sprite path is ahead on every device so far. The bulk paths (spryte `draw.sprites` against `ParticleContainer`) are 2.5-4.2x apart on desktop GPUs, but on iPhones they finish level, because there the GPU's fill rate, not JavaScript, is the limit. Phone runs are one quick round each with coarse timers, so treat them as indicative. Every row is a file in [`results/`](results).
 
 ### Phaser
 
-On the reference laptop (RTX 5060, 5 rounds, 50k sprites), spryte `draw.sprite` was 2.7–3.1× faster than Phaser 4 `Image` in bunny, mixed and particles (2.2× in raycaster at 10k enemies, 10,000 against 5,000 at 60 fps), and spryte `draw.sprites` 5.0× faster than `SpriteGPULayer` in particles. Phaser `Image` beat PixiJS `Sprite` in mixed and particles. `SpriteGPULayer` is built for members that rarely change, so these scenes use it against its design; it's Phaser's only bulk path with per-sprite rotation, scale and tint. Raw data: [`results/community/*-rtx-5060-laptop-phaser-*.json`](results/community). Write-up: [spryte vs Phaser](https://debuff.jp/blog/spryte-vs-phaser).
+On the reference laptop (RTX 5060, 5 rounds, 50k sprites), spryte `draw.sprite` was 2.7-3.1x faster than Phaser 4 `Image` in bunny, mixed and particles (2.2x in raycaster at 10k enemies, 10,000 against 5,000 at 60 fps), and spryte `draw.sprites` 5.0x faster than `SpriteGPULayer` in particles. Phaser `Image` beat PixiJS `Sprite` in mixed and particles. `SpriteGPULayer` is built for members that rarely change, so these scenes use it against its design; it's Phaser's only bulk path with per-sprite rotation, scale and tint. Raw data: [`results/community/*-rtx-5060-laptop-phaser-*.json`](results/community). Write-up: [spryte vs Phaser](https://debuff.jp/blog/spryte-vs-phaser).
 
 **`bunny`**: one texture, position only, 7 rounds
 
@@ -90,9 +90,9 @@ On the reference laptop (RTX 5060, 5 rounds, 50k sprites), spryte `draw.sprite` 
 | particles | spryte `draw.sprite` | 100,000 | 5 | 9 | 22 |
 | particles | PixiJS `Sprite` | 20,000 | 6 | 32 | – |
 
-On this phone, the gap closes for position-only bulk drawing (spryte `draw.sprites` and PixiJS `ParticleContainer` are level at 200k). It stays wide for general sprites (about 3.6× in `mixed` at 50k) and for dynamic particles (about 2.3× at 200k). The phone's Canvas 2D does twice as well as the desktop's.
+On this phone, the gap closes for position-only bulk drawing (spryte `draw.sprites` and PixiJS `ParticleContainer` are level at 200k). It stays wide for general sprites (about 3.6x in `mixed` at 50k) and for dynamic particles (about 2.3x at 200k). The phone's Canvas 2D does twice as well as the desktop's.
 
-Parity passed in every scene (desktop; re-checked against PixiJS `Sprite` as the reference): coverage 99.8–100%, and 0% of pixels differ inside sprites. The rotated scenes differ at sprite edges (8–13% of drawn pixels), where libraries round rotated corners differently.
+Parity passed in every scene (desktop; re-checked against PixiJS `Sprite` as the reference): coverage 99.8-100%, and 0% of pixels differ inside sprites. The rotated scenes differ at sprite edges (8-13% of drawn pixels), where libraries round rotated corners differently.
 
 **How to read these.** Compare within a table, as ratios. Absolute times depend on the machine, the day and the benchmark design (see [Statistics](METHOD.md#statistics)). One desktop GPU says little about phones, where filling pixels often dominates.
 
@@ -124,12 +124,12 @@ Wanted: KAPLAY, Excalibur, LittleJS, three.js, Babylon.js, melonJS, and Canvas 2
 | `tilemap` | Scrolling tile layers: an opaque ground layer with animated water, then sparse decoration layers, each scrolling at its own speed. The count is tiles drawn (2,135 per full layer). | The workload of nearly every platformer and top-down game: many small slices of one atlas, moving every frame. |
 | `churn` | Every sprite lives 60 frames, so a sixtieth of them are destroyed and created each frame, and they grow as they age. | Bullets, pickups and effects. Retained-mode libraries pay for creating and destroying objects, as a game would. |
 | `text` | A grid of numbers scrolling up; each changes every 8 frames and its colour every 16. Drawn with each library's native text API. The count is labels (540 fill the screen). | Scores, timers and damage numbers: text that changes often, the case that makes retained text re-rasterise. |
-| `lowres` | Bunnies drawn into a 480×270 offscreen target, which is then drawn at 2× to fill the canvas. | Pixel-art games rendered at low resolution and upscaled: render targets on every frame. Post-effect shaders aren't measured, since each library's shader API differs. |
-| `clip` | A 4×3 grid of UI panels, each clipping the bunnies bouncing through it. | Inventories, scrolling lists and minimaps: per-panel clipping. |
-| `upload` | A 960×540 layer repainted on the CPU every frame and re-uploaded, under bunnies. | Destructible terrain, paint canvases and software effects: a full-screen texture upload per frame. |
+| `lowres` | Bunnies drawn into a 480x270 offscreen target, which is then drawn at 2x to fill the canvas. | Pixel-art games rendered at low resolution and upscaled: render targets on every frame. Post-effect shaders aren't measured, since each library's shader API differs. |
+| `clip` | A 4x3 grid of UI panels, each clipping the bunnies bouncing through it. | Inventories, scrolling lists and minimaps: per-panel clipping. |
+| `upload` | A 960x540 layer repainted on the CPU every frame and re-uploaded, under bunnies. | Destructible terrain, paint canvases and software effects: a full-screen texture upload per frame. |
 | `raycaster` | A retro first-person maze (the Wolfenstein 3D technique): 480 textured wall slices, distance shading, and squish-blob enemies billboarded and clipped column by column. The count is the number of enemies. | Thousands of thin quads per frame, each from a different region of one texture atlas: what raycasters, sprite-sheet animation and tile atlases do. |
 
-Every property a scene uses changes over time, so no library can win by caching values that never change. In `raycaster`, the shared simulation does all the game work (casting rays, shading, projecting and depth-clipping enemies), and adapters only draw the resulting slices. Text uses each library's own text API, so glyphs are rasterised differently. It has its own, declared parity gate: coverage within 90–110% at 100 and 540 labels, where labels don't overlap. Labels land within 1–2 pixels of each other, so it catches missing, extra or wrong labels but not pixel-exact glyphs. Every run also checks **context loss**: each WebGL adapter draws a frame, the context is lost and restored, and the run records how long until the adapter draws the same frame again (or that it never did). Planned: post-effect shaders.
+Every property a scene uses changes over time, so no library can win by caching values that never change. In `raycaster`, the shared simulation does all the game work (casting rays, shading, projecting and depth-clipping enemies), and adapters only draw the resulting slices. Text uses each library's own text API, so glyphs are rasterised differently. It has its own, declared parity gate: coverage within 90-110% at 100 and 540 labels, where labels don't overlap. Labels land within 1-2 pixels of each other, so it catches missing, extra or wrong labels but not pixel-exact glyphs. Every run also checks **context loss**: each WebGL adapter draws a frame, the context is lost and restored, and the run records how long until the adapter draws the same frame again (or that it never did). Planned: post-effect shaders.
 
 ## Run it
 
@@ -167,10 +167,10 @@ The more varied the devices, the more useful the data. Phones, tablets, Chromebo
 
 ## Method, in brief
 
-1. **Same work.** Scenes own a seeded simulation and hand every adapter the same typed arrays each frame. Adapters only draw. Same textures, 960×540, nearest filtering, no antialiasing, unrotated sprites on whole pixels.
+1. **Same work.** Scenes own a seeded simulation and hand every adapter the same typed arrays each frame. Adapters only draw. Same textures, 960x540, nearest filtering, no antialiasing, unrotated sprites on whole pixels.
 2. **Parity gate.** Before timing, each adapter draws the same frame at 2,000 and 50,000 sprites, compared with the reference. The run fails if drawn area differs by more than 0.5%, or if more than 0.5% of pixels differ inside sprites. The inside-sprite metric is validated: a deliberately wrong tint scores 22%.
 3. **Honest timing.** Each frame is timed from simulation to GPU completion (a 1-pixel readback), so vsync can't hide cost. 20 warm-up frames, then 100 measured.
-4. **Statistics from evidence.** 5 interleaved rounds by default, chosen from a variance study. Medians with min–max, and every round's value kept. Low-precision cells are flagged.
+4. **Statistics from evidence.** 5 interleaved rounds by default, chosen from a variance study. Medians with min-max, and every round's value kept. Low-precision cells are flagged.
 5. **Full environment,** recorded automatically: GPU, browser, CPU, OS, memory, power source and plan, library versions, and the 2dbench commit.
 
 The reasons for each choice, and the threats to validity, are in **[METHOD.md](METHOD.md)**.

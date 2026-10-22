@@ -45,8 +45,8 @@
 | `adapter`, `label` | Adapter id and a human-readable library and API. |
 | `package`, `version` | npm package and installed version (empty for hand-written adapters). |
 | `setup` | How the library was configured, copied from the adapter, so readers can check it's idiomatic. |
-| `maxAt60fps` | The largest ladder count measured in every round whose median frame is at most `budgetMs`. A lower bound: ladder steps are up to 2× apart. |
-| `parity` | Per parity count: `coveragePercent` (drawn area relative to the reference), `differingPercent` (drawn pixels differing by more than the tolerance), `interiorDifferingPercent` (those inside sprites, where the 3×3 neighbourhood is flat in both frames) and `drawnPixels`. |
+| `maxAt60fps` | The largest ladder count measured in every round whose median frame is at most `budgetMs`. A lower bound: ladder steps are up to 2x apart. |
+| `parity` | Per parity count: `coveragePercent` (drawn area relative to the reference), `differingPercent` (drawn pixels differing by more than the tolerance), `interiorDifferingPercent` (those inside sprites, where the 3x3 neighbourhood is flat in both frames) and `drawnPixels`. |
 | `counts[]` | One entry per measured sprite count (below). |
 
 ## `counts[]`
