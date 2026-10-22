@@ -33,6 +33,8 @@ spryte's one-call-per-sprite path is ahead on every device so far. The bulk path
 
 On the reference laptop (RTX 5060, 5 rounds, 50k sprites), spryte `draw.sprite` was 2.7-3.1x faster than Phaser 4 `Image` in bunny, mixed and particles (2.2x in raycaster at 10k enemies, 10,000 against 5,000 at 60 fps), and spryte `draw.sprites` 5.0x faster than `SpriteGPULayer` in particles. Phaser `Image` beat PixiJS `Sprite` in mixed and particles. `SpriteGPULayer` is built for members that rarely change, so these scenes use it against its design; it's Phaser's only bulk path with per-sprite rotation, scale and tint. Raw data: [`results/community/*-rtx-5060-laptop-phaser-*.json`](results/community). Write-up: [spryte vs Phaser](https://debuff.jp/blog/spryte-vs-phaser).
 
+**spryte inside Phaser.** spryte 0.4's `spryte/phaser` draws in a Phaser `Extern` game object, on one WebGL2 context, in Phaser's frame and depth order. On the same laptop (5 rounds, 50k sprites), `draw.sprites` inside the Extern drew particles in 1.4 ms against `SpriteGPULayer`'s 7.1 ms (5.1x) and held 400,000 at 60 fps against 100,000; `draw.sprite` per sprite inside the Extern was 6.9 ms against `Image`'s 17.8 ms. Being inside Phaser cost 0.1 ms over spryte on its own canvas (1.3 ms), within the low-precision band under 2 ms. Raw data: [`results/community/2026-10-22-rtx-5060-laptop-phaser-spryte-*.json`](results/community) (run with spryte 0.4's code before its npm release, recorded as 0.3.0). Write-up: [spryte inside Phaser](https://debuff.jp/blog/spryte-inside-phaser).
+
 **`bunny`**: one texture, position only, 7 rounds
 
 ![bunny: frame time by count per library, with the 60 fps budget](docs/charts/bunny.svg)
@@ -109,6 +111,8 @@ Parity passed in every scene (desktop; re-checked against PixiJS `Sprite` as the
 | `phaser-image` | Phaser 4 `Image` (WebGL1; Phaser has no WebGL2 option) | bunny, mixed, particles, raycaster |
 | `phaser-gpulayer` | Phaser 4 `SpriteGPULayer`, every member rewritten each frame | bunny, particles |
 | `phaser-blitter` | Phaser 4 `Blitter` (position only) | bunny |
+| `phaser-spryte` | Phaser 4 with spryte `draw.sprite` inside an `Extern` (`spryte/phaser`, WebGL2) | bunny, mixed, particles |
+| `phaser-spryte-bulk` | Phaser 4 with spryte `draw.sprites` inside an `Extern` | bunny, particles |
 
 `raycaster` needs a different texture region per sprite. spryte `draw.sprite` and PixiJS `Sprite` do that; the bulk paths (`draw.sprites`, `ParticleContainer`) share one region per call, and Canvas 2D can't tint for the shading, so they sit this one out.
 
