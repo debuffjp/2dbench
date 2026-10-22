@@ -10,8 +10,23 @@ type P = typeof PhaserNS;
  * scene update and render exactly as the loop would, so the harness controls timing.
  * Phaser 4's WebGL renderer uses a WebGL1 context. Maintainers: if there's a more idiomatic or faster setup, please open a PR.
  */
-async function boot(canvas: HTMLCanvasElement) {
+/**
+ * Software renderers (SwiftShader, llvmpipe) mis-draw Phaser's multi-texture batch: some Image quads come out
+ * as stray triangles. There, and only there, the Image adapter batches with one texture unit (SpriteGPULayer
+ * draws nothing with it, and needs no fix). Timed runs are refused on software
+ * rendering (results marked software otherwise), so this only keeps CI's parity check meaningful.
+ */
+function softwareRendered(): boolean {
+  const gl = document.createElement("canvas").getContext("webgl");
+  const info = gl?.getExtension("WEBGL_debug_renderer_info");
+  const renderer = gl && info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
+  gl?.getExtension("WEBGL_lose_context")?.loseContext();
+  return /SwiftShader|llvmpipe|softpipe/i.test(renderer);
+}
+
+async function boot(canvas: HTMLCanvasElement, singleTextureOnSoftware = false) {
   const Phaser = (await import("phaser")).default as unknown as P;
+  const software = singleTextureOnSoftware && softwareRendered();
   let game!: PhaserNS.Game;
   const scene = await new Promise<PhaserNS.Scene>((resolve) => {
     game = new Phaser.Game({
@@ -25,6 +40,7 @@ async function boot(canvas: HTMLCanvasElement) {
       antialiasGL: false,
       roundPixels: true,
       banner: false,
+      ...(software ? { render: { maxTextures: 1 } } : {}),
       audio: { noAudio: true },
       input: false,
       autoFocus: false,
@@ -58,11 +74,11 @@ export const phaserImage: Adapter = {
   label: "Phaser Image",
   package: "phaser",
   setup:
-    "Game (WEBGL, pixelArt: nearest, no antialias, roundPixels), one Scene; Phaser's loop stopped and game.step() called per frame. One Image per sprite (origin 0.5), created once with scene.add.image; properties the scene uses are set each frame (setTint + setAlpha for colour). Slice scenes: a cached texture Frame per source rectangle (texture.add), and a pool of Images (origin 0) shown or hidden, setFrame + setDisplaySize per slice.",
+    "Game (WEBGL, pixelArt: nearest, no antialias, roundPixels; maxTextures 1 on software renderers only), one Scene; Phaser's loop stopped and game.step() called per frame. One Image per sprite (origin 0.5), created once with scene.add.image; properties the scene uses are set each frame (setTint + setAlpha for colour). Slice scenes: a cached texture Frame per source rectangle (texture.add), and a pool of Images (origin 0) shown or hidden, setFrame + setDisplaySize per slice.",
   // Not written yet: churn, render target, clip, upload and text scenes.
   supports: (scene: SceneSpec) => !scene.churn && !scene.target && !scene.clip && !scene.upload && !scene.text,
   async create(canvas, textures, scene): Promise<AdapterInstance> {
-    const { scene: sc, gl, step } = await boot(canvas);
+    const { scene: sc, gl, step } = await boot(canvas, true);
     const keys = textureKeys(sc, textures);
     const images: PhaserNS.GameObjects.Image[] = [];
     if (scene.slices) {
