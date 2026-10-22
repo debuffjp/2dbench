@@ -31,7 +31,7 @@ spryte's one-call-per-sprite path is ahead on every device so far. The bulk path
 
 ### Phaser
 
-On the reference laptop (RTX 5060, 5 rounds, 50k sprites), spryte `draw.sprite` was 2.7–3.1× faster than Phaser 4 `Image` in bunny, mixed and particles, and spryte `draw.sprites` 5.0× faster than `SpriteGPULayer` in particles. Phaser `Image` beat PixiJS `Sprite` in mixed and particles. `SpriteGPULayer` is built for members that rarely change, so these scenes use it against its design; it's Phaser's only bulk path with per-sprite rotation, scale and tint. Raw data: [`results/community/2026-10-21-rtx-5060-laptop-phaser-*.json`](results/community). Write-up: [spryte vs Phaser](https://debuff.jp/blog/spryte-vs-phaser).
+On the reference laptop (RTX 5060, 5 rounds, 50k sprites), spryte `draw.sprite` was 2.7–3.1× faster than Phaser 4 `Image` in bunny, mixed and particles (2.2× in raycaster at 10k enemies, 10,000 against 5,000 at 60 fps), and spryte `draw.sprites` 5.0× faster than `SpriteGPULayer` in particles. Phaser `Image` beat PixiJS `Sprite` in mixed and particles. `SpriteGPULayer` is built for members that rarely change, so these scenes use it against its design; it's Phaser's only bulk path with per-sprite rotation, scale and tint. Raw data: [`results/community/*-rtx-5060-laptop-phaser-*.json`](results/community). Write-up: [spryte vs Phaser](https://debuff.jp/blog/spryte-vs-phaser).
 
 **`bunny`**: one texture, position only, 7 rounds
 
