@@ -6,16 +6,26 @@ on:
   pull_request:
     # Results-only PRs (community submissions) are data, already validated by results-intake.
     paths-ignore: ["results/**"]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
 jobs:
   parity:
     # Typecheck and the parity gate: every adapter must draw the same pixels as the reference.
     # CI has no GPU (Chrome renders WebGL2 in software), so this checks correctness only. Timings here mean nothing.
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 24
+          cache: npm
       - run: npm ci
       - run: npm run typecheck
       - run: |
