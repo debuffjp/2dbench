@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "pixi.js": "8.22.0",
-    "spryte": "0.2.1"
+    "spryte": "0.4.0"
   },
   "devDependencies": {
     "phaser": "4.2.1",
