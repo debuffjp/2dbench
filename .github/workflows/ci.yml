@@ -29,6 +29,6 @@ jobs:
       - run: npm ci
       - run: npm run typecheck
       - run: |
-          for scene in bunny mixed particles; do node run.mjs $scene rounds=0 || exit 1; done
+          for scene in bunny mixed particles raycaster tilemap churn text lowres clip upload; do node run.mjs $scene rounds=0 || exit 1; done
         env:
           BROWSER_ARGS: --enable-unsafe-swiftshader --use-angle=swiftshader

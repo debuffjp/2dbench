@@ -7,7 +7,7 @@
 | Field | Meaning |
 | --- | --- |
 | `date` | ISO timestamp when the run finished. |
-| `scene` | Scene id (`bunny`, `mixed`, `particles`); see `src/scenes.ts`. |
+| `scene` | Scene id (`bunny`, `particles`, `mixed`, `raycaster`, `tilemap`, `churn`, `text`, `lowres`, `clip`, `upload`); see `src/scenes.ts`. |
 | `rounds` | How many interleaved rounds were run. |
 | `environment` | Where it ran (below). |
 | `method` | The constants used, so a file stays interpretable if the defaults change (below). |
@@ -34,9 +34,11 @@
 | --- | --- |
 | `budgetMs` | The 60 fps frame budget (16.67 ms) used for "max at 60 fps". |
 | `framesPerCount` / `warmupFrames` | Measured and warm-up frames per count (100 and 20). |
-| `publishedCounts` | Counts measured for every adapter in every round, even past the budget. |
+| `publishedCounts` | Counts measured for every adapter in every round, even past the budget. 10k, 50k and 200k unless the scene declares its own. |
+| `counts` | Present when the scene declares its own ladder: `ladder` (the counts timed), `published` and `why`. Only `text` does. |
 | `timing` | How a frame is timed. |
-| `parity` | `counts` checked, the per-channel `tolerance`, the `reference` adapter, and the `gate` thresholds. |
+| `parity` | `counts` checked, the per-channel `tolerance`, the `reference` adapter, and the `gate` thresholds. A scene that declares its own gate (`text`) replaces `gate` with its own, including its `counts` and `why`. |
+| `startup` | How the startup numbers were taken. |
 
 ## `results[]`
 
@@ -47,6 +49,8 @@
 | `setup` | How the library was configured, copied from the adapter, so readers can check it's idiomatic. |
 | `maxAt60fps` | The largest ladder count measured in every round whose median frame is at most `budgetMs`. A lower bound: ladder steps are up to 2x apart. |
 | `parity` | Per parity count: `coveragePercent` (drawn area relative to the reference), `differingPercent` (drawn pixels differing by more than the tolerance), `interiorDifferingPercent` (those inside sprites, where the 3x3 neighbourhood is flat in both frames) and `drawnPixels`. |
+| `startup` | Medians over rounds, each on a fresh page: `readyMs` from navigation to the adapter being ready, `createMs` for the adapter's own setup (its library import included), `firstFrameMs` for the first 1,000-sprite frame through GPU completion; `rounds` holds every round's values. |
+| `contextLoss` | For WebGL adapters: `recovered` and `ms` from the context being restored to the adapter drawing the same frame again, or `reason` when it never did. `null` for Canvas 2D. |
 | `counts[]` | One entry per measured sprite count (below). |
 
 ## `counts[]`
@@ -60,6 +64,8 @@
 | `roundsFrameMs` | Every round's median frame time, in round order, so anyone can redo the statistics (`node variance.mjs <files>`). |
 | `p95FrameMs` | Median across rounds of each round's 95th-percentile frame: spikes such as garbage collection show here. |
 | `submitMs` | Median across rounds of main-thread time before the GPU sync: the CPU part of the frame. `frameMs - submitMs` is roughly the GPU's share. |
+| `simMs` | Mean time per frame in the shared simulation, identical work for every adapter, so it can be subtracted to compare renderers alone. |
+| `roundsHeapMB` | JS heap after this count's frames, per round (Chrome's coarse counter), to show growth over a run. Textures and canvases aren't in it. |
 
 ## Phone results (`mobile.html`)
 
