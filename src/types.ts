@@ -51,6 +51,12 @@ export interface SceneSpec {
    * one because every library rasterises glyphs its own way.
    */
   gate?: { coveragePercent: [number, number]; maxInteriorDifferingPercent: number; counts?: number[]; why: string };
+  /**
+   * The counts a scene is timed at, instead of the runner's default ladder, and the counts every adapter is
+   * measured at even past the frame budget. Declared with the scene, with its reason, recorded in every
+   * results file. Text needs one: every library keeps a texture per label.
+   */
+  counts?: { ladder: number[]; published: number[]; why: string };
 }
 
 /**

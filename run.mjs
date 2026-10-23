@@ -116,6 +116,9 @@ const open = async (adapter) => {
 let list;
 let gpu = "unknown";
 let sceneGate = null;
+let sceneCounts = null;
+let ladder = COUNTS;
+let published = PUBLISHED;
 const parity = {};
 const samples = {};
 const startups = {};
@@ -128,6 +131,9 @@ try {
   list = await lister.waitForFunction(() => window.__list).then((h) => h.jsonValue());
   // A scene may declare its own gate (text: glyph rasterisation differs by library). It's recorded with results.
   sceneGate = (await lister.evaluate(() => window.__gates))[scene] ?? null;
+  // A scene may declare its own count ladder (text: a texture per label). Recorded with results too.
+  sceneCounts = (await lister.evaluate(() => window.__counts))[scene] ?? null;
+  if (sceneCounts) ({ ladder, published } = sceneCounts);
   gpu = await lister.evaluate(() => {
     const gl = document.createElement("canvas").getContext("webgl2");
     const ext = gl?.getExtension("WEBGL_debug_renderer_info");
@@ -195,7 +201,7 @@ try {
   if (failures.length) throw new Error(`Parity failed (${failures.join(", ")}): these adapters don't draw the same scene, so timings aren't comparable.`);
 
   // 2. Timing, interleaved: each round rotates the order so heat and ordering spread evenly.
-  const lastPublished = Math.max(...PUBLISHED);
+  const lastPublished = Math.max(...published);
   for (let round = 0; round < rounds; round++) {
     const order = adapters.map((_, i) => adapters[(i + round) % adapters.length]);
     for (const a of order) {
@@ -203,8 +209,8 @@ try {
       // Fresh page, so the first frame here is the adapter's real first frame.
       startups[a].push(await page.evaluate(() => window.__bench.startup()));
       let over = false;
-      for (const count of COUNTS) {
-        if (over && (count > lastPublished || !PUBLISHED.includes(count))) {
+      for (const count of ladder) {
+        if (over && (count > lastPublished || !published.includes(count))) {
           if (count > lastPublished) break;
           continue;
         }
@@ -285,7 +291,8 @@ const report = {
     budgetMs: BUDGET_MS,
     framesPerCount: 100,
     warmupFrames: 20,
-    publishedCounts: PUBLISHED,
+    publishedCounts: published,
+    ...(sceneCounts ? { counts: sceneCounts } : {}),
     timing: "simulation through GPU completion (1-pixel readback); median per count per round, then median across rounds. simMs is the shared simulation's part.",
     startup: "fresh page per round: readyMs since navigation, createMs for adapter setup (lazy library import included), firstFrameMs for the first 1,000-sprite frame through GPU completion",
     parity: { ...GATE, ...(sceneGate ? { gate: sceneGate } : {}), reference: adapters[0] },
@@ -302,11 +309,11 @@ const cell = (r, n) => {
   return c ? `${c.frameMs.toFixed(1)} ms (${c.minFrameMs.toFixed(1)}–${c.maxFrameMs.toFixed(1)})${c.frameMs < 2 ? " †" : ""}` : "n/a";
 };
 console.log(`\n${scene}: ${rounds} round${rounds === 1 ? "" : "s"} · ${gpu} · ${report.environment.browser} · ${report.environment.cpu} · ${report.environment.power}\n`);
-console.log(`| Adapter | Version | Max @60fps | ${PUBLISHED.map((n) => `${n / 1000}k`).join(" | ")} | Ready | First frame |`);
-console.log(`| --- | --- | --- | ${PUBLISHED.map(() => "---").join(" | ")} | --- | --- |`);
+console.log(`| Adapter | Version | Max @60fps | ${published.map((n) => (n >= 1000 ? `${n / 1000}k` : String(n))).join(" | ")} | Ready | First frame |`);
+console.log(`| --- | --- | --- | ${published.map(() => "---").join(" | ")} | --- | --- |`);
 for (const r of results)
   console.log(
-    `| ${r.label} | ${r.version || "-"} | ${r.maxAt60fps.toLocaleString("en")} | ${PUBLISHED.map((n) => cell(r, n)).join(" | ")} | ${r.startup.readyMs.toFixed(0)} ms | ${r.startup.firstFrameMs.toFixed(1)} ms |`,
+    `| ${r.label} | ${r.version || "-"} | ${r.maxAt60fps.toLocaleString("en")} | ${published.map((n) => cell(r, n)).join(" | ")} | ${r.startup.readyMs.toFixed(0)} ms | ${r.startup.firstFrameMs.toFixed(1)} ms |`,
   );
 console.log("\n† under 2 ms per frame: low precision, compare with care.");
 console.log(`Saved ${file}`);
@@ -319,12 +326,12 @@ const paint = (hex, text) => {
   const [r, g, b] = [1, 3, 5].map((i) => Number.parseInt(hex.slice(i, i + 2), 16));
   return `[38;2;${r};${g};${b}m${text}[0m`;
 };
-const top = Math.max(...results.map((r) => r.maxAt60fps), COUNTS[0]);
+const top = Math.max(...results.map((r) => r.maxAt60fps), ladder[0]);
 const width = Math.max(...results.map((r) => r.label.length));
 console.log(`
 Most ${scene === "raycaster" ? "enemies" : "sprites"} at 60 fps (log scale)`);
 for (const r of results) {
-  const n = r.maxAt60fps ? Math.max(1, Math.round((40 * Math.log2(r.maxAt60fps / (COUNTS[0] / 2))) / Math.log2(top / (COUNTS[0] / 2)))) : 0;
+  const n = r.maxAt60fps ? Math.max(1, Math.round((40 * Math.log2(r.maxAt60fps / (ladder[0] / 2))) / Math.log2(top / (ladder[0] / 2)))) : 0;
   console.log(`  ${r.label.padEnd(width)}  ${paint(colour(r.adapter), "█".repeat(n))} ${r.maxAt60fps ? r.maxAt60fps.toLocaleString("en") : "under 1k"}`);
 }
 const svg = frameChart(fromRunner(report));
@@ -340,7 +347,7 @@ if (svg) {
   console.log(`Chart ${chart} (and .svg)`);
 }
 if (JSON_OUT) {
-  const ms = (r) => Object.fromEntries(PUBLISHED.map((n) => [n, r.counts.find((c) => c.count === n)?.frameMs ?? null]));
+  const ms = (r) => Object.fromEntries(published.map((n) => [n, r.counts.find((c) => c.count === n)?.frameMs ?? null]));
   const summary = results.map((r) => ({ adapter: r.adapter, label: r.label, version: r.version, maxAt60fps: r.maxAt60fps, ms: ms(r), startup: { readyMs: r.startup.readyMs, firstFrameMs: r.startup.firstFrameMs } }));
   out(JSON.stringify({ file, chart: svg ? chart : null, scene, rounds, gpu, parity: "passed", results: summary }, null, 2));
 }

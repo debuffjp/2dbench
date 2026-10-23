@@ -184,7 +184,7 @@ async function run(): Promise<void> {
             say(String(e));
             continue;
           }
-          for (const count of COUNTS) {
+          for (const count of SCENE_SPECS[scene]?.counts?.ladder ?? COUNTS) {
             const m = await page.bench.measure(count, FRAMES);
             entry.counts[count] ??= [];
             entry.counts[count].push(m.frameMs);

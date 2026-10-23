@@ -105,6 +105,11 @@ export const SCENES: Record<string, SceneSpec> = {
       counts: [100, 540],
       why: "glyph rasterisation and text box metrics differ between libraries, so pixels rarely match exactly; coverage still catches missing or extra labels. Checked at counts where labels don't overlap (540 fill the screen).",
     },
+    counts: {
+      ladder: [100, 200, 500, 1_000, 2_000, 5_000, 10_000],
+      published: [500, 2_000, 5_000],
+      why: "540 labels fill the screen, so 5,000 is already nine layers of text; a HUD or a burst of damage numbers is hundreds. Every WebGL library keeps a texture per label, measured at 100 MB to 500 MB per 1,000 labels, so the default ladder's 200,000 labels would take tens of gigabytes.",
+    },
   },
 };
 

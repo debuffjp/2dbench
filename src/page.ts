@@ -28,6 +28,7 @@ if (params.has("list")) {
       .map((s) => s.id),
   }));
   (window as unknown as { __gates: unknown }).__gates = Object.fromEntries(Object.values(SCENES).map((s) => [s.id, s.gate ?? null]));
+  (window as unknown as { __counts: unknown }).__counts = Object.fromEntries(Object.values(SCENES).map((s) => [s.id, s.counts ?? null]));
   throw new Error("listed");
 }
 const adapter = ADAPTERS.find((a) => a.id === params.get("adapter"));
