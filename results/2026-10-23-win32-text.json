@@ -1,5 +1,5 @@
 {
-  "date": "2026-10-23T08:12:16.948Z",
+  "date": "2026-10-23T08:37:44.945Z",
   "scene": "text",
   "rounds": 5,
   "environment": {
@@ -12,7 +12,7 @@
     "headless": true,
     "softwareRendering": false,
     "note": "RTX 5060 laptop, AC power, spryte 0.4.2 re-run",
-    "commit": "1ce742d"
+    "commit": "a50af2f, modified"
   },
   "method": {
     "budgetMs": 16.666666666666668,
@@ -72,42 +72,42 @@
       "package": "pixi.js",
       "version": "8.22.0",
       "setup": "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame. Churn: dead Sprites are removed and destroyed, new ones created and added. Render target: sprites in a Container rendered to a RenderTexture (nearest), shown by a scaled Sprite. Clip: a Container per panel with a rectangle Graphics mask. Upload: a Sprite of the layer, texture.source.update() each frame. Text: one Text per label (canvas-rasterised, resolution 1), string set each frame. Slice scenes: a cached Texture per source rectangle on the shared source, and a pool of Sprites shown or hidden as the count changes.",
-      "maxAt60fps": 1000,
+      "maxAt60fps": 2000,
       "startup": {
-        "readyMs": 101.6,
-        "createMs": 83.6,
-        "firstFrameMs": 203.1,
+        "readyMs": 106.8,
+        "createMs": 80.8,
+        "firstFrameMs": 201.9,
         "rounds": [
           {
-            "readyMs": 97.4,
-            "createMs": 79.3,
-            "firstFrameMs": 119.7
+            "readyMs": 99.2,
+            "createMs": 81.4,
+            "firstFrameMs": 116.2
           },
           {
-            "readyMs": 100.1,
-            "createMs": 81,
-            "firstFrameMs": 207.7
+            "readyMs": 100.3,
+            "createMs": 80.8,
+            "firstFrameMs": 233
           },
           {
-            "readyMs": 102.8,
-            "createMs": 84.8,
-            "firstFrameMs": 203.1
+            "readyMs": 106.8,
+            "createMs": 86.6,
+            "firstFrameMs": 213.7
           },
           {
-            "readyMs": 101.6,
-            "createMs": 83.6,
-            "firstFrameMs": 173.4
+            "readyMs": 250.4,
+            "createMs": 72.6,
+            "firstFrameMs": 145.5
           },
           {
-            "readyMs": 120,
-            "createMs": 98.4,
-            "firstFrameMs": 267.6
+            "readyMs": 204.2,
+            "createMs": 75.4,
+            "firstFrameMs": 201.9
           }
         ]
       },
       "contextLoss": {
         "recovered": true,
-        "ms": 196.5
+        "ms": 190.1
       },
       "parity": {
         "100": {
@@ -127,145 +127,145 @@
         {
           "count": 100,
           "runs": 5,
-          "frameMs": 4.599999999627471,
-          "minFrameMs": 4.5,
-          "maxFrameMs": 5.2000000001862645,
-          "p95FrameMs": 8.5,
+          "frameMs": 4.3999999994412065,
+          "minFrameMs": 3.7999999998137355,
+          "maxFrameMs": 4.5,
+          "p95FrameMs": 7.800000000745058,
           "submitMs": 1.2999999998137355,
-          "simMs": 0.009,
+          "simMs": 0.008,
           "roundsHeapMB": [
-            11.3,
             11.2,
             11.2,
             11.2,
-            11.3
+            11.2,
+            11.2
           ],
           "roundsFrameMs": [
-            4.7,
+            4.4,
+            4.4,
             4.5,
-            4.5,
-            4.6,
-            5.2
+            3.8,
+            4.2
           ]
         },
         {
           "count": 200,
           "runs": 5,
-          "frameMs": 5.400000000372529,
-          "minFrameMs": 4.7999999998137355,
-          "maxFrameMs": 5.899999999906868,
-          "p95FrameMs": 12,
+          "frameMs": 5.2000000001862645,
+          "minFrameMs": 4.7000000001862645,
+          "maxFrameMs": 5.2999999998137355,
+          "p95FrameMs": 11.699999999254942,
           "submitMs": 1.7000000001862645,
-          "simMs": 0.012,
+          "simMs": 0.009,
           "roundsHeapMB": [
-            14.6,
-            14.5,
-            14.5,
-            14.5,
-            14.5
+            14.4,
+            14.4,
+            14.4,
+            14.4,
+            14.4
           ],
           "roundsFrameMs": [
-            5.4,
-            4.8,
-            5.5,
-            5.1,
-            5.9
+            5.3,
+            5.2,
+            5.3,
+            4.7,
+            5.2
           ]
         },
         {
           "count": 500,
           "runs": 5,
-          "frameMs": 6.899999999906868,
-          "minFrameMs": 6.7999999998137355,
-          "maxFrameMs": 7.5,
-          "p95FrameMs": 24.40000000037253,
-          "submitMs": 3,
-          "simMs": 0.017,
+          "frameMs": 6.900000000372529,
+          "minFrameMs": 6.400000000372529,
+          "maxFrameMs": 7.1000000005587935,
+          "p95FrameMs": 24,
+          "submitMs": 2.8999999994412065,
+          "simMs": 0.018,
           "roundsHeapMB": [
-            18,
-            17.8,
             17.9,
+            17.8,
+            17.8,
             17.8,
             17.8
           ],
           "roundsFrameMs": [
-            6.8,
-            6.8,
-            7,
             6.9,
-            7.5
+            7.1,
+            6.9,
+            6.4,
+            6.9
           ]
         },
         {
           "count": 1000,
           "runs": 5,
-          "frameMs": 9.799999999813735,
-          "minFrameMs": 9.200000000186265,
-          "maxFrameMs": 10.399999999906868,
-          "p95FrameMs": 44.8000000002794,
-          "submitMs": 4.899999999906868,
-          "simMs": 0.032,
+          "frameMs": 9.100000000558794,
+          "minFrameMs": 8.799999999813735,
+          "maxFrameMs": 9.799999999813735,
+          "p95FrameMs": 41.700000000186265,
+          "submitMs": 4.599999999627471,
+          "simMs": 0.027,
           "roundsHeapMB": [
-            35.7,
-            35.4,
-            35.6,
             35.5,
-            35.4
+            35.4,
+            35.5,
+            35.4,
+            35.5
           ],
           "roundsFrameMs": [
-            9.5,
+            8.9,
             9.8,
-            9.2,
-            10.4,
-            10
+            9.1,
+            8.8,
+            9.6
           ]
         },
         {
           "count": 2000,
           "runs": 5,
-          "frameMs": 17.199999999720603,
-          "minFrameMs": 16.899999999906868,
-          "maxFrameMs": 17.899999999906868,
-          "p95FrameMs": 88.39999999990687,
-          "submitMs": 9.899999999906868,
-          "simMs": 0.044,
+          "frameMs": 16.299999999813735,
+          "minFrameMs": 15.799999999813735,
+          "maxFrameMs": 16.90000000037253,
+          "p95FrameMs": 82.29999999981374,
+          "submitMs": 9.299999999813735,
+          "simMs": 0.046,
           "roundsHeapMB": [
             45.3,
             45.4,
+            45.4,
             45.3,
-            45.5,
-            45.4
+            45.3
           ],
           "roundsFrameMs": [
-            17.2,
-            17.9,
+            15.8,
             16.9,
-            17.4,
-            17.1
+            15.9,
+            16.3,
+            16.7
           ]
         },
         {
           "count": 5000,
           "runs": 5,
-          "frameMs": 39,
-          "minFrameMs": 36.8000000002794,
-          "maxFrameMs": 39.8000000002794,
-          "p95FrameMs": 215.1999999997206,
-          "submitMs": 25.100000000093132,
-          "simMs": 0.102,
+          "frameMs": 38.10000000055879,
+          "minFrameMs": 35.799999999813735,
+          "maxFrameMs": 77.5,
+          "p95FrameMs": 212.5,
+          "submitMs": 25.200000000186265,
+          "simMs": 0.101,
           "roundsHeapMB": [
             58.1,
-            58.2,
-            58.2,
-            58.2,
-            58.1
+            58.4,
+            53.2,
+            57.7,
+            58
           ],
           "roundsFrameMs": [
-            36.8,
-            39,
-            39.8,
-            39.8,
-            38.5
+            35.8,
+            38.1,
+            37.4,
+            77.5,
+            39.6
           ]
         }
       ]
@@ -278,40 +278,40 @@
       "setup": "Application as for Sprite; BitmapFont.install once (white, the scene's font, resolution 1, nearest filtering, digits); one BitmapText per label, string set each frame, colour by tint.",
       "maxAt60fps": 2000,
       "startup": {
-        "readyMs": 108.6,
-        "createMs": 88.7,
-        "firstFrameMs": 45.6,
+        "readyMs": 119.9,
+        "createMs": 90.3,
+        "firstFrameMs": 48,
         "rounds": [
           {
-            "readyMs": 108.6,
-            "createMs": 88.7,
-            "firstFrameMs": 46.7
+            "readyMs": 104.5,
+            "createMs": 85.4,
+            "firstFrameMs": 43.6
           },
           {
-            "readyMs": 105.4,
-            "createMs": 86.1,
-            "firstFrameMs": 42.8
+            "readyMs": 109.3,
+            "createMs": 90.3,
+            "firstFrameMs": 45.1
           },
           {
-            "readyMs": 106.7,
-            "createMs": 87.8,
-            "firstFrameMs": 45.6
+            "readyMs": 119.9,
+            "createMs": 86.7,
+            "firstFrameMs": 48
           },
           {
-            "readyMs": 110.6,
-            "createMs": 91.5,
-            "firstFrameMs": 44.5
+            "readyMs": 136.9,
+            "createMs": 110.5,
+            "firstFrameMs": 56.7
           },
           {
-            "readyMs": 125.1,
-            "createMs": 92.8,
-            "firstFrameMs": 47.9
+            "readyMs": 124.7,
+            "createMs": 105,
+            "firstFrameMs": 49.2
           }
         ]
       },
       "contextLoss": {
         "recovered": true,
-        "ms": 15.9
+        "ms": 14.9
       },
       "parity": {
         "100": {
@@ -331,145 +331,145 @@
         {
           "count": 100,
           "runs": 5,
-          "frameMs": 1.400000000372529,
-          "minFrameMs": 1.1000000000931323,
-          "maxFrameMs": 1.8000000002793968,
-          "p95FrameMs": 2.2000000001862645,
-          "submitMs": 1,
-          "simMs": 0.004,
+          "frameMs": 2,
+          "minFrameMs": 1.199999999254942,
+          "maxFrameMs": 2.5,
+          "p95FrameMs": 3.3999999994412065,
+          "submitMs": 1.2999999998137355,
+          "simMs": 0.01,
           "roundsHeapMB": [
             16.1,
             16,
-            16,
+            16.2,
             16,
             16
           ],
           "roundsFrameMs": [
-            1.1,
-            1.4,
-            1.8,
-            1.8,
-            1.4
+            1.2,
+            2.5,
+            1.7,
+            2.2,
+            2
           ]
         },
         {
           "count": 200,
           "runs": 5,
-          "frameMs": 1.6999999997206032,
-          "minFrameMs": 1.3999999999068677,
-          "maxFrameMs": 1.8999999999068677,
-          "p95FrameMs": 2.6000000000931323,
-          "submitMs": 1.2000000001862645,
-          "simMs": 0.004,
+          "frameMs": 1.900000000372529,
+          "minFrameMs": 1.300000000745058,
+          "maxFrameMs": 3.400000000372529,
+          "p95FrameMs": 4,
+          "submitMs": 1.5,
+          "simMs": 0.009,
           "roundsHeapMB": [
+            21.2,
             21.4,
-            21.2,
+            21.4,
             21.3,
-            21.2,
-            21.2
+            21.3
           ],
           "roundsFrameMs": [
-            1.4,
-            1.6,
+            1.3,
+            2.6,
             1.9,
-            1.9,
+            3.4,
             1.7
           ]
         },
         {
           "count": 500,
           "runs": 5,
-          "frameMs": 2.400000000372529,
-          "minFrameMs": 1.8999999999068677,
-          "maxFrameMs": 2.7000000001862645,
-          "p95FrameMs": 3.1000000000931323,
-          "submitMs": 1.8999999999068677,
-          "simMs": 0.012,
+          "frameMs": 3,
+          "minFrameMs": 1.900000000372529,
+          "maxFrameMs": 3.7000000001862645,
+          "p95FrameMs": 4.7000000001862645,
+          "submitMs": 2.2999999998137355,
+          "simMs": 0.014,
           "roundsHeapMB": [
-            16.1,
-            16.1,
+            16,
             16.1,
             16,
-            16
+            16.1,
+            16.1
           ],
           "roundsFrameMs": [
-            2,
             1.9,
-            2.7,
-            2.7,
-            2.4
+            3,
+            3.1,
+            3.7,
+            2.7
           ]
         },
         {
           "count": 1000,
           "runs": 5,
-          "frameMs": 3.5,
-          "minFrameMs": 3.1000000000931323,
-          "maxFrameMs": 3.7000000001862645,
-          "p95FrameMs": 4.7000000001862645,
-          "submitMs": 2.8999999999068677,
-          "simMs": 0.02,
+          "frameMs": 4,
+          "minFrameMs": 3,
+          "maxFrameMs": 5,
+          "p95FrameMs": 5.699999999254942,
+          "submitMs": 3.199999999254942,
+          "simMs": 0.032,
           "roundsHeapMB": [
+            18.9,
             19.1,
             19,
-            19.1,
-            19.1,
+            19,
             19.1
           ],
           "roundsFrameMs": [
-            3.3,
-            3.1,
-            3.7,
-            3.7,
-            3.5
+            3,
+            4,
+            4,
+            5,
+            3.8
           ]
         },
         {
           "count": 2000,
           "runs": 5,
           "frameMs": 7.2999999998137355,
-          "minFrameMs": 6.5,
-          "maxFrameMs": 7.400000000372529,
-          "p95FrameMs": 9,
-          "submitMs": 6,
-          "simMs": 0.032,
+          "minFrameMs": 7.1000000005587935,
+          "maxFrameMs": 8.5,
+          "p95FrameMs": 9.399999999441206,
+          "submitMs": 6.300000000745058,
+          "simMs": 0.044,
           "roundsHeapMB": [
-            38.9,
+            39,
             39.1,
-            39,
-            39,
+            39.1,
+            39.1,
             39.1
           ],
           "roundsFrameMs": [
-            7.4,
-            6.5,
-            7.3,
             7.1,
-            7.3
+            8.5,
+            7.6,
+            7.3,
+            7.2
           ]
         },
         {
           "count": 5000,
           "runs": 5,
-          "frameMs": 19.399999999906868,
-          "minFrameMs": 18.399999999906868,
-          "maxFrameMs": 21.100000000093132,
-          "p95FrameMs": 26.899999999906868,
-          "submitMs": 16.199999999720603,
+          "frameMs": 20,
+          "minFrameMs": 18.600000000558794,
+          "maxFrameMs": 22.799999999813735,
+          "p95FrameMs": 28.399999999441206,
+          "submitMs": 17,
           "simMs": 0.088,
           "roundsHeapMB": [
             79.6,
-            81.4,
+            76.1,
+            82.1,
             79.7,
-            80.2,
             81.6
           ],
           "roundsFrameMs": [
-            18.4,
-            19.5,
-            21.1,
-            19.3,
-            19.4
+            18.6,
+            22.8,
+            20,
+            19.6,
+            22.2
           ]
         }
       ]
@@ -482,40 +482,40 @@
       "setup": "createRenderer(canvas, { smooth: false }); one draw.sprite per sprite with a reused options object. Slice scenes: one reused Frame object whose source rectangle changes per call. Text: draw.text with a CSS font and a reused options object. Render target: createTarget, draw.into, then the target drawn scaled. Clip: draw.clip per panel. Upload: draw.invalidate on the layer each frame.",
       "maxAt60fps": 20000,
       "startup": {
-        "readyMs": 38.2,
-        "createMs": 18.3,
-        "firstFrameMs": 87.3,
+        "readyMs": 41.7,
+        "createMs": 19.9,
+        "firstFrameMs": 86.2,
         "rounds": [
           {
-            "readyMs": 40.2,
-            "createMs": 17.9,
-            "firstFrameMs": 89.5
+            "readyMs": 38.9,
+            "createMs": 20,
+            "firstFrameMs": 80.6
           },
           {
-            "readyMs": 44.3,
-            "createMs": 18.8,
-            "firstFrameMs": 108.9
+            "readyMs": 45.4,
+            "createMs": 19.9,
+            "firstFrameMs": 108.8
           },
           {
-            "readyMs": 38.2,
-            "createMs": 18.3,
-            "firstFrameMs": 87.3
+            "readyMs": 61.3,
+            "createMs": 39,
+            "firstFrameMs": 82.7
           },
           {
-            "readyMs": 36.7,
-            "createMs": 16.9,
-            "firstFrameMs": 81.6
+            "readyMs": 39.6,
+            "createMs": 18.2,
+            "firstFrameMs": 86.2
           },
           {
-            "readyMs": 36.5,
-            "createMs": 18.5,
-            "firstFrameMs": 82.2
+            "readyMs": 41.7,
+            "createMs": 19.4,
+            "firstFrameMs": 97.9
           }
         ]
       },
       "contextLoss": {
         "recovered": true,
-        "ms": 18.6
+        "ms": 15.1
       },
       "parity": {
         "100": {
@@ -535,47 +535,47 @@
         {
           "count": 100,
           "runs": 5,
-          "frameMs": 0.900000000372529,
-          "minFrameMs": 0.7999999998137355,
-          "maxFrameMs": 1.1000000000931323,
-          "p95FrameMs": 3.2000000001862645,
+          "frameMs": 1,
+          "minFrameMs": 0.7000000001862645,
+          "maxFrameMs": 1.199999999254942,
+          "p95FrameMs": 3.800000000745058,
           "submitMs": 0.20000000018626451,
-          "simMs": 0.005,
+          "simMs": 0.004,
           "roundsHeapMB": [
+            4.6,
+            4.6,
             4.5,
             4.5,
-            4.5,
-            4.5,
-            4.6
+            4.5
           ],
           "roundsFrameMs": [
-            1.1,
-            1,
             0.8,
-            0.9,
-            0.9
+            1.1,
+            0.7,
+            1,
+            1.2
           ]
         },
         {
           "count": 200,
           "runs": 5,
-          "frameMs": 0.6999999997206032,
-          "minFrameMs": 0.39999999990686774,
+          "frameMs": 0.7000000001862645,
+          "minFrameMs": 0.40000000037252903,
           "maxFrameMs": 0.7000000001862645,
-          "p95FrameMs": 1.7999999998137355,
-          "submitMs": 0.10000000009313226,
-          "simMs": 0.004,
+          "p95FrameMs": 1.400000000372529,
+          "submitMs": 0.10000000055879354,
+          "simMs": 0.005,
           "roundsHeapMB": [
             4.6,
             4.6,
-            4.6,
+            4.5,
             4.6,
             4.6
           ],
           "roundsFrameMs": [
-            0.7,
-            0.7,
             0.4,
+            0.7,
+            0.5,
             0.7,
             0.7
           ]
@@ -583,169 +583,169 @@
         {
           "count": 500,
           "runs": 5,
-          "frameMs": 0.6999999997206032,
+          "frameMs": 0.599999999627471,
           "minFrameMs": 0.5,
-          "maxFrameMs": 0.8999999999068677,
-          "p95FrameMs": 1.6000000000931323,
-          "submitMs": 0.19999999972060323,
-          "simMs": 0.009,
+          "maxFrameMs": 0.6000000005587935,
+          "p95FrameMs": 1.2000000001862645,
+          "submitMs": 0.20000000018626451,
+          "simMs": 0.005,
           "roundsHeapMB": [
+            4.3,
             4.4,
-            4.4,
-            4.4,
+            4.3,
             4.3,
             4.4
           ],
           "roundsFrameMs": [
             0.5,
-            0.9,
+            0.6,
             0.5,
-            0.8,
-            0.7
+            0.6,
+            0.6
           ]
         },
         {
           "count": 1000,
           "runs": 5,
-          "frameMs": 1.2000000001862645,
-          "minFrameMs": 1,
-          "maxFrameMs": 1.3999999999068677,
-          "p95FrameMs": 4,
-          "submitMs": 0.39999999990686774,
-          "simMs": 0.016,
+          "frameMs": 1.099999999627471,
+          "minFrameMs": 0.900000000372529,
+          "maxFrameMs": 1.3999999994412065,
+          "p95FrameMs": 1.599999999627471,
+          "submitMs": 0.39999999944120646,
+          "simMs": 0.013,
           "roundsHeapMB": [
             3.7,
+            3.8,
+            3.9,
             3.7,
-            3.8,
-            3.8,
-            3.8
+            3.9
           ],
           "roundsFrameMs": [
-            1.2,
-            1.2,
-            1,
+            0.9,
             1.4,
-            1.3
+            1.1,
+            1,
+            1.2
           ]
         },
         {
           "count": 2000,
           "runs": 5,
-          "frameMs": 1.7999999998137355,
-          "minFrameMs": 1.3999999999068677,
-          "maxFrameMs": 2.2000000001862645,
-          "p95FrameMs": 4.199999999720603,
-          "submitMs": 0.6999999997206032,
-          "simMs": 0.03,
+          "frameMs": 1.599999999627471,
+          "minFrameMs": 1.2999999998137355,
+          "maxFrameMs": 2.2999999998137355,
+          "p95FrameMs": 3.2000000001862645,
+          "submitMs": 0.7000000001862645,
+          "simMs": 0.027,
           "roundsHeapMB": [
             4.3,
-            4.6,
-            4.6,
             4.5,
-            4.4
+            4.7,
+            4.6,
+            4.6
           ],
           "roundsFrameMs": [
+            1.3,
+            2.3,
+            1.5,
             1.6,
-            2.2,
-            1.4,
-            1.8,
-            1.8
+            1.7
           ]
         },
         {
           "count": 5000,
           "runs": 5,
-          "frameMs": 2.6999999997206032,
-          "minFrameMs": 2.3000000002793968,
-          "maxFrameMs": 4.199999999720603,
-          "p95FrameMs": 5.399999999906868,
-          "submitMs": 1.5,
-          "simMs": 0.076,
+          "frameMs": 2.7000000001862645,
+          "minFrameMs": 2.5,
+          "maxFrameMs": 4.6000000005587935,
+          "p95FrameMs": 5.2000000001862645,
+          "submitMs": 1.6000000005587935,
+          "simMs": 0.07,
           "roundsHeapMB": [
             5.5,
-            6.2,
-            5.9,
-            6.2,
-            5.8
+            6.1,
+            6.1,
+            6.1,
+            6
           ],
           "roundsFrameMs": [
-            2.3,
+            2.5,
+            4.6,
             2.7,
             2.7,
-            4.2,
-            2.9
+            3.1
           ]
         },
         {
           "count": 10000,
           "runs": 5,
-          "frameMs": 4.899999999906868,
-          "minFrameMs": 4.2999999998137355,
-          "maxFrameMs": 7,
-          "p95FrameMs": 7.899999999906868,
-          "submitMs": 3.5,
-          "simMs": 0.242,
+          "frameMs": 5.599999999627471,
+          "minFrameMs": 3.7000000001862645,
+          "maxFrameMs": 6.900000000372529,
+          "p95FrameMs": 7.7999999998137355,
+          "submitMs": 3.7999999998137355,
+          "simMs": 0.229,
           "roundsHeapMB": [
-            6.8,
-            6.9,
-            7.1,
             7.2,
-            7
+            7.2,
+            7,
+            7,
+            6.8
           ],
           "roundsFrameMs": [
-            5.2,
-            4.3,
-            4.3,
-            7,
-            4.9
+            3.7,
+            6.9,
+            5.6,
+            5.6,
+            5.8
           ]
         },
         {
           "count": 20000,
           "runs": 5,
-          "frameMs": 9.800000000279397,
-          "minFrameMs": 8.899999999906868,
-          "maxFrameMs": 10.600000000093132,
-          "p95FrameMs": 14.699999999720603,
-          "submitMs": 8.5,
-          "simMs": 0.532,
+          "frameMs": 10.099999999627471,
+          "minFrameMs": 8.299999999813735,
+          "maxFrameMs": 13.099999999627471,
+          "p95FrameMs": 16.300000000745058,
+          "submitMs": 8.600000000558794,
+          "simMs": 0.526,
           "roundsHeapMB": [
-            19.4,
-            24.1,
+            20,
+            19.9,
             19.7,
             19.7,
             19.7
           ],
           "roundsFrameMs": [
-            9.9,
-            9.2,
-            8.9,
-            10.6,
-            9.8
+            8.3,
+            13.1,
+            9.4,
+            10.1,
+            12.4
           ]
         },
         {
           "count": 50000,
           "runs": 5,
-          "frameMs": 29.100000000093132,
-          "minFrameMs": 25.5,
-          "maxFrameMs": 35.10000000009313,
-          "p95FrameMs": 45.5,
-          "submitMs": 27.100000000093132,
-          "simMs": 1.211,
+          "frameMs": 31.59999999962747,
+          "minFrameMs": 27.699999999254942,
+          "maxFrameMs": 43.299999999813735,
+          "p95FrameMs": 45.700000000186265,
+          "submitMs": 29.700000000186265,
+          "simMs": 1.283,
           "roundsHeapMB": [
-            35.8,
-            46.1,
-            37.5,
-            35.5,
-            45.1
+            25.5,
+            22.3,
+            45,
+            44.8,
+            35.6
           ],
           "roundsFrameMs": [
-            29.1,
-            26.7,
-            35.1,
-            34.2,
-            25.5
+            27.7,
+            43.3,
+            31.6,
+            29.8,
+            32.4
           ]
         }
       ]
@@ -755,52 +755,52 @@
       "label": "Canvas 2D drawImage",
       "package": "",
       "version": "",
-      "setup": "getContext('2d', { alpha: false }), imageSmoothingEnabled = false, one drawImage per sprite (the nine-argument form for slices). Text: fillText with textBaseline top. Render target: an offscreen canvas drawn scaled. Clip: save, rect, clip, restore per panel. Upload: the layer canvas drawn directly.",
+      "setup": "getContext('2d', { alpha: false }), imageSmoothingEnabled = false, one drawImage per sprite (the nine-argument form for slices). Text: fillText with textBaseline top, on an alpha: true context so glyphs get grayscale antialiasing like every other library's offscreen rasterisation (an opaque canvas gets LCD subpixel antialiasing on Linux, which lights extra pixels). Render target: an offscreen canvas drawn scaled. Clip: save, rect, clip, restore per panel. Upload: the layer canvas drawn directly.",
       "maxAt60fps": 5000,
       "startup": {
-        "readyMs": 20,
+        "readyMs": 21.4,
         "createMs": 0.2,
-        "firstFrameMs": 7.5,
+        "firstFrameMs": 7.8,
         "rounds": [
           {
-            "readyMs": 19.1,
+            "readyMs": 21.4,
             "createMs": 0.2,
+            "firstFrameMs": 7.8
+          },
+          {
+            "readyMs": 27.5,
+            "createMs": 0.3,
             "firstFrameMs": 8.8
           },
           {
-            "readyMs": 20,
-            "createMs": 0.3,
-            "firstFrameMs": 7.2
+            "readyMs": 25,
+            "createMs": 0.2,
+            "firstFrameMs": 150.8
           },
           {
-            "readyMs": 21.5,
+            "readyMs": 19.6,
             "createMs": 0.1,
-            "firstFrameMs": 8.2
+            "firstFrameMs": 7.4
           },
           {
-            "readyMs": 18.8,
+            "readyMs": 19.7,
             "createMs": 0.2,
-            "firstFrameMs": 6.9
-          },
-          {
-            "readyMs": 20.4,
-            "createMs": 0.2,
-            "firstFrameMs": 7.5
+            "firstFrameMs": 7
           }
         ]
       },
       "contextLoss": null,
       "parity": {
         "100": {
-          "drawnPixels": 25850,
-          "differingPercent": 94.79,
-          "coveragePercent": 102.9,
+          "drawnPixels": 25936,
+          "differingPercent": 88.68,
+          "coveragePercent": 103.8,
           "interiorDifferingPercent": 0
         },
         "540": {
-          "drawnPixels": 164292,
-          "differingPercent": 94.62,
-          "coveragePercent": 99.4,
+          "drawnPixels": 164993,
+          "differingPercent": 87.2,
+          "coveragePercent": 100.6,
           "interiorDifferingPercent": 0
         }
       },
@@ -808,8 +808,8 @@
         {
           "count": 100,
           "runs": 5,
-          "frameMs": 0.10000000009313226,
-          "minFrameMs": 0.10000000009313226,
+          "frameMs": 0.10000000055879354,
+          "minFrameMs": 0.10000000055879354,
           "maxFrameMs": 0.20000000018626451,
           "p95FrameMs": 0.20000000018626451,
           "submitMs": 0.09999999962747097,
@@ -818,13 +818,13 @@
             2.3,
             2.3,
             2.3,
-            2.3,
+            2.6,
             2.3
           ],
           "roundsFrameMs": [
             0.1,
-            0.1,
             0.2,
+            0.1,
             0.1,
             0.1
           ]
@@ -832,36 +832,36 @@
         {
           "count": 200,
           "runs": 5,
-          "frameMs": 0.20000000018626451,
+          "frameMs": 0.2999999998137355,
           "minFrameMs": 0.20000000018626451,
           "maxFrameMs": 0.2999999998137355,
-          "p95FrameMs": 0.39999999990686774,
-          "submitMs": 0.10000000009313226,
-          "simMs": 0.004,
+          "p95FrameMs": 0.30000000074505806,
+          "submitMs": 0.10000000055879354,
+          "simMs": 0.003,
           "roundsHeapMB": [
             2.3,
             2.3,
             2.3,
-            2.3,
+            2.6,
             2.3
           ],
           "roundsFrameMs": [
             0.2,
+            0.3,
+            0.3,
             0.2,
-            0.3,
-            0.3,
-            0.2
+            0.3
           ]
         },
         {
           "count": 500,
           "runs": 5,
-          "frameMs": 0.6000000000931323,
-          "minFrameMs": 0.6000000000931323,
-          "maxFrameMs": 0.6999999997206032,
+          "frameMs": 0.6000000005587935,
+          "minFrameMs": 0.599999999627471,
+          "maxFrameMs": 0.7999999998137355,
           "p95FrameMs": 0.7999999998137355,
           "submitMs": 0.2999999998137355,
-          "simMs": 0.006,
+          "simMs": 0.005,
           "roundsHeapMB": [
             2.5,
             2.5,
@@ -871,8 +871,8 @@
           ],
           "roundsFrameMs": [
             0.6,
+            0.8,
             0.6,
-            0.7,
             0.6,
             0.6
           ]
@@ -880,11 +880,11 @@
         {
           "count": 1000,
           "runs": 5,
-          "frameMs": 1.2000000001862645,
-          "minFrameMs": 1.1999999997206032,
-          "maxFrameMs": 1.3999999999068677,
-          "p95FrameMs": 1.6000000000931323,
-          "submitMs": 0.6000000000931323,
+          "frameMs": 1.2999999998137355,
+          "minFrameMs": 1.2000000001862645,
+          "maxFrameMs": 1.7999999998137355,
+          "p95FrameMs": 1.6000000005587935,
+          "submitMs": 0.6000000005587935,
           "simMs": 0.009,
           "roundsHeapMB": [
             2.6,
@@ -895,21 +895,21 @@
           ],
           "roundsFrameMs": [
             1.2,
-            1.2,
-            1.4,
+            1.8,
             1.3,
-            1.2
+            1.2,
+            1.4
           ]
         },
         {
           "count": 2000,
           "runs": 5,
-          "frameMs": 2.6000000000931323,
-          "minFrameMs": 2.3999999999068677,
-          "maxFrameMs": 2.8999999999068677,
-          "p95FrameMs": 3.599999999627471,
-          "submitMs": 1.3000000002793968,
-          "simMs": 0.022,
+          "frameMs": 2.8999999994412065,
+          "minFrameMs": 2.2999999998137355,
+          "maxFrameMs": 4.5,
+          "p95FrameMs": 3.300000000745058,
+          "submitMs": 1.599999999627471,
+          "simMs": 0.026,
           "roundsHeapMB": [
             2.2,
             2.2,
@@ -918,75 +918,59 @@
             2.2
           ],
           "roundsFrameMs": [
+            2.3,
+            4.5,
             2.5,
-            2.6,
             2.9,
-            2.9,
-            2.4
+            2.9
           ]
         },
         {
           "count": 5000,
           "runs": 5,
-          "frameMs": 8.200000000186265,
-          "minFrameMs": 7.699999999720603,
-          "maxFrameMs": 8.5,
-          "p95FrameMs": 49,
-          "submitMs": 5,
-          "simMs": 0.064,
+          "frameMs": 8.099999999627471,
+          "minFrameMs": 7.400000000372529,
+          "maxFrameMs": 8.700000000186265,
+          "p95FrameMs": 45.799999999813735,
+          "submitMs": 4.800000000745058,
+          "simMs": 0.062,
           "roundsHeapMB": [
             2.5,
             2.5,
             2.5,
             2.5,
-            2.6
+            2.5
           ],
           "roundsFrameMs": [
-            7.7,
-            8.3,
+            7.4,
+            8.7,
+            7.4,
             8.1,
-            8.2,
-            8.5
+            8.1
           ]
         },
         {
           "count": 10000,
           "runs": 5,
-          "frameMs": 17.700000000186265,
-          "minFrameMs": 16.600000000093132,
-          "maxFrameMs": 18.399999999906868,
-          "p95FrameMs": 81.29999999981374,
-          "submitMs": 10.800000000279397,
-          "simMs": 0.264,
+          "frameMs": 18.40000000037253,
+          "minFrameMs": 16.90000000037253,
+          "maxFrameMs": 21.40000000037253,
+          "p95FrameMs": 75.40000000037253,
+          "submitMs": 11.100000000558794,
+          "simMs": 0.268,
           "roundsHeapMB": [
             4.1,
             4.1,
             4.1,
-            4.2,
-            4.2
+            4.1,
+            4.1
           ],
           "roundsFrameMs": [
-            17.5,
-            18.1,
-            17.7,
+            17.2,
+            21.4,
             18.4,
-            16.6
-          ]
-        },
-        {
-          "count": 20000,
-          "runs": 1,
-          "frameMs": 35.60000000009313,
-          "minFrameMs": 35.60000000009313,
-          "maxFrameMs": 35.60000000009313,
-          "p95FrameMs": 101,
-          "submitMs": 21.600000000093132,
-          "simMs": 0.945,
-          "roundsHeapMB": [
-            7.2
-          ],
-          "roundsFrameMs": [
-            35.6
+            19.3,
+            16.9
           ]
         }
       ]

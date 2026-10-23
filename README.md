@@ -110,10 +110,10 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 | Adapter | Version | Max labels at 60 fps | 500 | 2k | 5k |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.text` | 0.4.2 | 20,000 | 0.7 † | 1.8 † | 2.7 |
-| Canvas 2D `fillText` | – | 5,000 | 0.6 † | 2.6 | 8.2 |
-| PixiJS `BitmapText` | 8.22.0 | 2,000 | 2.4 | 7.3 | 19.4 |
-| PixiJS `Text` | 8.22.0 | 1,000 | 6.9 | 17.2 | 39.0 |
+| spryte `draw.text` | 0.4.2 | 20,000 | 0.6 † | 1.6 † | 2.7 |
+| Canvas 2D `fillText` | – | 5,000 | 0.6 † | 2.9 | 8.1 |
+| PixiJS `BitmapText` | 8.22.0 | 2,000 | 3.0 | 7.3 | 20.0 |
+| PixiJS `Text` | 8.22.0 | 2,000 | 6.9 | 16.3 | 38.1 |
 
 spryte packs new strings into shared atlas pages and uploads only each new rectangle, so a frame is one draw call whatever the count. PixiJS `Text` rasterises each label to its own canvas and texture, which is also why its memory grows with count (1.2 GB at 10,000 labels). `BitmapText` draws from a pre-rasterised glyph sheet. Canvas 2D `fillText` has no texture to manage at all, and is the fastest below about 800 labels.
 

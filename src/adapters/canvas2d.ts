@@ -10,11 +10,13 @@ export const canvas2d: Adapter = {
   id: "canvas2d",
   label: "Canvas 2D drawImage",
   package: "",
-  setup: "getContext('2d', { alpha: false }), imageSmoothingEnabled = false, one drawImage per sprite (the nine-argument form for slices). Text: fillText with textBaseline top. Render target: an offscreen canvas drawn scaled. Clip: save, rect, clip, restore per panel. Upload: the layer canvas drawn directly.",
+  setup: "getContext('2d', { alpha: false }), imageSmoothingEnabled = false, one drawImage per sprite (the nine-argument form for slices). Text: fillText with textBaseline top, on an alpha: true context so glyphs get grayscale antialiasing like every other library's offscreen rasterisation (an opaque canvas gets LCD subpixel antialiasing on Linux, which lights extra pixels). Render target: an offscreen canvas drawn scaled. Clip: save, rect, clip, restore per panel. Upload: the layer canvas drawn directly.",
   // fillText takes any colour, so text scenes are supported.
   supports: (scene) => !scene.color || !!scene.text,
   async create(canvas, textures, scene) {
-    const ctx = canvas.getContext("2d", { alpha: false }) as CanvasRenderingContext2D;
+    // Text: a transparent context, so Chrome antialiases glyphs in grayscale as the other libraries' offscreen
+    // canvases do. On an opaque canvas Linux uses LCD subpixel antialiasing, which fails the coverage gate (130%).
+    const ctx = canvas.getContext("2d", { alpha: !!scene.text }) as CanvasRenderingContext2D;
     ctx.imageSmoothingEnabled = false;
     const layer = scene.upload ? (textures[textures.length - 1] as HTMLCanvasElement) : null;
     // Render target: an offscreen canvas of the target's size, drawn scaled.

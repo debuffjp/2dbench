@@ -101,12 +101,12 @@
 <text x="180" y="776" fill="#8b909a" font-size="11" text-anchor="end">Canvas 2D drawImage</text>
 <rect x="190" y="766" width="120" height="13" rx="3" fill="#a78bfa"/>
 <text x="316" y="776" fill="#d4d7dd" font-size="11">5,000</text>
-<text x="180" y="794" fill="#8b909a" font-size="11" text-anchor="end">PixiJS BitmapText</text>
-<rect x="190" y="784" width="48" height="13" rx="3" fill="#94a3b8"/>
+<text x="180" y="794" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
+<rect x="190" y="784" width="48" height="13" rx="3" fill="#f472b6"/>
 <text x="244" y="794" fill="#d4d7dd" font-size="11">2,000</text>
-<text x="180" y="812" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
-<rect x="190" y="802" width="24" height="13" rx="3" fill="#f472b6"/>
-<text x="220" y="812" fill="#d4d7dd" font-size="11">1,000</text>
+<text x="180" y="812" fill="#8b909a" font-size="11" text-anchor="end">PixiJS BitmapText</text>
+<rect x="190" y="802" width="48" height="13" rx="3" fill="#94a3b8"/>
+<text x="244" y="812" fill="#d4d7dd" font-size="11">2,000</text>
 <text x="20" y="838" fill="#d4d7dd" font-size="12" font-weight="600">lowres</text>
 <text x="180" y="856" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprites</text>
 <rect x="190" y="846" width="480" height="13" rx="3" fill="#22d3ee"/>
