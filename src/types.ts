@@ -54,7 +54,7 @@ export interface SceneSpec {
   /**
    * The counts a scene is timed at, instead of the runner's default ladder, and the counts every adapter is
    * measured at even past the frame budget. Declared with the scene, with its reason, recorded in every
-   * results file. Text needs one: every library keeps a texture per label.
+   * results file. Text needs one: a library that keeps a texture per label runs out of memory on the default ladder.
    */
   counts?: { ladder: number[]; published: number[]; why: string };
 }
