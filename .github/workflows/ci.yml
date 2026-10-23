@@ -28,7 +28,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run typecheck
+      # text is skipped: fonts and glyph antialiasing differ by platform, so its parity is checked on the reference machine, not here.
       - run: |
-          for scene in bunny mixed particles raycaster tilemap churn text lowres clip upload; do node run.mjs $scene rounds=0 || exit 1; done
+          for scene in bunny mixed particles raycaster tilemap churn lowres clip upload; do node run.mjs $scene rounds=0 || exit 1; done
         env:
           BROWSER_ARGS: --enable-unsafe-swiftshader --use-angle=swiftshader
