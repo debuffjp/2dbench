@@ -1,0 +1,1943 @@
+{
+  "date": "2026-10-24T06:12:57.619Z",
+  "rounds": 1,
+  "framesPerCount": 60,
+  "method": {
+    "parity": {
+      "counts": [
+        2000,
+        50000
+      ],
+      "tolerance": 8,
+      "gate": {
+        "coveragePercent": [
+          99.5,
+          100.5
+        ],
+        "maxInteriorDifferingPercent": 0.5
+      },
+      "reference": "pixi-sprite"
+    }
+  },
+  "environment": {
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M1 Pro, Unspecified Version)",
+    "devicePixelRatio": 2,
+    "screen": "1512×982",
+    "cores": 8,
+    "timerResolutionMs": 0.1,
+    "memoryGB": 16,
+    "note": "Mac, Chrome",
+    "hiddenDuringRun": false,
+    "battery": {
+      "start": "charging, 91%",
+      "end": "charging, 95%"
+    }
+  },
+  "results": {
+    "bunny": {
+      "pixi-sprite": {
+        "maxAt60fps": 50000,
+        "counts": {
+          "1000": [
+            0.599999999627471
+          ],
+          "2000": [
+            0.7000000011175871
+          ],
+          "5000": [
+            1
+          ],
+          "10000": [
+            1.900000000372529
+          ],
+          "20000": [
+            4.5
+          ],
+          "50000": [
+            10.600000001490116
+          ],
+          "100000": [
+            20.299999998882413
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172260,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317440,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "pixi-particle": {
+        "maxAt60fps": 400000,
+        "counts": {
+          "1000": [
+            0.599999999627471
+          ],
+          "2000": [
+            0.5
+          ],
+          "5000": [
+            0.599999999627471
+          ],
+          "10000": [
+            0.8000000007450581
+          ],
+          "20000": [
+            0.8999999985098839
+          ],
+          "50000": [
+            2.5
+          ],
+          "100000": [
+            4.599999999627471
+          ],
+          "200000": [
+            5.5
+          ],
+          "400000": [
+            9.900000000372529
+          ],
+          "800000": [
+            25.100000001490116
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172260,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317440,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 200000,
+        "counts": {
+          "1000": [
+            0.5
+          ],
+          "2000": [
+            0.6000000014901161
+          ],
+          "5000": [
+            1
+          ],
+          "10000": [
+            1.200000001117587
+          ],
+          "20000": [
+            1.800000000745058
+          ],
+          "50000": [
+            4.200000001117587
+          ],
+          "100000": [
+            7.700000001117587
+          ],
+          "200000": [
+            15.700000001117587
+          ],
+          "400000": [
+            32
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172298,
+            "differingPercent": 0.04,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317499,
+            "differingPercent": 0.08,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte-bulk": {
+        "maxAt60fps": 800000,
+        "counts": {
+          "1000": [
+            0.40000000037252903
+          ],
+          "2000": [
+            0.40000000037252903
+          ],
+          "5000": [
+            0.5
+          ],
+          "10000": [
+            0.5
+          ],
+          "20000": [
+            0.6999999992549419
+          ],
+          "50000": [
+            1
+          ],
+          "100000": [
+            1.699999999254942
+          ],
+          "200000": [
+            3
+          ],
+          "400000": [
+            6
+          ],
+          "800000": [
+            11.299999998882413
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172298,
+            "differingPercent": 0.04,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317499,
+            "differingPercent": 0.08,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "phaser-image": {
+        "maxAt60fps": 50000,
+        "counts": {
+          "1000": [
+            0.6000000014901161
+          ],
+          "2000": [
+            0.6999999992549419
+          ],
+          "5000": [
+            1.200000001117587
+          ],
+          "10000": [
+            2.199999999254942
+          ],
+          "20000": [
+            4.200000001117587
+          ],
+          "50000": [
+            9.699999999254942
+          ],
+          "100000": [
+            17.899999998509884
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172298,
+            "differingPercent": 0.04,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317505,
+            "differingPercent": 0.08,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "phaser-gpulayer": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            0.599999999627471
+          ],
+          "2000": [
+            0.599999999627471
+          ],
+          "5000": [
+            1
+          ],
+          "10000": [
+            1.400000000372529
+          ],
+          "20000": [
+            2.699999999254942
+          ],
+          "50000": [
+            6.599999999627471
+          ],
+          "100000": [
+            12.099999999627471
+          ],
+          "200000": [
+            22.600000001490116
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172325,
+            "differingPercent": 0.07,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317485,
+            "differingPercent": 0.03,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "phaser-blitter": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            0.599999999627471
+          ],
+          "2000": [
+            0.599999999627471
+          ],
+          "5000": [
+            0.900000000372529
+          ],
+          "10000": [
+            1.599999999627471
+          ],
+          "20000": [
+            2.900000000372529
+          ],
+          "50000": [
+            6.800000000745058
+          ],
+          "100000": [
+            12.5
+          ],
+          "200000": [
+            23.600000001490116
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172345,
+            "differingPercent": 0.09,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317564,
+            "differingPercent": 0.11,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "canvas2d": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            0.6999999992549419
+          ],
+          "2000": [
+            1.400000000372529
+          ],
+          "5000": [
+            3.400000000372529
+          ],
+          "10000": [
+            6.900000000372529
+          ],
+          "20000": [
+            13.800000000745058
+          ],
+          "50000": [
+            34.59999999962747
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 172298,
+            "differingPercent": 0.04,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 317499,
+            "differingPercent": 0.08,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "mixed": {
+      "pixi-sprite": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            0.7999999988824129
+          ],
+          "2000": [
+            0.900000000372529
+          ],
+          "5000": [
+            2
+          ],
+          "10000": [
+            4.199999999254942
+          ],
+          "20000": [
+            8.299999998882413
+          ],
+          "50000": [
+            18.700000001117587
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 183374,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 334540,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            0.599999999627471
+          ],
+          "2000": [
+            0.599999999627471
+          ],
+          "5000": [
+            1
+          ],
+          "10000": [
+            1.700000001117587
+          ],
+          "20000": [
+            3.100000001490116
+          ],
+          "50000": [
+            7.100000001490116
+          ],
+          "100000": [
+            13.5
+          ],
+          "200000": [
+            26.5
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 186511,
+            "differingPercent": 8.83,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 335028,
+            "differingPercent": 12.63,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "phaser-image": {
+        "maxAt60fps": 50000,
+        "counts": {
+          "1000": [
+            0.7999999988824129
+          ],
+          "2000": [
+            1.099999999627471
+          ],
+          "5000": [
+            1.900000000372529
+          ],
+          "10000": [
+            3.5
+          ],
+          "20000": [
+            6.599999999627471
+          ],
+          "50000": [
+            14.799999998882413
+          ],
+          "100000": [
+            29.600000001490116
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 186511,
+            "differingPercent": 8.83,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 335026,
+            "differingPercent": 12.64,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "particles": {
+      "pixi-sprite": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            0.7999999988824129
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            1.8999999985098839
+          ],
+          "10000": [
+            3.700000001117587
+          ],
+          "20000": [
+            7.700000001117587
+          ],
+          "50000": [
+            18.200000001117587
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 183374,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 334540,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "pixi-particle": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            0.5
+          ],
+          "2000": [
+            0.599999999627471
+          ],
+          "5000": [
+            0.900000000372529
+          ],
+          "10000": [
+            1.400000000372529
+          ],
+          "20000": [
+            2.599999999627471
+          ],
+          "50000": [
+            5.900000000372529
+          ],
+          "100000": [
+            10.900000000372529
+          ],
+          "200000": [
+            21
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 183379,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 334540,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            0.5
+          ],
+          "2000": [
+            0.599999999627471
+          ],
+          "5000": [
+            0.900000000372529
+          ],
+          "10000": [
+            1.400000000372529
+          ],
+          "20000": [
+            2.800000000745058
+          ],
+          "50000": [
+            6.099999999627471
+          ],
+          "100000": [
+            12.699999999254942
+          ],
+          "200000": [
+            24.199999999254942
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 186511,
+            "differingPercent": 8.62,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 335028,
+            "differingPercent": 11.42,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte-bulk": {
+        "maxAt60fps": 400000,
+        "counts": {
+          "1000": [
+            0.40000000037252903
+          ],
+          "2000": [
+            0.40000000037252903
+          ],
+          "5000": [
+            0.5
+          ],
+          "10000": [
+            0.6000000014901161
+          ],
+          "20000": [
+            0.900000000372529
+          ],
+          "50000": [
+            1.900000000372529
+          ],
+          "100000": [
+            3.800000000745058
+          ],
+          "200000": [
+            7.099999999627471
+          ],
+          "400000": [
+            14
+          ],
+          "800000": [
+            28.600000001490116
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 186511,
+            "differingPercent": 8.62,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 335028,
+            "differingPercent": 11.42,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "phaser-image": {
+        "maxAt60fps": 50000,
+        "counts": {
+          "1000": [
+            0.7000000011175871
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            1.800000000745058
+          ],
+          "10000": [
+            3.400000000372529
+          ],
+          "20000": [
+            6.400000000372529
+          ],
+          "50000": [
+            14.5
+          ],
+          "100000": [
+            28.300000000745058
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 186511,
+            "differingPercent": 8.62,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 335026,
+            "differingPercent": 11.44,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "phaser-gpulayer": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            0.6999999992549419
+          ],
+          "2000": [
+            0.6999999992549419
+          ],
+          "5000": [
+            1.099999999627471
+          ],
+          "10000": [
+            1.900000000372529
+          ],
+          "20000": [
+            3.599999999627471
+          ],
+          "50000": [
+            8.400000000372529
+          ],
+          "100000": [
+            16.5
+          ],
+          "200000": [
+            30.800000000745058
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 186510,
+            "differingPercent": 8.62,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 335026,
+            "differingPercent": 11.41,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "raycaster": {
+      "pixi-sprite": {
+        "maxAt60fps": 5000,
+        "counts": {
+          "1000": [
+            3
+          ],
+          "2000": [
+            4.900000000372529
+          ],
+          "5000": [
+            10.300000000745058
+          ],
+          "10000": [
+            25.90000000037253
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 511416,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 518400,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 10000,
+        "counts": {
+          "1000": [
+            1.5
+          ],
+          "2000": [
+            2
+          ],
+          "5000": [
+            4.200000001117587
+          ],
+          "10000": [
+            8.400000000372529
+          ],
+          "20000": [
+            16.800000000745058
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 511466,
+            "differingPercent": 0.28,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 518400,
+            "differingPercent": 1.22,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "phaser-image": {
+        "maxAt60fps": 5000,
+        "counts": {
+          "1000": [
+            2.699999999254942
+          ],
+          "2000": [
+            4.5
+          ],
+          "5000": [
+            11.599999999627471
+          ],
+          "10000": [
+            24
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 511466,
+            "differingPercent": 0.25,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 518400,
+            "differingPercent": 1.2,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "tilemap": {
+      "pixi-sprite": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            0.6999999992549419
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            2
+          ],
+          "10000": [
+            4.600000001490116
+          ],
+          "20000": [
+            8.600000001490116
+          ],
+          "50000": [
+            19.40000000037253
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 503648,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 513341,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            0.599999999627471
+          ],
+          "2000": [
+            0.599999999627471
+          ],
+          "5000": [
+            0.900000000372529
+          ],
+          "10000": [
+            1.300000000745058
+          ],
+          "20000": [
+            2.400000000372529
+          ],
+          "50000": [
+            5.400000000372529
+          ],
+          "100000": [
+            10.5
+          ],
+          "200000": [
+            20.09999999962747
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 503648,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 513341,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "phaser-image": {
+        "maxAt60fps": 50000,
+        "counts": {
+          "1000": [
+            0.8000000007450581
+          ],
+          "2000": [
+            1
+          ],
+          "5000": [
+            2
+          ],
+          "10000": [
+            3.699999999254942
+          ],
+          "20000": [
+            6.900000000372529
+          ],
+          "50000": [
+            15.799999998882413
+          ],
+          "100000": [
+            32.40000000037253
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 503648,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 513341,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "canvas2d": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            0.6000000014901161
+          ],
+          "2000": [
+            1.400000000372529
+          ],
+          "5000": [
+            3.399999998509884
+          ],
+          "10000": [
+            6.600000001490116
+          ],
+          "20000": [
+            13.599999999627471
+          ],
+          "50000": [
+            33.19999999925494
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 503648,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 513341,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "churn": {
+      "pixi-sprite": {
+        "maxAt60fps": 10000,
+        "counts": {
+          "1000": [
+            1.200000001117587
+          ],
+          "2000": [
+            2.099999999627471
+          ],
+          "5000": [
+            5.300000000745058
+          ],
+          "10000": [
+            12.299999998882413
+          ],
+          "20000": [
+            31.300000000745058
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 147795,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 251606,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "pixi-particle": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            0.8000000007450581
+          ],
+          "2000": [
+            1.200000001117587
+          ],
+          "5000": [
+            2.699999999254942
+          ],
+          "10000": [
+            4.800000000745058
+          ],
+          "20000": [
+            9
+          ],
+          "50000": [
+            22.09999999962747
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 147795,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 251606,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 0,
+        "counts": {},
+        "parity": {
+          "2000": {
+            "drawnPixels": 147807,
+            "differingPercent": 0.73,
+            "coveragePercent": 99.3,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 251607,
+            "differingPercent": 0.04,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte-bulk": {
+        "maxAt60fps": 0,
+        "counts": {},
+        "parity": {
+          "2000": {
+            "drawnPixels": 147807,
+            "differingPercent": 0.73,
+            "coveragePercent": 99.3,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 251607,
+            "differingPercent": 0.04,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "canvas2d": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            0.599999999627471
+          ],
+          "2000": [
+            1.300000000745058
+          ],
+          "5000": [
+            3.200000001117587
+          ],
+          "10000": [
+            6.5
+          ],
+          "20000": [
+            12.900000000372529
+          ],
+          "50000": [
+            32.5
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 149940,
+            "differingPercent": 2.84,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 252109,
+            "differingPercent": 0.32,
+            "coveragePercent": 100.1,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "lowres": {
+      "pixi-sprite": {
+        "maxAt60fps": 50000,
+        "counts": {
+          "1000": [
+            0.599999999627471
+          ],
+          "2000": [
+            0.7000000011175871
+          ],
+          "5000": [
+            1.400000000372529
+          ],
+          "10000": [
+            2.200000001117587
+          ],
+          "20000": [
+            4.800000000745058
+          ],
+          "50000": [
+            11.599999999627471
+          ],
+          "100000": [
+            23.399999998509884
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 335712,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 400940,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "pixi-particle": {
+        "maxAt60fps": 400000,
+        "counts": {
+          "1000": [
+            0.5
+          ],
+          "2000": [
+            0.5
+          ],
+          "5000": [
+            0.5
+          ],
+          "10000": [
+            0.6999999992549419
+          ],
+          "20000": [
+            1
+          ],
+          "50000": [
+            3.300000000745058
+          ],
+          "100000": [
+            3.5
+          ],
+          "200000": [
+            8.099999999627471
+          ],
+          "400000": [
+            12.400000000372529
+          ],
+          "800000": [
+            21
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 335712,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 400940,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            0.8000000007450581
+          ],
+          "2000": [
+            0.8000000007450581
+          ],
+          "5000": [
+            1
+          ],
+          "10000": [
+            1.400000000372529
+          ],
+          "20000": [
+            2.200000001117587
+          ],
+          "50000": [
+            4.599999999627471
+          ],
+          "100000": [
+            8.5
+          ],
+          "200000": [
+            17.5
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 335764,
+            "differingPercent": 0.07,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 401036,
+            "differingPercent": 0.05,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte-bulk": {
+        "maxAt60fps": 800000,
+        "counts": {
+          "1000": [
+            0.599999999627471
+          ],
+          "2000": [
+            0.599999999627471
+          ],
+          "5000": [
+            0.599999999627471
+          ],
+          "10000": [
+            0.6999999992549419
+          ],
+          "20000": [
+            0.7000000011175871
+          ],
+          "50000": [
+            1.199999999254942
+          ],
+          "100000": [
+            1.800000000745058
+          ],
+          "200000": [
+            3.299999998882413
+          ],
+          "400000": [
+            6.599999999627471
+          ],
+          "800000": [
+            12.099999999627471
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 335764,
+            "differingPercent": 0.07,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 401036,
+            "differingPercent": 0.05,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "canvas2d": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            0.6999999992549419
+          ],
+          "2000": [
+            1.400000000372529
+          ],
+          "5000": [
+            3.400000000372529
+          ],
+          "10000": [
+            6.900000000372529
+          ],
+          "20000": [
+            13.799999998882413
+          ],
+          "50000": [
+            35.899999998509884
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 335764,
+            "differingPercent": 0.07,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 401036,
+            "differingPercent": 0.05,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "clip": {
+      "pixi-sprite": {
+        "maxAt60fps": 50000,
+        "counts": {
+          "1000": [
+            0.7999999988824129
+          ],
+          "2000": [
+            0.900000000372529
+          ],
+          "5000": [
+            1.299999998882413
+          ],
+          "10000": [
+            2.300000000745058
+          ],
+          "20000": [
+            5.5
+          ],
+          "50000": [
+            15.100000001490116
+          ],
+          "100000": [
+            32.100000001490116
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 160638,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 425748,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            1.099999999627471
+          ],
+          "2000": [
+            1.1000000014901161
+          ],
+          "5000": [
+            1.300000000745058
+          ],
+          "10000": [
+            1.699999999254942
+          ],
+          "20000": [
+            2.400000000372529
+          ],
+          "50000": [
+            5
+          ],
+          "100000": [
+            9.099999999627471
+          ],
+          "200000": [
+            18.200000001117587
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 160638,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 425748,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte-bulk": {
+        "maxAt60fps": 800000,
+        "counts": {
+          "1000": [
+            0.5
+          ],
+          "2000": [
+            0.40000000037252903
+          ],
+          "5000": [
+            0.5
+          ],
+          "10000": [
+            0.599999999627471
+          ],
+          "20000": [
+            0.7999999988824129
+          ],
+          "50000": [
+            1.199999999254942
+          ],
+          "100000": [
+            2
+          ],
+          "200000": [
+            3.800000000745058
+          ],
+          "400000": [
+            6.799999998882413
+          ],
+          "800000": [
+            12.799999998882413
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 160638,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 425748,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "canvas2d": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            0.599999999627471
+          ],
+          "2000": [
+            1.1000000014901161
+          ],
+          "5000": [
+            2.900000000372529
+          ],
+          "10000": [
+            5.800000000745058
+          ],
+          "20000": [
+            11.800000000745058
+          ],
+          "50000": [
+            29.299999998882413
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 160638,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 425748,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "upload": {
+      "pixi-sprite": {
+        "maxAt60fps": 50000,
+        "counts": {
+          "1000": [
+            2
+          ],
+          "2000": [
+            2.200000001117587
+          ],
+          "5000": [
+            2.700000001117587
+          ],
+          "10000": [
+            3.800000000745058
+          ],
+          "20000": [
+            6.200000001117587
+          ],
+          "50000": [
+            11.899999998509884
+          ],
+          "100000": [
+            21.90000000037253
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 508276,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 499849,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "pixi-particle": {
+        "maxAt60fps": 400000,
+        "counts": {
+          "1000": [
+            1.800000000745058
+          ],
+          "2000": [
+            1.900000000372529
+          ],
+          "5000": [
+            2
+          ],
+          "10000": [
+            2.200000001117587
+          ],
+          "20000": [
+            3.099999999627471
+          ],
+          "50000": [
+            5.199999999254942
+          ],
+          "100000": [
+            4.800000000745058
+          ],
+          "200000": [
+            9.5
+          ],
+          "400000": [
+            13.200000001117587
+          ],
+          "800000": [
+            21.5
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 508276,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 499849,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 100000,
+        "counts": {
+          "1000": [
+            2.200000001117587
+          ],
+          "2000": [
+            2.299999998882413
+          ],
+          "5000": [
+            2.699999999254942
+          ],
+          "10000": [
+            3.100000001490116
+          ],
+          "20000": [
+            4.099999999627471
+          ],
+          "50000": [
+            7.100000001490116
+          ],
+          "100000": [
+            11.099999999627471
+          ],
+          "200000": [
+            19.100000001490116
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 508284,
+            "differingPercent": 0.01,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 499908,
+            "differingPercent": 0.05,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte-bulk": {
+        "maxAt60fps": 800000,
+        "counts": {
+          "1000": [
+            2.399999998509884
+          ],
+          "2000": [
+            2.400000000372529
+          ],
+          "5000": [
+            2.300000000745058
+          ],
+          "10000": [
+            2.5
+          ],
+          "20000": [
+            2.900000000372529
+          ],
+          "50000": [
+            2.800000000745058
+          ],
+          "100000": [
+            3.400000000372529
+          ],
+          "200000": [
+            4.899999998509884
+          ],
+          "400000": [
+            7.599999999627471
+          ],
+          "800000": [
+            12.800000000745058
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 508284,
+            "differingPercent": 0.01,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 499908,
+            "differingPercent": 0.05,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "canvas2d": {
+        "maxAt60fps": 20000,
+        "counts": {
+          "1000": [
+            1.300000000745058
+          ],
+          "2000": [
+            2.099999999627471
+          ],
+          "5000": [
+            4.199999999254942
+          ],
+          "10000": [
+            7.5
+          ],
+          "20000": [
+            14.199999999254942
+          ],
+          "50000": [
+            35.5
+          ]
+        },
+        "parity": {
+          "2000": {
+            "drawnPixels": 508284,
+            "differingPercent": 0.01,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "50000": {
+            "drawnPixels": 499908,
+            "differingPercent": 0.05,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      }
+    },
+    "text": {
+      "pixi-sprite": {
+        "maxAt60fps": 200,
+        "counts": {
+          "100": [
+            4.700000001117587
+          ],
+          "200": [
+            7.100000001490116
+          ],
+          "500": [
+            25.40000000037253
+          ]
+        },
+        "parity": {
+          "100": {
+            "drawnPixels": 23571,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          },
+          "540": {
+            "drawnPixels": 150929,
+            "differingPercent": 0,
+            "coveragePercent": 100,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "pixi-bitmaptext": {
+        "maxAt60fps": 5000,
+        "counts": {
+          "100": [
+            0.599999999627471
+          ],
+          "200": [
+            0.7999999988824129
+          ],
+          "500": [
+            1.299999998882413
+          ],
+          "1000": [
+            2.399999998509884
+          ],
+          "2000": [
+            4.800000000745058
+          ],
+          "5000": [
+            12.300000000745058
+          ],
+          "10000": [
+            28.699999999254942
+          ]
+        },
+        "parity": {
+          "100": {
+            "drawnPixels": 24221,
+            "differingPercent": 35.19,
+            "coveragePercent": 100.1,
+            "interiorDifferingPercent": 0
+          },
+          "540": {
+            "drawnPixels": 154688,
+            "differingPercent": 32.52,
+            "coveragePercent": 100.2,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "spryte": {
+        "maxAt60fps": 10000,
+        "counts": {
+          "100": [
+            2.400000000372529
+          ],
+          "200": [
+            2.900000000372529
+          ],
+          "500": [
+            2.599999999627471
+          ],
+          "1000": [
+            2.900000000372529
+          ],
+          "2000": [
+            3.699999999254942
+          ],
+          "5000": [
+            4.799999998882413
+          ],
+          "10000": [
+            8.099999999627471
+          ],
+          "20000": [
+            33.20000000111759
+          ]
+        },
+        "parity": {
+          "100": {
+            "drawnPixels": 29412,
+            "differingPercent": 77.43,
+            "coveragePercent": 98.3,
+            "interiorDifferingPercent": 0
+          },
+          "540": {
+            "drawnPixels": 189926,
+            "differingPercent": 77.53,
+            "coveragePercent": 99.7,
+            "interiorDifferingPercent": 0
+          }
+        }
+      },
+      "canvas2d": {
+        "maxAt60fps": 10000,
+        "counts": {
+          "100": [
+            0.09999999962747097
+          ],
+          "200": [
+            0.2000000011175871
+          ],
+          "500": [
+            0.5
+          ],
+          "1000": [
+            1
+          ],
+          "2000": [
+            2.199999999254942
+          ],
+          "5000": [
+            5.5
+          ],
+          "10000": [
+            12.599999999627471
+          ],
+          "20000": [
+            25.600000001490116
+          ]
+        },
+        "parity": {
+          "100": {
+            "drawnPixels": 33781,
+            "differingPercent": 83.05,
+            "coveragePercent": 104.8,
+            "interiorDifferingPercent": 0.04
+          },
+          "540": {
+            "drawnPixels": 213376,
+            "differingPercent": 82.41,
+            "coveragePercent": 100.7,
+            "interiorDifferingPercent": 0.05
+          }
+        }
+      }
+    }
+  },
+  "submission": {
+    "issue": 34,
+    "device": "Mac, Chrome",
+    "conditions": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36",
+    "submittedBy": "h0ds"
+  }
+}
