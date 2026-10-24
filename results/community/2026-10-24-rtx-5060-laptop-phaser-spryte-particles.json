@@ -1,0 +1,2110 @@
+{
+  "date": "2026-10-24T08:13:23.683Z",
+  "scene": "particles",
+  "rounds": 5,
+  "environment": {
+    "gpu": "ANGLE (NVIDIA, NVIDIA GeForce RTX 5060 Laptop GPU (0x00002D59) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "browser": "Chrome 155.0.8059.85",
+    "os": "win32 10.0.26200 x64",
+    "cpu": "AMD Ryzen 7 260 w/ Radeon 780M Graphics",
+    "memoryGB": 15,
+    "power": "AC power, power plan Turbo",
+    "headless": true,
+    "softwareRendering": false,
+    "note": "",
+    "commit": "40f1ac7"
+  },
+  "method": {
+    "budgetMs": 16.666666666666668,
+    "framesPerCount": 100,
+    "warmupFrames": 20,
+    "publishedCounts": [
+      10000,
+      50000,
+      200000
+    ],
+    "timing": "simulation through GPU completion (1-pixel readback); median per count per round, then median across rounds. simMs is the shared simulation's part.",
+    "startup": "fresh page per round: readyMs since navigation, createMs for adapter setup (lazy library import included), firstFrameMs for the first 1,000-sprite frame through GPU completion",
+    "parity": {
+      "counts": [
+        2000,
+        50000
+      ],
+      "tolerance": 8,
+      "gate": {
+        "coveragePercent": [
+          99.5,
+          100.5
+        ],
+        "maxInteriorDifferingPercent": 0.5
+      },
+      "reference": "pixi-sprite"
+    }
+  },
+  "results": [
+    {
+      "adapter": "pixi-sprite",
+      "label": "PixiJS Sprite",
+      "package": "pixi.js",
+      "version": "8.22.0",
+      "setup": "Application (WebGL, roundPixels, no antialias, no ticker); one Sprite per sprite, anchor 0.5, created once; properties the scene uses are set each frame. Churn: dead Sprites are removed and destroyed, new ones created and added. Render target: sprites in a Container rendered to a RenderTexture (nearest), shown by a scaled Sprite. Clip: a Container per panel with a rectangle Graphics mask. Upload: a Sprite of the layer, texture.source.update() each frame. Text: one Text per label (canvas-rasterised, resolution 1), string set each frame. Slice scenes: a cached Texture per source rectangle on the shared source, and a pool of Sprites shown or hidden as the count changes.",
+      "maxAt60fps": 20000,
+      "startup": {
+        "readyMs": 137.8,
+        "createMs": 110.4,
+        "firstFrameMs": 23.2,
+        "rounds": [
+          {
+            "readyMs": 122.9,
+            "createMs": 98.7,
+            "firstFrameMs": 22.1
+          },
+          {
+            "readyMs": 154.4,
+            "createMs": 124.6,
+            "firstFrameMs": 53.5
+          },
+          {
+            "readyMs": 137.8,
+            "createMs": 110.4,
+            "firstFrameMs": 23
+          },
+          {
+            "readyMs": 120.9,
+            "createMs": 96.5,
+            "firstFrameMs": 23.2
+          },
+          {
+            "readyMs": 198.6,
+            "createMs": 156.9,
+            "firstFrameMs": 66.1
+          }
+        ]
+      },
+      "contextLoss": {
+        "recovered": true,
+        "ms": 24.8
+      },
+      "parity": {
+        "2000": {
+          "drawnPixels": 183959,
+          "differingPercent": 0,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 334564,
+          "differingPercent": 0,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 5,
+          "frameMs": 1,
+          "minFrameMs": 0.7999999970197678,
+          "maxFrameMs": 1.3999999910593033,
+          "p95FrameMs": 1.5,
+          "submitMs": 0.3999999910593033,
+          "simMs": 0.025,
+          "roundsHeapMB": [
+            9.6,
+            9.3,
+            9.1,
+            9.3,
+            9.3
+          ],
+          "roundsFrameMs": [
+            0.9,
+            1,
+            1.1,
+            0.8,
+            1.4
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 5,
+          "frameMs": 1.3999999910593033,
+          "minFrameMs": 1.2999999970197678,
+          "maxFrameMs": 1.8999999910593033,
+          "p95FrameMs": 5.5999999940395355,
+          "submitMs": 0.7000000029802322,
+          "simMs": 0.032,
+          "roundsHeapMB": [
+            10.3,
+            10.2,
+            10,
+            10.3,
+            10.3
+          ],
+          "roundsFrameMs": [
+            1.4,
+            1.3,
+            1.5,
+            1.3,
+            1.9
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 5,
+          "frameMs": 2.9000000059604645,
+          "minFrameMs": 2.800000011920929,
+          "maxFrameMs": 4.399999991059303,
+          "p95FrameMs": 8.299999997019768,
+          "submitMs": 1.7000000029802322,
+          "simMs": 0.078,
+          "roundsHeapMB": [
+            20.2,
+            20.2,
+            19.9,
+            20.2,
+            20.3
+          ],
+          "roundsFrameMs": [
+            2.8,
+            2.8,
+            3.1,
+            2.9,
+            4.4
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 5,
+          "frameMs": 5,
+          "minFrameMs": 4.5999999940395355,
+          "maxFrameMs": 5.299999997019768,
+          "p95FrameMs": 7.5,
+          "submitMs": 3.5999999940395355,
+          "simMs": 0.143,
+          "roundsHeapMB": [
+            26.6,
+            26.5,
+            26.6,
+            26.7,
+            25.6
+          ],
+          "roundsFrameMs": [
+            4.9,
+            4.6,
+            5.3,
+            5,
+            5.3
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 5,
+          "frameMs": 9.799999997019768,
+          "minFrameMs": 9,
+          "maxFrameMs": 12.099999994039536,
+          "p95FrameMs": 14.200000002980232,
+          "submitMs": 6.799999997019768,
+          "simMs": 0.298,
+          "roundsHeapMB": [
+            36.6,
+            36.5,
+            36.6,
+            36.7,
+            67.5
+          ],
+          "roundsFrameMs": [
+            9.3,
+            9,
+            10,
+            9.8,
+            12.1
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 5,
+          "frameMs": 27,
+          "minFrameMs": 21.900000005960464,
+          "maxFrameMs": 33.099999994039536,
+          "p95FrameMs": 34.79999999701977,
+          "submitMs": 20.5,
+          "simMs": 0.76,
+          "roundsHeapMB": [
+            79.1,
+            79,
+            79.1,
+            79.1,
+            79
+          ],
+          "roundsFrameMs": [
+            31.6,
+            21.9,
+            27,
+            23.9,
+            33.1
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 5,
+          "frameMs": 103.6000000089407,
+          "minFrameMs": 85.5,
+          "maxFrameMs": 133.70000000298023,
+          "p95FrameMs": 140,
+          "submitMs": 85.79999999701977,
+          "simMs": 3.417,
+          "roundsHeapMB": [
+            304.1,
+            304.1,
+            304,
+            304.7,
+            304.3
+          ],
+          "roundsFrameMs": [
+            128.3,
+            85.5,
+            103.6,
+            133.7,
+            99.6
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "pixi-particle",
+      "label": "PixiJS ParticleContainer",
+      "package": "pixi.js",
+      "version": "8.22.0",
+      "setup": "Application as for Sprite; one ParticleContainer with dynamicProperties set to exactly what the scene changes per frame (position, plus rotation, scale and color where used). Churn: dead particles removed with removeParticles, new ones created and added. Render target and upload as for Sprite.",
+      "maxAt60fps": 100000,
+      "startup": {
+        "readyMs": 138.5,
+        "createMs": 109.3,
+        "firstFrameMs": 22,
+        "rounds": [
+          {
+            "readyMs": 149.9,
+            "createMs": 118.9,
+            "firstFrameMs": 16.7
+          },
+          {
+            "readyMs": 136.8,
+            "createMs": 108.6,
+            "firstFrameMs": 28.4
+          },
+          {
+            "readyMs": 138.5,
+            "createMs": 109.3,
+            "firstFrameMs": 15.8
+          },
+          {
+            "readyMs": 138.8,
+            "createMs": 108,
+            "firstFrameMs": 26.5
+          },
+          {
+            "readyMs": 136.6,
+            "createMs": 110.1,
+            "firstFrameMs": 22
+          }
+        ]
+      },
+      "contextLoss": {
+        "recovered": true,
+        "ms": 19.9
+      },
+      "parity": {
+        "2000": {
+          "drawnPixels": 183959,
+          "differingPercent": 0,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 334564,
+          "differingPercent": 0,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 5,
+          "frameMs": 0.7000000029802322,
+          "minFrameMs": 0.5,
+          "maxFrameMs": 1.0999999940395355,
+          "p95FrameMs": 1.2999999970197678,
+          "submitMs": 0.10000000894069672,
+          "simMs": 0.019,
+          "roundsHeapMB": [
+            7.1,
+            6.3,
+            6.9,
+            6.9,
+            7.5
+          ],
+          "roundsFrameMs": [
+            0.6,
+            0.7,
+            0.8,
+            1.1,
+            0.5
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 5,
+          "frameMs": 0.7999999970197678,
+          "minFrameMs": 0.7000000029802322,
+          "maxFrameMs": 0.9000000059604645,
+          "p95FrameMs": 1.4000000059604645,
+          "submitMs": 0.20000000298023224,
+          "simMs": 0.027,
+          "roundsHeapMB": [
+            7.9,
+            8.7,
+            7.9,
+            7.8,
+            8.3
+          ],
+          "roundsFrameMs": [
+            0.8,
+            0.8,
+            0.9,
+            0.8,
+            0.7
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 5,
+          "frameMs": 1.2999999970197678,
+          "minFrameMs": 0.9000000059604645,
+          "maxFrameMs": 1.3999999910593033,
+          "p95FrameMs": 2.7000000029802322,
+          "submitMs": 0.5,
+          "simMs": 0.071,
+          "roundsHeapMB": [
+            8.7,
+            9.5,
+            8.7,
+            8.6,
+            9.1
+          ],
+          "roundsFrameMs": [
+            1.3,
+            1.2,
+            1.3,
+            1.4,
+            0.9
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 5,
+          "frameMs": 2,
+          "minFrameMs": 1.4000000059604645,
+          "maxFrameMs": 2.2999999970197678,
+          "p95FrameMs": 7.299999997019768,
+          "submitMs": 0.8999999910593033,
+          "simMs": 0.151,
+          "roundsHeapMB": [
+            11.8,
+            12.6,
+            11.6,
+            11.3,
+            12.1
+          ],
+          "roundsFrameMs": [
+            2.2,
+            2,
+            2.3,
+            1.9,
+            1.4
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 5,
+          "frameMs": 3.300000011920929,
+          "minFrameMs": 3,
+          "maxFrameMs": 3.5,
+          "p95FrameMs": 7.399999991059303,
+          "submitMs": 1.6000000089406967,
+          "simMs": 0.297,
+          "roundsHeapMB": [
+            17.2,
+            18.1,
+            16.9,
+            16.5,
+            17.7
+          ],
+          "roundsFrameMs": [
+            3.5,
+            3.2,
+            3.4,
+            3.3,
+            3
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 5,
+          "frameMs": 6.9000000059604645,
+          "minFrameMs": 6.700000002980232,
+          "maxFrameMs": 9.700000002980232,
+          "p95FrameMs": 11.599999994039536,
+          "submitMs": 4,
+          "simMs": 0.75,
+          "roundsHeapMB": [
+            35.3,
+            36.6,
+            35.2,
+            34.7,
+            36.2
+          ],
+          "roundsFrameMs": [
+            9.7,
+            6.7,
+            7.2,
+            6.8,
+            6.9
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 5,
+          "frameMs": 13.400000005960464,
+          "minFrameMs": 11.599999994039536,
+          "maxFrameMs": 17.19999998807907,
+          "p95FrameMs": 20,
+          "submitMs": 8.100000008940697,
+          "simMs": 1.509,
+          "roundsHeapMB": [
+            62.1,
+            63.6,
+            62,
+            61.4,
+            63.1
+          ],
+          "roundsFrameMs": [
+            17.2,
+            11.6,
+            13.4,
+            14,
+            12.9
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 5,
+          "frameMs": 30.5,
+          "minFrameMs": 27.400000005960464,
+          "maxFrameMs": 31.700000002980232,
+          "p95FrameMs": 37.80000001192093,
+          "submitMs": 19.700000002980232,
+          "simMs": 3.547,
+          "roundsHeapMB": [
+            96.2,
+            102.3,
+            102.5,
+            95.6,
+            102
+          ],
+          "roundsFrameMs": [
+            31.7,
+            27.4,
+            28.2,
+            30.5,
+            31.5
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "spryte",
+      "label": "spryte draw.sprite",
+      "package": "spryte",
+      "version": "0.5.0",
+      "setup": "createRenderer(canvas, { smooth: false }); one draw.sprite per sprite with a reused options object. Slice scenes: one reused Frame object whose source rectangle changes per call. Text: draw.text with a CSS font and a reused options object. Render target: createTarget, draw.into, then the target drawn scaled. Clip: draw.clip per panel. Upload: draw.invalidate on the layer each frame.",
+      "maxAt60fps": 50000,
+      "startup": {
+        "readyMs": 50.3,
+        "createMs": 24.3,
+        "firstFrameMs": 6.4,
+        "rounds": [
+          {
+            "readyMs": 49.5,
+            "createMs": 24.3,
+            "firstFrameMs": 6.1
+          },
+          {
+            "readyMs": 50.3,
+            "createMs": 23.5,
+            "firstFrameMs": 6.4
+          },
+          {
+            "readyMs": 47.8,
+            "createMs": 22.8,
+            "firstFrameMs": 6.2
+          },
+          {
+            "readyMs": 88.8,
+            "createMs": 56.4,
+            "firstFrameMs": 13.1
+          },
+          {
+            "readyMs": 115.7,
+            "createMs": 79.7,
+            "firstFrameMs": 14.7
+          }
+        ]
+      },
+      "contextLoss": {
+        "recovered": true,
+        "ms": 21
+      },
+      "parity": {
+        "2000": {
+          "drawnPixels": 186977,
+          "differingPercent": 8.57,
+          "coveragePercent": 99.9,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 335041,
+          "differingPercent": 11.43,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 5,
+          "frameMs": 0.699999988079071,
+          "minFrameMs": 0.5,
+          "maxFrameMs": 0.8999999910593033,
+          "p95FrameMs": 1.2999999970197678,
+          "submitMs": 0.10000000894069672,
+          "simMs": 0.021,
+          "roundsHeapMB": [
+            3.7,
+            3.7,
+            3.7,
+            3.7,
+            4.1
+          ],
+          "roundsFrameMs": [
+            0.5,
+            0.7,
+            0.5,
+            0.7,
+            0.9
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 5,
+          "frameMs": 0.7999999970197678,
+          "minFrameMs": 0.5999999940395355,
+          "maxFrameMs": 1,
+          "p95FrameMs": 1.0999999940395355,
+          "submitMs": 0.29999999701976776,
+          "simMs": 0.027,
+          "roundsHeapMB": [
+            3.2,
+            3.2,
+            3.2,
+            3.2,
+            3.6
+          ],
+          "roundsFrameMs": [
+            0.8,
+            1,
+            0.6,
+            0.8,
+            1
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 5,
+          "frameMs": 1.2000000029802322,
+          "minFrameMs": 0.8999999910593033,
+          "maxFrameMs": 1.9000000059604645,
+          "p95FrameMs": 2.300000011920929,
+          "submitMs": 0.5,
+          "simMs": 0.064,
+          "roundsHeapMB": [
+            4.1,
+            4.1,
+            4,
+            4.1,
+            3.5
+          ],
+          "roundsFrameMs": [
+            1.2,
+            1.9,
+            0.9,
+            1.2,
+            1.8
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 5,
+          "frameMs": 2.0999999940395355,
+          "minFrameMs": 1.4000000059604645,
+          "maxFrameMs": 2.7000000029802322,
+          "p95FrameMs": 7.5,
+          "submitMs": 1,
+          "simMs": 0.152,
+          "roundsHeapMB": [
+            3.8,
+            3.7,
+            3.7,
+            3.8,
+            4.2
+          ],
+          "roundsFrameMs": [
+            2.1,
+            2.7,
+            1.4,
+            2.1,
+            2.6
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 5,
+          "frameMs": 3.699999988079071,
+          "minFrameMs": 3,
+          "maxFrameMs": 4.0999999940395355,
+          "p95FrameMs": 8.299999997019768,
+          "submitMs": 2,
+          "simMs": 0.278,
+          "roundsHeapMB": [
+            4.6,
+            4.6,
+            4.5,
+            4.6,
+            4.9
+          ],
+          "roundsFrameMs": [
+            3.7,
+            3.8,
+            3,
+            3.5,
+            4.1
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 5,
+          "frameMs": 7.799999997019768,
+          "minFrameMs": 6.700000002980232,
+          "maxFrameMs": 10.5,
+          "p95FrameMs": 13.399999991059303,
+          "submitMs": 4.9000000059604645,
+          "simMs": 0.714,
+          "roundsHeapMB": [
+            5.7,
+            5.7,
+            6.5,
+            5.7,
+            6
+          ],
+          "roundsFrameMs": [
+            7.6,
+            7.8,
+            6.7,
+            7.8,
+            10.5
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 5,
+          "frameMs": 16.700000002980232,
+          "minFrameMs": 13.199999988079071,
+          "maxFrameMs": 21.100000008940697,
+          "p95FrameMs": 21.299999997019768,
+          "submitMs": 13.200000002980232,
+          "simMs": 1.577,
+          "roundsHeapMB": [
+            9.4,
+            9.4,
+            10.2,
+            9.4,
+            8.7
+          ],
+          "roundsFrameMs": [
+            21.1,
+            15.5,
+            13.2,
+            19.6,
+            16.7
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 5,
+          "frameMs": 27.19999998807907,
+          "minFrameMs": 26,
+          "maxFrameMs": 36.6000000089407,
+          "p95FrameMs": 31.700000002980232,
+          "submitMs": 19.700000002980232,
+          "simMs": 3.416,
+          "roundsHeapMB": [
+            14.3,
+            14.3,
+            15.3,
+            14.3,
+            15.6
+          ],
+          "roundsFrameMs": [
+            36.6,
+            26,
+            26,
+            27.2,
+            33.9
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "spryte-bulk",
+      "label": "spryte draw.sprites",
+      "package": "spryte",
+      "version": "0.5.0",
+      "setup": "createRenderer(canvas, { smooth: false }); one draw.sprites per texture per frame, with per-copy scale, rotation and colour arrays. Render target, upload: as for draw.sprite. Clip: positions grouped per panel as they're copied, one draw.sprites per panel inside draw.clip.",
+      "maxAt60fps": 400000,
+      "startup": {
+        "readyMs": 52.7,
+        "createMs": 26.4,
+        "firstFrameMs": 4.1,
+        "rounds": [
+          {
+            "readyMs": 52.7,
+            "createMs": 26.4,
+            "firstFrameMs": 4.6
+          },
+          {
+            "readyMs": 48.1,
+            "createMs": 23.3,
+            "firstFrameMs": 3.7
+          },
+          {
+            "readyMs": 45.9,
+            "createMs": 22.4,
+            "firstFrameMs": 3.7
+          },
+          {
+            "readyMs": 55.3,
+            "createMs": 26.7,
+            "firstFrameMs": 4.1
+          },
+          {
+            "readyMs": 119.3,
+            "createMs": 81,
+            "firstFrameMs": 7.6
+          }
+        ]
+      },
+      "contextLoss": {
+        "recovered": true,
+        "ms": 26.1
+      },
+      "parity": {
+        "2000": {
+          "drawnPixels": 186977,
+          "differingPercent": 8.57,
+          "coveragePercent": 99.9,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 335041,
+          "differingPercent": 11.43,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 5,
+          "frameMs": 0.4000000059604645,
+          "minFrameMs": 0.4000000059604645,
+          "maxFrameMs": 0.7999999970197678,
+          "p95FrameMs": 0.7000000029802322,
+          "submitMs": 0.09999999403953552,
+          "simMs": 0.023,
+          "roundsHeapMB": [
+            3.7,
+            3.7,
+            3.5,
+            3.5,
+            3.5
+          ],
+          "roundsFrameMs": [
+            0.4,
+            0.4,
+            0.4,
+            0.6,
+            0.8
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 5,
+          "frameMs": 0.4000000059604645,
+          "minFrameMs": 0.4000000059604645,
+          "maxFrameMs": 0.800000011920929,
+          "p95FrameMs": 0.7999999970197678,
+          "submitMs": 0.09999999403953552,
+          "simMs": 0.032,
+          "roundsHeapMB": [
+            3.8,
+            3.8,
+            3.8,
+            3.8,
+            3.8
+          ],
+          "roundsFrameMs": [
+            0.4,
+            0.5,
+            0.4,
+            0.4,
+            0.8
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 5,
+          "frameMs": 0.5999999940395355,
+          "minFrameMs": 0.4000000059604645,
+          "maxFrameMs": 0.7000000029802322,
+          "p95FrameMs": 0.9000000059604645,
+          "submitMs": 0.09999999403953552,
+          "simMs": 0.072,
+          "roundsHeapMB": [
+            3.5,
+            3.5,
+            3.5,
+            3.5,
+            3.5
+          ],
+          "roundsFrameMs": [
+            0.4,
+            0.5,
+            0.7,
+            0.6,
+            0.6
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 5,
+          "frameMs": 0.7000000029802322,
+          "minFrameMs": 0.699999988079071,
+          "maxFrameMs": 1.0999999940395355,
+          "p95FrameMs": 1.0999999940395355,
+          "submitMs": 0.20000000298023224,
+          "simMs": 0.148,
+          "roundsHeapMB": [
+            4,
+            3.9,
+            4,
+            4,
+            4
+          ],
+          "roundsFrameMs": [
+            0.7,
+            0.7,
+            1.1,
+            0.8,
+            0.7
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 5,
+          "frameMs": 1.1000000089406967,
+          "minFrameMs": 0.7999999970197678,
+          "maxFrameMs": 1.2000000029802322,
+          "p95FrameMs": 1.6000000089406967,
+          "submitMs": 0.3999999910593033,
+          "simMs": 0.282,
+          "roundsHeapMB": [
+            4.8,
+            4.7,
+            4.8,
+            4.8,
+            4.8
+          ],
+          "roundsFrameMs": [
+            0.8,
+            1.1,
+            1.1,
+            1.2,
+            1.1
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 5,
+          "frameMs": 2.2000000029802322,
+          "minFrameMs": 1.7000000029802322,
+          "maxFrameMs": 2.2999999970197678,
+          "p95FrameMs": 4.200000002980232,
+          "submitMs": 0.9000000059604645,
+          "simMs": 0.73,
+          "roundsHeapMB": [
+            6.6,
+            6.6,
+            6.6,
+            6.6,
+            6.6
+          ],
+          "roundsFrameMs": [
+            1.7,
+            2.3,
+            2.2,
+            2.3,
+            2.2
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 5,
+          "frameMs": 3.7999999970197678,
+          "minFrameMs": 3.5999999940395355,
+          "maxFrameMs": 4.299999997019768,
+          "p95FrameMs": 6.700000002980232,
+          "submitMs": 2,
+          "simMs": 1.682,
+          "roundsHeapMB": [
+            10.2,
+            10.2,
+            10.2,
+            10.2,
+            10.2
+          ],
+          "roundsFrameMs": [
+            3.8,
+            3.8,
+            3.9,
+            4.3,
+            3.6
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 5,
+          "frameMs": 6.4000000059604645,
+          "minFrameMs": 5.799999997019768,
+          "maxFrameMs": 6.5,
+          "p95FrameMs": 8.5,
+          "submitMs": 3.5999999940395355,
+          "simMs": 3.061,
+          "roundsHeapMB": [
+            17.4,
+            17.3,
+            17.3,
+            17.3,
+            17.4
+          ],
+          "roundsFrameMs": [
+            6.5,
+            6.2,
+            6.4,
+            6.5,
+            5.8
+          ]
+        },
+        {
+          "count": 400000,
+          "runs": 5,
+          "frameMs": 12.400000005960464,
+          "minFrameMs": 11.700000002980232,
+          "maxFrameMs": 12.700000002980232,
+          "p95FrameMs": 17.200000002980232,
+          "submitMs": 7.0999999940395355,
+          "simMs": 6.219,
+          "roundsHeapMB": [
+            31.5,
+            31.5,
+            31.5,
+            31.5,
+            31.5
+          ],
+          "roundsFrameMs": [
+            12.4,
+            11.9,
+            11.7,
+            12.4,
+            12.7
+          ]
+        },
+        {
+          "count": 800000,
+          "runs": 5,
+          "frameMs": 24.700000002980232,
+          "minFrameMs": 22.5,
+          "maxFrameMs": 24.799999997019768,
+          "p95FrameMs": 30.299999997019768,
+          "submitMs": 14.900000005960464,
+          "simMs": 13.076,
+          "roundsHeapMB": [
+            59.8,
+            59.8,
+            59.8,
+            59.8,
+            59.9
+          ],
+          "roundsFrameMs": [
+            24.2,
+            24.7,
+            22.5,
+            24.8,
+            24.7
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "phaser-image",
+      "label": "Phaser Image",
+      "package": "phaser",
+      "version": "4.2.1",
+      "setup": "Game (WEBGL, pixelArt: nearest, no antialias, roundPixels; maxTextures 1 on software renderers only), one Scene; Phaser's loop stopped and game.step() called per frame. One Image per sprite (origin 0.5), created once with scene.add.image; properties the scene uses are set each frame (setTint + setAlpha for colour). Slice scenes: a cached texture Frame per source rectangle (texture.add), and a pool of Images (origin 0) shown or hidden, setFrame + setDisplaySize per slice.",
+      "maxAt60fps": 20000,
+      "startup": {
+        "readyMs": 142.1,
+        "createMs": 115.6,
+        "firstFrameMs": 17.9,
+        "rounds": [
+          {
+            "readyMs": 144.7,
+            "createMs": 116.7,
+            "firstFrameMs": 13.7
+          },
+          {
+            "readyMs": 137.9,
+            "createMs": 111.7,
+            "firstFrameMs": 29.2
+          },
+          {
+            "readyMs": 142.1,
+            "createMs": 115.6,
+            "firstFrameMs": 14.6
+          },
+          {
+            "readyMs": 167.5,
+            "createMs": 135.8,
+            "firstFrameMs": 17.9
+          },
+          {
+            "readyMs": 130.3,
+            "createMs": 106.5,
+            "firstFrameMs": 26.4
+          }
+        ]
+      },
+      "contextLoss": {
+        "recovered": true,
+        "ms": 22.8
+      },
+      "parity": {
+        "2000": {
+          "drawnPixels": 186977,
+          "differingPercent": 8.57,
+          "coveragePercent": 99.9,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 335039,
+          "differingPercent": 11.43,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 5,
+          "frameMs": 1,
+          "minFrameMs": 0.800000011920929,
+          "maxFrameMs": 1.2000000029802322,
+          "p95FrameMs": 1.4000000059604645,
+          "submitMs": 0.30000001192092896,
+          "simMs": 0.02,
+          "roundsHeapMB": [
+            14.4,
+            14.6,
+            14.5,
+            14.6,
+            14.3
+          ],
+          "roundsFrameMs": [
+            0.9,
+            1,
+            0.8,
+            1.2,
+            1
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 5,
+          "frameMs": 1.2999999970197678,
+          "minFrameMs": 1.2000000029802322,
+          "maxFrameMs": 1.5999999940395355,
+          "p95FrameMs": 2.2000000029802322,
+          "submitMs": 0.5999999940395355,
+          "simMs": 0.032,
+          "roundsHeapMB": [
+            17.7,
+            17.8,
+            17.8,
+            17.9,
+            17.7
+          ],
+          "roundsFrameMs": [
+            1.2,
+            1.3,
+            1.2,
+            1.6,
+            1.3
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 5,
+          "frameMs": 2.6000000089406967,
+          "minFrameMs": 2.5,
+          "maxFrameMs": 3.300000011920929,
+          "p95FrameMs": 7.799999997019768,
+          "submitMs": 1.300000011920929,
+          "simMs": 0.079,
+          "roundsHeapMB": [
+            23.9,
+            23.4,
+            23.6,
+            24,
+            23.9
+          ],
+          "roundsFrameMs": [
+            2.6,
+            2.6,
+            2.5,
+            3.3,
+            2.6
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 5,
+          "frameMs": 4.5999999940395355,
+          "minFrameMs": 4.5,
+          "maxFrameMs": 5.600000008940697,
+          "p95FrameMs": 7.600000008940697,
+          "submitMs": 2.7999999970197678,
+          "simMs": 0.144,
+          "roundsHeapMB": [
+            27.9,
+            26.4,
+            35.7,
+            34.7,
+            35.7
+          ],
+          "roundsFrameMs": [
+            4.6,
+            4.8,
+            4.5,
+            5.6,
+            4.6
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 5,
+          "frameMs": 8.599999994039536,
+          "minFrameMs": 8.200000002980232,
+          "maxFrameMs": 10.200000002980232,
+          "p95FrameMs": 13.799999997019768,
+          "submitMs": 5.5,
+          "simMs": 0.307,
+          "roundsHeapMB": [
+            42.4,
+            40.4,
+            50,
+            51.4,
+            49.9
+          ],
+          "roundsFrameMs": [
+            8.5,
+            8.6,
+            8.2,
+            10.2,
+            9
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 5,
+          "frameMs": 25.5,
+          "minFrameMs": 21.200000002980232,
+          "maxFrameMs": 30.099999994039536,
+          "p95FrameMs": 32.5,
+          "submitMs": 19.100000008940697,
+          "simMs": 0.762,
+          "roundsHeapMB": [
+            91.7,
+            90.1,
+            65.8,
+            67.6,
+            65.9
+          ],
+          "roundsFrameMs": [
+            30.1,
+            25.9,
+            25.5,
+            21.2,
+            21.2
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 5,
+          "frameMs": 80.1000000089407,
+          "minFrameMs": 76.59999999403954,
+          "maxFrameMs": 121.70000000298023,
+          "p95FrameMs": 97.29999999701977,
+          "submitMs": 62.69999998807907,
+          "simMs": 2.935,
+          "roundsHeapMB": [
+            184.2,
+            185.6,
+            198.6,
+            204.2,
+            208.3
+          ],
+          "roundsFrameMs": [
+            121.7,
+            79.8,
+            91.3,
+            76.6,
+            80.1
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "phaser-gpulayer",
+      "label": "Phaser SpriteGPULayer",
+      "package": "phaser",
+      "version": "4.2.1",
+      "setup": "Game as for Image; one SpriteGPULayer (single texture), sized to the count. Each frame every member is rewritten with editMember from one reused member object (x, y, plus rotation, scaleX/scaleY, tint and alpha where the scene uses them); the layer re-uploads the edited buffer segments when it renders.",
+      "maxAt60fps": 50000,
+      "startup": {
+        "readyMs": 141.8,
+        "createMs": 113.9,
+        "firstFrameMs": 45.9,
+        "rounds": [
+          {
+            "readyMs": 141.8,
+            "createMs": 113.9,
+            "firstFrameMs": 54.7
+          },
+          {
+            "readyMs": 126.8,
+            "createMs": 99.6,
+            "firstFrameMs": 45.9
+          },
+          {
+            "readyMs": 161.6,
+            "createMs": 130.5,
+            "firstFrameMs": 11.9
+          },
+          {
+            "readyMs": 137.5,
+            "createMs": 111.5,
+            "firstFrameMs": 13.2
+          },
+          {
+            "readyMs": 181.1,
+            "createMs": 140.8,
+            "firstFrameMs": 60.5
+          }
+        ]
+      },
+      "contextLoss": {
+        "recovered": true,
+        "ms": 25.3
+      },
+      "parity": {
+        "2000": {
+          "drawnPixels": 186976,
+          "differingPercent": 8.57,
+          "coveragePercent": 99.9,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 335040,
+          "differingPercent": 11.43,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 5,
+          "frameMs": 0.800000011920929,
+          "minFrameMs": 0.7000000029802322,
+          "maxFrameMs": 1.0999999940395355,
+          "p95FrameMs": 1.5,
+          "submitMs": 0.20000000298023224,
+          "simMs": 0.018,
+          "roundsHeapMB": [
+            15.1,
+            15,
+            15.1,
+            15.1,
+            15.1
+          ],
+          "roundsFrameMs": [
+            0.9,
+            0.7,
+            0.8,
+            0.8,
+            1.1
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 5,
+          "frameMs": 1,
+          "minFrameMs": 0.8999999910593033,
+          "maxFrameMs": 1.5999999940395355,
+          "p95FrameMs": 1.7000000029802322,
+          "submitMs": 0.29999999701976776,
+          "simMs": 0.026,
+          "roundsHeapMB": [
+            15.5,
+            15.6,
+            15.6,
+            15.6,
+            15.6
+          ],
+          "roundsFrameMs": [
+            1,
+            0.9,
+            1.1,
+            1,
+            1.6
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 5,
+          "frameMs": 1.5,
+          "minFrameMs": 1.4000000059604645,
+          "maxFrameMs": 1.7000000029802322,
+          "p95FrameMs": 2.300000011920929,
+          "submitMs": 0.6000000089406967,
+          "simMs": 0.075,
+          "roundsHeapMB": [
+            15.4,
+            15.2,
+            15.4,
+            15.3,
+            15.2
+          ],
+          "roundsFrameMs": [
+            1.7,
+            1.5,
+            1.4,
+            1.5,
+            1.7
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 5,
+          "frameMs": 2.4000000059604645,
+          "minFrameMs": 1.7000000029802322,
+          "maxFrameMs": 2.7000000029802322,
+          "p95FrameMs": 6.899999991059303,
+          "submitMs": 1.0999999940395355,
+          "simMs": 0.144,
+          "roundsHeapMB": [
+            16.8,
+            16.7,
+            16.7,
+            16.8,
+            18.5
+          ],
+          "roundsFrameMs": [
+            2.7,
+            1.7,
+            2.6,
+            2.4,
+            1.9
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 5,
+          "frameMs": 4.0999999940395355,
+          "minFrameMs": 3.2999999970197678,
+          "maxFrameMs": 4.600000008940697,
+          "p95FrameMs": 5.200000002980232,
+          "submitMs": 2.0999999940395355,
+          "simMs": 0.281,
+          "roundsHeapMB": [
+            20.6,
+            20.9,
+            20.6,
+            20.7,
+            20.7
+          ],
+          "roundsFrameMs": [
+            4.6,
+            3.6,
+            4.1,
+            4.1,
+            3.3
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 5,
+          "frameMs": 9.299999997019768,
+          "minFrameMs": 8.199999988079071,
+          "maxFrameMs": 10.200000002980232,
+          "p95FrameMs": 12.099999994039536,
+          "submitMs": 5.5,
+          "simMs": 1.158,
+          "roundsHeapMB": [
+            31,
+            31.8,
+            31.3,
+            31.7,
+            31.8
+          ],
+          "roundsFrameMs": [
+            8.2,
+            9.3,
+            10.2,
+            9.7,
+            9.2
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 5,
+          "frameMs": 20,
+          "minFrameMs": 19.700000002980232,
+          "maxFrameMs": 20,
+          "p95FrameMs": 22.799999997019768,
+          "submitMs": 11.700000002980232,
+          "simMs": 1.607,
+          "roundsHeapMB": [
+            50.6,
+            52.4,
+            51.5,
+            50.5,
+            52.2
+          ],
+          "roundsFrameMs": [
+            20,
+            19.7,
+            20,
+            19.9,
+            20
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 5,
+          "frameMs": 34.900000005960464,
+          "minFrameMs": 33.6000000089407,
+          "maxFrameMs": 44.20000000298023,
+          "p95FrameMs": 40.70000000298023,
+          "submitMs": 21.799999997019768,
+          "simMs": 3.179,
+          "roundsHeapMB": [
+            52.6,
+            51.3,
+            53.4,
+            52.7,
+            51.4
+          ],
+          "roundsFrameMs": [
+            44.2,
+            33.7,
+            36.9,
+            34.9,
+            33.6
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "phaser-spryte",
+      "label": "Phaser + spryte draw.sprite",
+      "package": "spryte",
+      "version": "0.5.0",
+      "setup": "Phaser Game as for Image, on a WebGL2 context from spryte/phaser's createPhaserContext (no antialias); one Extern game object, drawn by spryteExtern with smooth: false. Each frame, inside the Extern, one draw.sprite per sprite with a reused options object.",
+      "maxAt60fps": 100000,
+      "startup": {
+        "readyMs": 135.2,
+        "createMs": 107.8,
+        "firstFrameMs": 16.1,
+        "rounds": [
+          {
+            "readyMs": 158.4,
+            "createMs": 126.9,
+            "firstFrameMs": 57.9
+          },
+          {
+            "readyMs": 135.2,
+            "createMs": 107.8,
+            "firstFrameMs": 17.5
+          },
+          {
+            "readyMs": 145.7,
+            "createMs": 116.4,
+            "firstFrameMs": 16
+          },
+          {
+            "readyMs": 132.5,
+            "createMs": 104.6,
+            "firstFrameMs": 14.4
+          },
+          {
+            "readyMs": 132.9,
+            "createMs": 105.4,
+            "firstFrameMs": 16.1
+          }
+        ]
+      },
+      "contextLoss": {
+        "recovered": true,
+        "ms": 25.6
+      },
+      "parity": {
+        "2000": {
+          "drawnPixels": 186977,
+          "differingPercent": 8.57,
+          "coveragePercent": 99.9,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 335041,
+          "differingPercent": 11.43,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 5,
+          "frameMs": 1,
+          "minFrameMs": 0.8999999910593033,
+          "maxFrameMs": 1.5,
+          "p95FrameMs": 1.7999999970197678,
+          "submitMs": 0.3999999910593033,
+          "simMs": 0.023,
+          "roundsHeapMB": [
+            14.9,
+            15.1,
+            15,
+            14.9,
+            15
+          ],
+          "roundsFrameMs": [
+            1.5,
+            1,
+            0.9,
+            0.9,
+            1
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 5,
+          "frameMs": 0.9000000059604645,
+          "minFrameMs": 0.8999999910593033,
+          "maxFrameMs": 1.5999999940395355,
+          "p95FrameMs": 1.7999999970197678,
+          "submitMs": 0.4000000059604645,
+          "simMs": 0.03,
+          "roundsHeapMB": [
+            14.6,
+            14.5,
+            14.5,
+            14.4,
+            14.4
+          ],
+          "roundsFrameMs": [
+            1.6,
+            0.9,
+            0.9,
+            0.9,
+            1
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 5,
+          "frameMs": 1.5,
+          "minFrameMs": 1.2999999970197678,
+          "maxFrameMs": 1.7000000029802322,
+          "p95FrameMs": 2.0999999940395355,
+          "submitMs": 0.7999999970197678,
+          "simMs": 0.07,
+          "roundsHeapMB": [
+            15.4,
+            15.5,
+            15.5,
+            15.4,
+            15.5
+          ],
+          "roundsFrameMs": [
+            1.7,
+            1.7,
+            1.3,
+            1.4,
+            1.5
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 5,
+          "frameMs": 2.5,
+          "minFrameMs": 2.2999999970197678,
+          "maxFrameMs": 2.7000000029802322,
+          "p95FrameMs": 7.399999991059303,
+          "submitMs": 1.2999999970197678,
+          "simMs": 0.151,
+          "roundsHeapMB": [
+            15.7,
+            15.8,
+            15.7,
+            15.4,
+            15.7
+          ],
+          "roundsFrameMs": [
+            2.5,
+            2.4,
+            2.7,
+            2.3,
+            2.6
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 5,
+          "frameMs": 3.7999999970197678,
+          "minFrameMs": 3.5,
+          "maxFrameMs": 4.299999997019768,
+          "p95FrameMs": 7.299999997019768,
+          "submitMs": 2.2000000029802322,
+          "simMs": 0.281,
+          "roundsHeapMB": [
+            16.2,
+            16.4,
+            16.5,
+            15.5,
+            16.3
+          ],
+          "roundsFrameMs": [
+            4.3,
+            3.8,
+            4.1,
+            3.5,
+            3.8
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 5,
+          "frameMs": 8.299999997019768,
+          "minFrameMs": 7.200000002980232,
+          "maxFrameMs": 8.900000005960464,
+          "p95FrameMs": 13.100000008940697,
+          "submitMs": 5.299999997019768,
+          "simMs": 0.743,
+          "roundsHeapMB": [
+            18.7,
+            18.4,
+            18.7,
+            18.7,
+            18.7
+          ],
+          "roundsFrameMs": [
+            8.8,
+            7.8,
+            8.3,
+            7.2,
+            8.9
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 5,
+          "frameMs": 15.299999997019768,
+          "minFrameMs": 14.600000008940697,
+          "maxFrameMs": 18.700000002980232,
+          "p95FrameMs": 20.799999997019768,
+          "submitMs": 10.299999997019768,
+          "simMs": 1.432,
+          "roundsHeapMB": [
+            23,
+            20.8,
+            22.7,
+            23.6,
+            20.5
+          ],
+          "roundsFrameMs": [
+            18.7,
+            14.7,
+            18.2,
+            14.6,
+            15.3
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 5,
+          "frameMs": 31.100000008940697,
+          "minFrameMs": 27.399999991059303,
+          "maxFrameMs": 34.5,
+          "p95FrameMs": 40.8999999910593,
+          "submitMs": 23.299999997019768,
+          "simMs": 3.519,
+          "roundsHeapMB": [
+            28.9,
+            25.5,
+            28.3,
+            27.8,
+            26.1
+          ],
+          "roundsFrameMs": [
+            32.2,
+            27.4,
+            31.1,
+            27.7,
+            34.5
+          ]
+        }
+      ]
+    },
+    {
+      "adapter": "phaser-spryte-bulk",
+      "label": "Phaser + spryte draw.sprites",
+      "package": "spryte",
+      "version": "0.5.0",
+      "setup": "Phaser Game and Extern as for Phaser + spryte draw.sprite. Each frame, inside the Extern, one draw.sprites call with the scene's scale, rotation and colour arrays; positions are interleaved into one array per frame (the only per-sprite JavaScript), as in the spryte draw.sprites adapter.",
+      "maxAt60fps": 400000,
+      "startup": {
+        "readyMs": 151.7,
+        "createMs": 121,
+        "firstFrameMs": 20,
+        "rounds": [
+          {
+            "readyMs": 159.2,
+            "createMs": 126.1,
+            "firstFrameMs": 22.4
+          },
+          {
+            "readyMs": 127.8,
+            "createMs": 101.4,
+            "firstFrameMs": 13.3
+          },
+          {
+            "readyMs": 151.7,
+            "createMs": 121,
+            "firstFrameMs": 20
+          },
+          {
+            "readyMs": 124.9,
+            "createMs": 102.3,
+            "firstFrameMs": 12.7
+          },
+          {
+            "readyMs": 166.5,
+            "createMs": 133,
+            "firstFrameMs": 21
+          }
+        ]
+      },
+      "contextLoss": {
+        "recovered": true,
+        "ms": 23.3
+      },
+      "parity": {
+        "2000": {
+          "drawnPixels": 186977,
+          "differingPercent": 8.57,
+          "coveragePercent": 99.9,
+          "interiorDifferingPercent": 0
+        },
+        "50000": {
+          "drawnPixels": 335041,
+          "differingPercent": 11.43,
+          "coveragePercent": 100,
+          "interiorDifferingPercent": 0
+        }
+      },
+      "counts": [
+        {
+          "count": 1000,
+          "runs": 5,
+          "frameMs": 0.7999999970197678,
+          "minFrameMs": 0.7000000029802322,
+          "maxFrameMs": 1,
+          "p95FrameMs": 1.8999999910593033,
+          "submitMs": 0.29999999701976776,
+          "simMs": 0.021,
+          "roundsHeapMB": [
+            14.4,
+            14.4,
+            14.4,
+            14.3,
+            14.6
+          ],
+          "roundsFrameMs": [
+            0.8,
+            0.8,
+            1,
+            0.7,
+            0.8
+          ]
+        },
+        {
+          "count": 2000,
+          "runs": 5,
+          "frameMs": 0.7000000029802322,
+          "minFrameMs": 0.6000000089406967,
+          "maxFrameMs": 0.8999999910593033,
+          "p95FrameMs": 1.5,
+          "submitMs": 0.29999999701976776,
+          "simMs": 0.03,
+          "roundsHeapMB": [
+            15.4,
+            15.5,
+            15.5,
+            15.3,
+            15.6
+          ],
+          "roundsFrameMs": [
+            0.6,
+            0.7,
+            0.9,
+            0.7,
+            0.8
+          ]
+        },
+        {
+          "count": 5000,
+          "runs": 5,
+          "frameMs": 0.800000011920929,
+          "minFrameMs": 0.5,
+          "maxFrameMs": 1,
+          "p95FrameMs": 1.300000011920929,
+          "submitMs": 0.29999999701976776,
+          "simMs": 0.07,
+          "roundsHeapMB": [
+            14.7,
+            14.8,
+            14.8,
+            14.6,
+            14.9
+          ],
+          "roundsFrameMs": [
+            0.8,
+            0.9,
+            1,
+            0.5,
+            0.8
+          ]
+        },
+        {
+          "count": 10000,
+          "runs": 5,
+          "frameMs": 1,
+          "minFrameMs": 0.7000000029802322,
+          "maxFrameMs": 1.3999999910593033,
+          "p95FrameMs": 1.7999999970197678,
+          "submitMs": 0.4000000059604645,
+          "simMs": 0.149,
+          "roundsHeapMB": [
+            15.7,
+            15.7,
+            15.8,
+            15.6,
+            15.9
+          ],
+          "roundsFrameMs": [
+            0.8,
+            1,
+            1.4,
+            0.7,
+            1.1
+          ]
+        },
+        {
+          "count": 20000,
+          "runs": 5,
+          "frameMs": 1.2999999970197678,
+          "minFrameMs": 1,
+          "maxFrameMs": 2.1000000089406967,
+          "p95FrameMs": 1.9000000059604645,
+          "submitMs": 0.5,
+          "simMs": 0.29,
+          "roundsHeapMB": [
+            16.9,
+            17,
+            17,
+            16.9,
+            17.1
+          ],
+          "roundsFrameMs": [
+            1,
+            1.3,
+            2.1,
+            1,
+            1.6
+          ]
+        },
+        {
+          "count": 50000,
+          "runs": 5,
+          "frameMs": 1.9000000059604645,
+          "minFrameMs": 1.7000000029802322,
+          "maxFrameMs": 3,
+          "p95FrameMs": 2.5,
+          "submitMs": 1.1000000089406967,
+          "simMs": 0.743,
+          "roundsHeapMB": [
+            19,
+            19.1,
+            19.1,
+            18.9,
+            17.5
+          ],
+          "roundsFrameMs": [
+            1.9,
+            1.9,
+            3,
+            1.7,
+            2.6
+          ]
+        },
+        {
+          "count": 100000,
+          "runs": 5,
+          "frameMs": 4.200000002980232,
+          "minFrameMs": 3.5,
+          "maxFrameMs": 4.5,
+          "p95FrameMs": 4.899999991059303,
+          "submitMs": 2.3999999910593033,
+          "simMs": 1.691,
+          "roundsHeapMB": [
+            19.7,
+            20.7,
+            20.7,
+            20.7,
+            21.3
+          ],
+          "roundsFrameMs": [
+            4.3,
+            3.7,
+            4.5,
+            3.5,
+            4.2
+          ]
+        },
+        {
+          "count": 200000,
+          "runs": 5,
+          "frameMs": 6.5,
+          "minFrameMs": 6.299999997019768,
+          "maxFrameMs": 7.4000000059604645,
+          "p95FrameMs": 8.400000005960464,
+          "submitMs": 3.800000011920929,
+          "simMs": 3.106,
+          "roundsHeapMB": [
+            27.1,
+            28.1,
+            28.1,
+            28.1,
+            28.7
+          ],
+          "roundsFrameMs": [
+            6.9,
+            6.5,
+            7.4,
+            6.3,
+            6.5
+          ]
+        },
+        {
+          "count": 400000,
+          "runs": 5,
+          "frameMs": 12.099999994039536,
+          "minFrameMs": 11.400000005960464,
+          "maxFrameMs": 12.699999988079071,
+          "p95FrameMs": 17.5,
+          "submitMs": 7.200000002980232,
+          "simMs": 6.121,
+          "roundsHeapMB": [
+            41.5,
+            42.5,
+            42.6,
+            42.6,
+            43.2
+          ],
+          "roundsFrameMs": [
+            12.6,
+            11.9,
+            12.7,
+            12.1,
+            11.4
+          ]
+        },
+        {
+          "count": 800000,
+          "runs": 5,
+          "frameMs": 23.400000005960464,
+          "minFrameMs": 22.799999997019768,
+          "maxFrameMs": 24.099999994039536,
+          "p95FrameMs": 28.69999998807907,
+          "submitMs": 14.200000002980232,
+          "simMs": 12.12,
+          "roundsHeapMB": [
+            70.1,
+            71.1,
+            71.1,
+            71.1,
+            71.7
+          ],
+          "roundsFrameMs": [
+            22.9,
+            22.8,
+            24.1,
+            23.4,
+            23.5
+          ]
+        }
+      ]
+    }
+  ]
+}
