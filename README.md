@@ -37,7 +37,7 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 ![bunny: frame time by count per library, with the 60 fps budget](docs/charts/bunny.svg)
 
-| Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
+| Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
 | spryte `draw.sprites` | 0.4.2 | 800,000 | 0.5 † | 0.8 † | 2.8 |
 | PixiJS `ParticleContainer` | 8.22.0 | 400,000 | 1.0 † | 3.0 | 7.5 |
@@ -52,7 +52,7 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 ![particles: frame time by count per library, with the 60 fps budget](docs/charts/particles.svg)
 
-| Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
+| Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
 | spryte `draw.sprites` | 0.4.2 | 400,000 | 0.6 † | 1.9 † | 6.3 |
 | PixiJS `ParticleContainer` | 8.22.0 | 100,000 | 1.6 † | 6.5 | 28.9 |
@@ -65,7 +65,7 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 ![mixed: frame time by count per library, with the 60 fps budget](docs/charts/mixed.svg)
 
-| Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
+| Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
 | spryte `draw.sprite` | 0.4.2 | 100,000 | 1.9 † | 7.2 | 27.5 |
 | PixiJS `Sprite` | 8.22.0 | 20,000 | 4.5 | 25.6 | 106.6 |
@@ -96,7 +96,7 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 ![churn: frame time by count per library, with the 60 fps budget](docs/charts/churn.svg)
 
-| Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
+| Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
 | spryte `draw.sprites` | 0.4.2 | 800,000 | 0.4 † | 1.1 † | 3.8 |
 | spryte `draw.sprite` | 0.4.2 | 100,000 | 1.6 † | 5.2 | 22.0 |
@@ -121,7 +121,7 @@ spryte packs new strings into shared atlas pages and uploads only each new recta
 
 ![lowres: frame time by count per library, with the 60 fps budget](docs/charts/lowres.svg)
 
-| Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
+| Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
 | spryte `draw.sprites` | 0.4.2 | 800,000 | 0.4 † | 0.8 † | 2.3 |
 | PixiJS `ParticleContainer` | 8.22.0 | 400,000 | 0.7 † | 3.0 | 7.3 |
@@ -133,7 +133,7 @@ spryte packs new strings into shared atlas pages and uploads only each new recta
 
 ![clip: frame time by count per library, with the 60 fps budget](docs/charts/clip.svg)
 
-| Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
+| Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
 | spryte `draw.sprites` | 0.4.2 | 800,000 | 0.4 † | 0.9 † | 3.3 |
 | spryte `draw.sprite` | 0.4.2 | 100,000 | 1.2 † | 4.9 | 20.1 |
@@ -146,7 +146,7 @@ PixiJS `ParticleContainer` sits this one out: clipping would need a container pe
 
 ![upload: frame time by count per library, with the 60 fps budget](docs/charts/upload.svg)
 
-| Adapter | Version | Max at 60 fps | 10k | 50k | 200k |
+| Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
 | spryte `draw.sprites` | 0.4.2 | 800,000 | 2.4 | 2.6 | 4.8 |
 | PixiJS `ParticleContainer` | 8.22.0 | 400,000 | 2.3 | 3.8 | 8.9 |
@@ -158,7 +158,7 @@ The upload itself costs every WebGL library about 2 ms a frame, which is the flo
 
 **iPhone** (iOS 26.6.2, Chrome, which uses WebKit on iOS; Apple GPU): `mobile.html`, 1 quick round, 60 frames per count. iOS timers have 1 ms resolution, so these are indicative ([raw](results/community/2026-10-19-iphone-ios-26-chrome.json)).
 
-| Scene | Adapter | Max at 60 fps | 10k | 50k | 200k |
+| Scene | Adapter | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
 | bunny | spryte `draw.sprites` | 400,000 | 2 | 6 | 12 |
 | bunny | PixiJS `ParticleContainer` | 200,000 | 2 | 7 | 13 |
