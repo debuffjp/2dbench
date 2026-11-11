@@ -12,15 +12,15 @@
 <rect x="190" y="106" width="120" height="13" rx="3" fill="#fbbf24"/>
 <text x="316" y="116" fill="#d4d7dd" font-size="11">400,000</text>
 <text x="180" y="134" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
-<rect x="190" y="124" width="30" height="13" rx="3" fill="#4ade80"/>
-<text x="226" y="134" fill="#d4d7dd" font-size="11">100,000</text>
-<text x="180" y="152" fill="#8b909a" font-size="11" text-anchor="end">Phaser SpriteGPULayer</text>
-<rect x="190" y="142" width="30" height="13" rx="3" fill="#94a3b8"/>
-<text x="226" y="152" fill="#d4d7dd" font-size="11">100,000</text>
-<text x="180" y="170" fill="#8b909a" font-size="11" text-anchor="end">Phaser Blitter</text>
+<rect x="190" y="124" width="60" height="13" rx="3" fill="#4ade80"/>
+<text x="256" y="134" fill="#d4d7dd" font-size="11">200,000</text>
+<text x="180" y="152" fill="#8b909a" font-size="11" text-anchor="end">Phaser + spryte draw.sprite</text>
+<rect x="190" y="142" width="60" height="13" rx="3" fill="#94a3b8"/>
+<text x="256" y="152" fill="#d4d7dd" font-size="11">200,000</text>
+<text x="180" y="170" fill="#8b909a" font-size="11" text-anchor="end">Phaser SpriteGPULayer</text>
 <rect x="190" y="160" width="30" height="13" rx="3" fill="#94a3b8"/>
 <text x="226" y="170" fill="#d4d7dd" font-size="11">100,000</text>
-<text x="180" y="188" fill="#8b909a" font-size="11" text-anchor="end">Phaser + spryte draw.sprite</text>
+<text x="180" y="188" fill="#8b909a" font-size="11" text-anchor="end">Phaser Blitter</text>
 <rect x="190" y="178" width="30" height="13" rx="3" fill="#94a3b8"/>
 <text x="226" y="188" fill="#d4d7dd" font-size="11">100,000</text>
 <text x="180" y="206" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
@@ -45,12 +45,12 @@
 <text x="180" y="340" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
 <rect x="190" y="330" width="120" height="13" rx="3" fill="#4ade80"/>
 <text x="316" y="340" fill="#d4d7dd" font-size="11">100,000</text>
-<text x="180" y="358" fill="#8b909a" font-size="11" text-anchor="end">Phaser + spryte draw.sprite</text>
+<text x="180" y="358" fill="#8b909a" font-size="11" text-anchor="end">Phaser SpriteGPULayer</text>
 <rect x="190" y="348" width="120" height="13" rx="3" fill="#94a3b8"/>
 <text x="316" y="358" fill="#d4d7dd" font-size="11">100,000</text>
-<text x="180" y="376" fill="#8b909a" font-size="11" text-anchor="end">Phaser SpriteGPULayer</text>
-<rect x="190" y="366" width="60" height="13" rx="3" fill="#94a3b8"/>
-<text x="256" y="376" fill="#d4d7dd" font-size="11">50,000</text>
+<text x="180" y="376" fill="#8b909a" font-size="11" text-anchor="end">Phaser + spryte draw.sprite</text>
+<rect x="190" y="366" width="120" height="13" rx="3" fill="#94a3b8"/>
+<text x="316" y="376" fill="#d4d7dd" font-size="11">100,000</text>
 <text x="180" y="394" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
 <rect x="190" y="384" width="24" height="13" rx="3" fill="#f472b6"/>
 <text x="220" y="394" fill="#d4d7dd" font-size="11">20,000</text>
@@ -60,46 +60,46 @@
 <text x="20" y="438" fill="#d4d7dd" font-size="12" font-weight="600">mixed</text>
 <text x="180" y="456" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
 <rect x="190" y="446" width="480" height="13" rx="3" fill="#4ade80"/>
-<text x="676" y="456" fill="#d4d7dd" font-size="11">100,000</text>
+<text x="676" y="456" fill="#d4d7dd" font-size="11">200,000</text>
 <text x="180" y="474" fill="#8b909a" font-size="11" text-anchor="end">Phaser + spryte draw.sprite</text>
 <rect x="190" y="464" width="480" height="13" rx="3" fill="#94a3b8"/>
-<text x="676" y="474" fill="#d4d7dd" font-size="11">100,000</text>
-<text x="180" y="492" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
-<rect x="190" y="482" width="96" height="13" rx="3" fill="#f472b6"/>
-<text x="292" y="492" fill="#d4d7dd" font-size="11">20,000</text>
-<text x="180" y="510" fill="#8b909a" font-size="11" text-anchor="end">Phaser Image</text>
-<rect x="190" y="500" width="96" height="13" rx="3" fill="#94a3b8"/>
-<text x="292" y="510" fill="#d4d7dd" font-size="11">20,000</text>
+<text x="676" y="474" fill="#d4d7dd" font-size="11">200,000</text>
+<text x="180" y="492" fill="#8b909a" font-size="11" text-anchor="end">Phaser Image</text>
+<rect x="190" y="482" width="120" height="13" rx="3" fill="#94a3b8"/>
+<text x="316" y="492" fill="#d4d7dd" font-size="11">50,000</text>
+<text x="180" y="510" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
+<rect x="190" y="500" width="48" height="13" rx="3" fill="#f472b6"/>
+<text x="244" y="510" fill="#d4d7dd" font-size="11">20,000</text>
 <text x="20" y="536" fill="#d4d7dd" font-size="12" font-weight="600">raycaster</text>
 <text x="180" y="554" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
 <rect x="190" y="544" width="480" height="13" rx="3" fill="#4ade80"/>
-<text x="676" y="554" fill="#d4d7dd" font-size="11">10,000</text>
+<text x="676" y="554" fill="#d4d7dd" font-size="11">20,000</text>
 <text x="180" y="572" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
-<rect x="190" y="562" width="240" height="13" rx="3" fill="#f472b6"/>
-<text x="436" y="572" fill="#d4d7dd" font-size="11">5,000</text>
+<rect x="190" y="562" width="120" height="13" rx="3" fill="#f472b6"/>
+<text x="316" y="572" fill="#d4d7dd" font-size="11">5,000</text>
 <text x="180" y="590" fill="#8b909a" font-size="11" text-anchor="end">Phaser Image</text>
-<rect x="190" y="580" width="240" height="13" rx="3" fill="#94a3b8"/>
-<text x="436" y="590" fill="#d4d7dd" font-size="11">5,000</text>
+<rect x="190" y="580" width="120" height="13" rx="3" fill="#94a3b8"/>
+<text x="316" y="590" fill="#d4d7dd" font-size="11">5,000</text>
 <text x="20" y="616" fill="#d4d7dd" font-size="12" font-weight="600">tilemap</text>
 <text x="180" y="634" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
 <rect x="190" y="624" width="480" height="13" rx="3" fill="#4ade80"/>
-<text x="676" y="634" fill="#d4d7dd" font-size="11">100,000</text>
-<text x="180" y="652" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
-<rect x="190" y="642" width="96" height="13" rx="3" fill="#f472b6"/>
-<text x="292" y="652" fill="#d4d7dd" font-size="11">20,000</text>
-<text x="180" y="670" fill="#8b909a" font-size="11" text-anchor="end">Phaser Image</text>
-<rect x="190" y="660" width="96" height="13" rx="3" fill="#94a3b8"/>
-<text x="292" y="670" fill="#d4d7dd" font-size="11">20,000</text>
+<text x="676" y="634" fill="#d4d7dd" font-size="11">200,000</text>
+<text x="180" y="652" fill="#8b909a" font-size="11" text-anchor="end">Phaser Image</text>
+<rect x="190" y="642" width="120" height="13" rx="3" fill="#94a3b8"/>
+<text x="316" y="652" fill="#d4d7dd" font-size="11">50,000</text>
+<text x="180" y="670" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
+<rect x="190" y="660" width="48" height="13" rx="3" fill="#f472b6"/>
+<text x="244" y="670" fill="#d4d7dd" font-size="11">20,000</text>
 <text x="180" y="688" fill="#8b909a" font-size="11" text-anchor="end">Canvas 2D drawImage</text>
-<rect x="190" y="678" width="48" height="13" rx="3" fill="#a78bfa"/>
-<text x="244" y="688" fill="#d4d7dd" font-size="11">10,000</text>
+<rect x="190" y="678" width="24" height="13" rx="3" fill="#a78bfa"/>
+<text x="220" y="688" fill="#d4d7dd" font-size="11">10,000</text>
 <text x="20" y="714" fill="#d4d7dd" font-size="12" font-weight="600">churn</text>
 <text x="180" y="732" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprites</text>
 <rect x="190" y="722" width="480" height="13" rx="3" fill="#22d3ee"/>
 <text x="676" y="732" fill="#d4d7dd" font-size="11">800,000</text>
 <text x="180" y="750" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
-<rect x="190" y="740" width="60" height="13" rx="3" fill="#4ade80"/>
-<text x="256" y="750" fill="#d4d7dd" font-size="11">100,000</text>
+<rect x="190" y="740" width="120" height="13" rx="3" fill="#4ade80"/>
+<text x="316" y="750" fill="#d4d7dd" font-size="11">200,000</text>
 <text x="180" y="768" fill="#8b909a" font-size="11" text-anchor="end">PixiJS ParticleContainer</text>
 <rect x="190" y="758" width="30" height="13" rx="3" fill="#fbbf24"/>
 <text x="226" y="768" fill="#d4d7dd" font-size="11">50,000</text>
@@ -127,11 +127,11 @@
 <rect x="190" y="936" width="480" height="13" rx="3" fill="#22d3ee"/>
 <text x="676" y="946" fill="#d4d7dd" font-size="11">800,000</text>
 <text x="180" y="964" fill="#8b909a" font-size="11" text-anchor="end">PixiJS ParticleContainer</text>
-<rect x="190" y="954" width="120" height="13" rx="3" fill="#fbbf24"/>
-<text x="316" y="964" fill="#d4d7dd" font-size="11">200,000</text>
+<rect x="190" y="954" width="240" height="13" rx="3" fill="#fbbf24"/>
+<text x="436" y="964" fill="#d4d7dd" font-size="11">400,000</text>
 <text x="180" y="982" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
-<rect x="190" y="972" width="60" height="13" rx="3" fill="#4ade80"/>
-<text x="256" y="982" fill="#d4d7dd" font-size="11">100,000</text>
+<rect x="190" y="972" width="120" height="13" rx="3" fill="#4ade80"/>
+<text x="316" y="982" fill="#d4d7dd" font-size="11">200,000</text>
 <text x="180" y="1000" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
 <rect x="190" y="990" width="30" height="13" rx="3" fill="#f472b6"/>
 <text x="226" y="1000" fill="#d4d7dd" font-size="11">50,000</text>
@@ -143,8 +143,8 @@
 <rect x="190" y="1052" width="480" height="13" rx="3" fill="#22d3ee"/>
 <text x="676" y="1062" fill="#d4d7dd" font-size="11">800,000</text>
 <text x="180" y="1080" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
-<rect x="190" y="1070" width="60" height="13" rx="3" fill="#4ade80"/>
-<text x="256" y="1080" fill="#d4d7dd" font-size="11">100,000</text>
+<rect x="190" y="1070" width="120" height="13" rx="3" fill="#4ade80"/>
+<text x="316" y="1080" fill="#d4d7dd" font-size="11">200,000</text>
 <text x="180" y="1098" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
 <rect x="190" y="1088" width="12" height="13" rx="3" fill="#f472b6"/>
 <text x="208" y="1098" fill="#d4d7dd" font-size="11">20,000</text>
@@ -156,11 +156,11 @@
 <rect x="190" y="1150" width="480" height="13" rx="3" fill="#22d3ee"/>
 <text x="676" y="1160" fill="#d4d7dd" font-size="11">800,000</text>
 <text x="180" y="1178" fill="#8b909a" font-size="11" text-anchor="end">PixiJS ParticleContainer</text>
-<rect x="190" y="1168" width="120" height="13" rx="3" fill="#fbbf24"/>
-<text x="316" y="1178" fill="#d4d7dd" font-size="11">200,000</text>
+<rect x="190" y="1168" width="240" height="13" rx="3" fill="#fbbf24"/>
+<text x="436" y="1178" fill="#d4d7dd" font-size="11">400,000</text>
 <text x="180" y="1196" fill="#8b909a" font-size="11" text-anchor="end">spryte draw.sprite</text>
-<rect x="190" y="1186" width="60" height="13" rx="3" fill="#4ade80"/>
-<text x="256" y="1196" fill="#d4d7dd" font-size="11">100,000</text>
+<rect x="190" y="1186" width="120" height="13" rx="3" fill="#4ade80"/>
+<text x="316" y="1196" fill="#d4d7dd" font-size="11">200,000</text>
 <text x="180" y="1214" fill="#8b909a" font-size="11" text-anchor="end">PixiJS Sprite</text>
 <rect x="190" y="1204" width="30" height="13" rx="3" fill="#f472b6"/>
 <text x="226" y="1214" fill="#d4d7dd" font-size="11">50,000</text>

@@ -12,7 +12,7 @@ Renderer benchmarks are easy to rig, usually by accident: a library left on a sl
 
 ![Most sprites at 60 fps in each scene, per library](docs/charts/max-at-60fps.svg)
 
-Windows 11, Chrome 155, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryzen 7 260, on AC power with power plan Turbo, 28 October 2026, spryte 0.7.2, PixiJS 8.22.0, Phaser 4.2.1. The median frame (simulation through GPU completion) is in ms; lower is better. † marks frames under 2 ms, which are low precision ([why](METHOD.md#statistics)). Raw data, with every round's value, is in [`results/`](results); the spryte 0.4.2 runs these replace are in [`results/archive/`](results/archive).
+Windows 11, Chrome 157, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryzen 7 260, on AC power with power plan Turbo, 11 November 2026, spryte 0.13.0, PixiJS 8.22.0, Phaser 4.2.1. The median frame (simulation through GPU completion) is in ms; lower is better. † marks frames under 2 ms, which are low precision ([why](METHOD.md#statistics)). Raw data, with every round's value, is in [`results/`](results); older runs (spryte 0.7.2 on 28 October, and spryte 0.4.2 before it) are in [`results/archive/`](results/archive).
 
 ### Across devices
 
@@ -31,7 +31,7 @@ spryte's one-call-per-sprite path is ahead on every device so far. The bulk path
 
 ### Phaser
 
-On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster than Phaser 4 `Image` in bunny, mixed, particles and tilemap (2.6x in raycaster at 10k enemies, 10,000 against 5,000 at 60 fps), and spryte `draw.sprites` 4.1x faster than `SpriteGPULayer` in particles. Phaser `Image` beat PixiJS `Sprite` in mixed, particles and tilemap. `SpriteGPULayer` is built for members that rarely change, so these scenes use it against its design; it's Phaser's only bulk path with per-sprite rotation, scale and tint. Raw data: [`results/community/*-rtx-5060-laptop-phaser-*.json`](results/community). Write-up: [spryte vs Phaser](https://debuff.jp/blog/spryte-vs-phaser).
+On the reference laptop (28 October run, spryte 0.7.2, 50k sprites), spryte `draw.sprite` was 2.7-3.4x faster than Phaser 4 `Image` in bunny, mixed, particles and tilemap (2.6x in raycaster at 10k enemies, 10,000 against 5,000 at 60 fps), and spryte `draw.sprites` 4.1x faster than `SpriteGPULayer` in particles. Phaser `Image` beat PixiJS `Sprite` in mixed, particles and tilemap. `SpriteGPULayer` is built for members that rarely change, so these scenes use it against its design; it's Phaser's only bulk path with per-sprite rotation, scale and tint. Raw data: [`results/community/*-rtx-5060-laptop-phaser-*.json`](results/community). Write-up: [spryte vs Phaser](https://debuff.jp/blog/spryte-vs-phaser).
 
 **spryte inside Phaser.** spryte's `spryte/phaser` draws in a Phaser `Extern` game object, on one WebGL2 context, in Phaser's frame and depth order. On the same laptop (spryte 0.5.0, 5 rounds, 50k sprites), `draw.sprites` inside the Extern drew particles in 1.9 ms against `SpriteGPULayer`'s 9.3 ms (4.9x) and held 400,000 at 60 fps against 50,000; `draw.sprite` per sprite inside the Extern was 8.3 ms against `Image`'s 25.5 ms. Being inside Phaser had no measurable cost: `draw.sprites` took 1.9 ms in the Extern and 2.2 ms on its own canvas in particles, 1.2 and 0.9 ms in bunny, all within the low-precision band under 2 ms. Raw data: [`results/community/2026-10-24-rtx-5060-laptop-phaser-spryte-*.json`](results/community). Write-up: [spryte inside Phaser](https://debuff.jp/blog/spryte-inside-phaser).
 
@@ -41,14 +41,14 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 | Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprites` | 0.7.2 | 1,600,000 | 0.3 † | 0.7 † | 2.7 |
-| PixiJS `ParticleContainer` | 8.22.0 | 400,000 | 0.6 † | 2.1 | 7.7 |
-| spryte `draw.sprite` | 0.7.2 | 100,000 | 1.0 † | 4.7 | 19.1 |
-| Phaser `Blitter` | 4.2.1 | 100,000 | 1.9 † | 7.8 | 29.3 |
-| Phaser `SpriteGPULayer` | 4.2.1 | 100,000 | 1.7 † | 8.1 | 29.9 |
-| PixiJS `Sprite` | 8.22.0 | 50,000 | 2.5 | 11.3 | 47.7 |
-| Phaser `Image` | 4.2.1 | 50,000 | 2.4 | 11.9 | 47.8 |
-| Canvas 2D `drawImage` | – | 10,000 | 14.8 | 78.6 | 351.0 |
+| spryte `draw.sprites` | 0.13.0 | 1,600,000 | 0.4 † | 0.8 † | 2.7 |
+| PixiJS `ParticleContainer` | 8.22.0 | 400,000 | 0.6 † | 1.9 † | 6.4 |
+| spryte `draw.sprite` | 0.13.0 | 200,000 | 0.9 † | 3.3 | 11.9 |
+| Phaser `SpriteGPULayer` | 4.2.1 | 100,000 | 1.5 † | 6.1 | 22.0 |
+| Phaser `Blitter` | 4.2.1 | 100,000 | 1.5 † | 5.9 | 23.1 |
+| PixiJS `Sprite` | 8.22.0 | 50,000 | 2.4 | 10.3 | 43.5 |
+| Phaser `Image` | 4.2.1 | 50,000 | 2.6 | 11.5 | 46.8 |
+| Canvas 2D `drawImage` | – | 10,000 | 15.0 | 75.2 | 421.7 |
 
 **`particles`**: one texture; position, rotation, scale, tint and alpha all change, 7 rounds
 
@@ -56,12 +56,12 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 | Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprites` | 0.7.2 | 400,000 | 0.5 † | 1.5 † | 6.3 |
-| spryte `draw.sprite` | 0.7.2 | 100,000 | 1.0 † | 4.6 | 18.0 |
-| PixiJS `ParticleContainer` | 8.22.0 | 100,000 | 1.2 † | 6.3 | 23.5 |
-| Phaser `SpriteGPULayer` | 4.2.1 | 50,000 | 2.0 | 8.8 | 33.1 |
-| Phaser `Image` | 4.2.1 | 20,000 | 3.4 | 18.2 | 71.0 |
-| PixiJS `Sprite` | 8.22.0 | 20,000 | 3.8 | 20.5 | 81.0 |
+| spryte `draw.sprites` | 0.13.0 | 400,000 | 0.6 † | 1.7 † | 6.0 |
+| spryte `draw.sprite` | 0.13.0 | 100,000 | 1.2 † | 4.8 | 16.8 |
+| PixiJS `ParticleContainer` | 8.22.0 | 100,000 | 1.2 † | 5.1 | 19.8 |
+| Phaser `SpriteGPULayer` | 4.2.1 | 100,000 | 1.6 † | 6.9 | 24.8 |
+| Phaser `Image` | 4.2.1 | 20,000 | 3.5 | 16.9 | 65.9 |
+| PixiJS `Sprite` | 8.22.0 | 20,000 | 4.0 | 18.3 | 76.6 |
 
 **`mixed`**: 4 separate textures; rotation, scale, tint and alpha all change, 5 rounds
 
@@ -69,9 +69,9 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 | Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprite` | 0.7.2 | 100,000 | 1.3 † | 5.5 | 19.7 |
-| Phaser `Image` | 4.2.1 | 20,000 | 3.6 | 18.4 | 72.4 |
-| PixiJS `Sprite` | 8.22.0 | 20,000 | 4.1 | 20.2 | 82.2 |
+| spryte `draw.sprite` | 0.13.0 | 200,000 | 1.0 † | 3.9 | 15.3 |
+| Phaser `Image` | 4.2.1 | 50,000 | 3.3 | 16.1 | 60.3 |
+| PixiJS `Sprite` | 8.22.0 | 20,000 | 3.8 | 17.5 | 75.9 |
 
 **`raycaster`**: enemies in a first-person maze, each visible one drawn as many texture slices, 3 rounds
 
@@ -79,9 +79,9 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 | Adapter | Version | Max enemies at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprite` | 0.7.2 | 10,000 | 8.6 | 48.5 | 225.5 |
-| Phaser `Image` | 4.2.1 | 5,000 | 21.2 | 104.1 | 352.3 |
-| PixiJS `Sprite` | 8.22.0 | 5,000 | 29.9 | 148.8 | 519.0 |
+| spryte `draw.sprite` | 0.13.0 | 20,000 | 8.3 | 41.1 | 189.4 |
+| Phaser `Image` | 4.2.1 | 5,000 | 18.3 | 95.4 | 369.9 |
+| PixiJS `Sprite` | 8.22.0 | 5,000 | 28.4 | 129.7 | 535.1 |
 
 **`tilemap`**: scrolling tile layers from one atlas, 5 rounds
 
@@ -89,10 +89,10 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 | Adapter | Version | Max tiles at 60 fps | 10k | 50k | 200k |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprite` | 0.7.2 | 100,000 | 1.0 † | 4.0 | 21.4 |
-| Phaser `Image` | 4.2.1 | 20,000 | 3.8 | 22.7 | 90.7 |
-| PixiJS `Sprite` | 8.22.0 | 20,000 | 3.4 | 24.6 | 103.6 |
-| Canvas 2D `drawImage` | – | 10,000 | 16.5 | 103.3 | 434.0 |
+| spryte `draw.sprite` | 0.13.0 | 200,000 | 0.9 † | 3.7 | 13.7 |
+| Phaser `Image` | 4.2.1 | 50,000 | 3.3 | 15.7 | 65.0 |
+| PixiJS `Sprite` | 8.22.0 | 20,000 | 3.6 | 18.1 | 79.1 |
+| Canvas 2D `drawImage` | – | 10,000 | 14.4 | 80.1 | 322.8 |
 
 **`churn`**: every sprite lives 60 frames, so a sixtieth are destroyed and created each frame, 5 rounds
 
@@ -100,11 +100,11 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 | Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprites` | 0.7.2 | 800,000 | 0.4 † | 0.8 † | 3.7 |
-| spryte `draw.sprite` | 0.7.2 | 100,000 | 1.3 † | 4.8 | 19.2 |
-| PixiJS `ParticleContainer` | 8.22.0 | 50,000 | 1.7 † | 11.3 | 34.6 |
-| PixiJS `Sprite` | 8.22.0 | 20,000 | 5.7 | 32.6 | 95.4 |
-| Canvas 2D `drawImage` | – | 10,000 | 14.0 | 76.1 | 351.6 |
+| spryte `draw.sprites` | 0.13.0 | 800,000 | 0.4 † | 0.9 † | 3.4 |
+| spryte `draw.sprite` | 0.13.0 | 200,000 | 1.0 † | 3.9 | 14.5 |
+| PixiJS `ParticleContainer` | 8.22.0 | 50,000 | 2.0 | 8.8 | 32.3 |
+| PixiJS `Sprite` | 8.22.0 | 20,000 | 5.4 | 32.6 | 120.7 |
+| Canvas 2D `drawImage` | – | 10,000 | 13.9 | 94.2 | 432.2 |
 
 **`text`**: a grid of numbers scrolling up, each changing every 8 frames, drawn with each library's text API, 5 rounds. The count is labels; 540 fill the screen, so this scene publishes 500, 2,000 and 5,000 and climbs to 50,000 ([why](METHOD.md#noise-and-ordering)).
 
@@ -112,10 +112,10 @@ On the reference laptop (50k sprites), spryte `draw.sprite` was 2.7-3.4x faster 
 
 | Adapter | Version | Max labels at 60 fps | 500 | 2k | 5k |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.text` | 0.7.2 | 20,000 | 0.8 † | 1.7 † | 2.3 |
-| Canvas 2D `fillText` | – | 5,000 | 0.6 † | 2.5 | 7.4 |
-| PixiJS `BitmapText` | 8.22.0 | 2,000 | 2.6 | 7.4 | 23.2 |
-| PixiJS `Text` | 8.22.0 | 1,000 | 7.8 | 22.3 | 50.9 |
+| spryte `draw.text` | 0.13.0 | 20,000 | 0.6 † | 1.8 † | 3.4 |
+| Canvas 2D `fillText` | – | 5,000 | 0.6 † | 2.8 | 8.1 |
+| PixiJS `BitmapText` | 8.22.0 | 2,000 | 3.5 | 7.9 | 20.2 |
+| PixiJS `Text` | 8.22.0 | 1,000 | 7.3 | 17.7 | 42.4 |
 
 spryte packs new strings into shared atlas pages and uploads only each new rectangle, so a frame is one draw call whatever the count. PixiJS `Text` rasterises each label to its own canvas and texture, which is also why its memory grows with count (1.2 GB at 10,000 labels). `BitmapText` draws from a pre-rasterised glyph sheet. Canvas 2D `fillText` has no texture to manage at all, and is the fastest below about 800 labels.
 
@@ -125,11 +125,11 @@ spryte packs new strings into shared atlas pages and uploads only each new recta
 
 | Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprites` | 0.7.2 | 800,000 | 0.4 † | 0.8 † | 2.6 |
-| PixiJS `ParticleContainer` | 8.22.0 | 200,000 | 0.6 † | 2.7 | 8.0 |
-| spryte `draw.sprite` | 0.7.2 | 100,000 | 1.2 † | 5.0 | 21.7 |
-| PixiJS `Sprite` | 8.22.0 | 50,000 | 2.9 | 11.5 | 57.2 |
-| Canvas 2D `drawImage` | – | 10,000 | 15.6 | 106.6 | 480.4 |
+| spryte `draw.sprites` | 0.13.0 | 800,000 | 0.4 † | 0.7 † | 2.6 |
+| PixiJS `ParticleContainer` | 8.22.0 | 400,000 | 0.6 † | 2.5 | 6.6 |
+| spryte `draw.sprite` | 0.13.0 | 200,000 | 1.1 † | 3.8 | 16.3 |
+| PixiJS `Sprite` | 8.22.0 | 50,000 | 2.9 | 12.3 | 51.2 |
+| Canvas 2D `drawImage` | – | 10,000 | 16.5 | 111.9 | 466.5 |
 
 **`clip`**: a 4x3 grid of panels, each clipping the bunnies inside it, 5 rounds
 
@@ -137,10 +137,10 @@ spryte packs new strings into shared atlas pages and uploads only each new recta
 
 | Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprites` | 0.7.2 | 800,000 | 0.4 † | 0.9 † | 3.6 |
-| spryte `draw.sprite` | 0.7.2 | 100,000 | 1.2 † | 4.7 | 19.8 |
-| PixiJS `Sprite` | 8.22.0 | 20,000 | 6.3 | 20.5 | 82.6 |
-| Canvas 2D `drawImage` | – | 10,000 | 12.8 | 68.3 | 303.7 |
+| spryte `draw.sprites` | 0.13.0 | 800,000 | 0.5 † | 1.0 † | 3.7 |
+| spryte `draw.sprite` | 0.13.0 | 200,000 | 0.9 † | 3.8 | 16.4 |
+| PixiJS `Sprite` | 8.22.0 | 20,000 | 6.1 | 23.0 | 85.2 |
+| Canvas 2D `drawImage` | – | 10,000 | 13.6 | 90.9 | 383.8 |
 
 PixiJS `ParticleContainer` sits this one out: clipping would need a container per panel, which isn't measured yet.
 
@@ -150,11 +150,11 @@ PixiJS `ParticleContainer` sits this one out: clipping would need a container pe
 
 | Adapter | Version | Max at 60 fps (higher is better) | 10k (ms) | 50k (ms) | 200k (ms) |
 | --- | --- | --- | --- | --- | --- |
-| spryte `draw.sprites` | 0.7.2 | 800,000 | 2.6 | 2.9 | 4.5 |
-| PixiJS `ParticleContainer` | 8.22.0 | 200,000 | 2.8 | 4.1 | 11.5 |
-| spryte `draw.sprite` | 0.7.2 | 100,000 | 3.3 | 7.5 | 21.6 |
-| PixiJS `Sprite` | 8.22.0 | 50,000 | 4.8 | 14.3 | 50.1 |
-| Canvas 2D `drawImage` | – | 5,000 | 17.3 | 81.7 | 378.2 |
+| spryte `draw.sprites` | 0.13.0 | 800,000 | 2.3 | 2.8 | 4.4 |
+| PixiJS `ParticleContainer` | 8.22.0 | 400,000 | 2.6 | 4.2 | 8.8 |
+| spryte `draw.sprite` | 0.13.0 | 200,000 | 3.1 | 5.4 | 15.5 |
+| PixiJS `Sprite` | 8.22.0 | 50,000 | 4.4 | 13.2 | 48.2 |
+| Canvas 2D `drawImage` | – | 5,000 | 17.8 | 83.3 | 412.9 |
 
 The upload itself costs every WebGL library about 2.5 ms a frame, which is the floor the bulk paths sit on at 10k.
 
