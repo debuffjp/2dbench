@@ -20,7 +20,7 @@ Windows 11, Chrome 157, NVIDIA RTX 5060 Laptop GPU (ANGLE, Direct3D 11), AMD Ryz
 
 | Device | GPU | Browser | spryte | PixiJS | spryte faster |
 | --- | --- | --- | --- | --- | --- |
-| Laptop (reference) | NVIDIA RTX 5060 | Chrome 155, Windows | 100,000 | 20,000 | 4.5x |
+| Laptop (reference) | NVIDIA RTX 5060 | Chrome 157, Windows | 100,000 | 20,000 | 3.8x |
 | Lenovo Legion Pro 7 | NVIDIA RTX 4080 | Chromium 156, Linux | 100,000 | 50,000 | 2.7x |
 | Windows laptop | AMD Radeon 780M (integrated) | Chrome, Windows | 50,000 | 20,000 | 3.3x |
 | iPhone | Apple GPU | Safari, iOS 18 | 100,000 | 20,000 | 3.7x |
