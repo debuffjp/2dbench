@@ -16,14 +16,14 @@
     "charts": "node scripts/charts.mjs"
   },
   "dependencies": {
-    "pixi.js": "8.22.0",
-    "spryte": "0.13.0"
+    "pixi.js": "8.23.0",
+    "spryte": "0.17.0"
   },
   "devDependencies": {
     "phaser": "4.2.1",
-    "playwright-core": "1.64.1",
+    "playwright-core": "1.65.1",
     "typescript": "^7.0.2",
-    "vite": "^8.3.5"
+    "vite": "^8.3.8"
   },
   "engines": {
     "node": ">=22.18"
